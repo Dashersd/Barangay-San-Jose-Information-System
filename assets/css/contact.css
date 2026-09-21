@@ -1,0 +1,233 @@
+/* ==========================================================================
+   Barangay San Jose Web-Based Information System
+   Contact Us Module Stylesheet (contact.css)
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------- */
+/* 2. Main Contact Layout                                                    */
+/* -------------------------------------------------------------------------- */
+.contact-main-section {
+    padding: 3.5rem 0 5.5rem;
+    background-color: var(--background);
+}
+
+.contact-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. Quick Info Cards Grid (2 Columns)                                       */
+/* -------------------------------------------------------------------------- */
+.contact-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.contact-info-card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 2.25rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium), border-color var(--transition-medium);
+}
+
+.contact-info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: rgba(16, 185, 129, 0.35);
+}
+
+.contact-card-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background-color: #eff6ff; /* Very light blue */
+    color: #1a73e8; /* Blue icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.contact-info-card:nth-child(1) .contact-card-icon-box {
+    background-color: #bfdbfe; /* Darker light blue for the first card */
+    color: #1e40af; /* Dark blue icon */
+}
+
+.contact-info-card:hover .contact-card-icon-box {
+    background-color: #1a73e8;
+    color: #ffffff;
+}
+
+.contact-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+}
+
+.contact-card-content {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.7;
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+.contact-card-content strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. Operating Schedule Card                                                */
+/* -------------------------------------------------------------------------- */
+.contact-schedule-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.contact-schedule-card {
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 2.5rem 2.25rem;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.contact-section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.contact-section-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background-color: #eff6ff; /* Very light blue */
+    color: #1a73e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.contact-section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.contact-section-subtitle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 500;
+    display: block;
+}
+
+.schedule-description {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+}
+
+.schedule-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.schedule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1.15rem;
+    border-radius: var(--radius-sm);
+    background-color: #f9fafb; /* Light gray for non-active */
+    border: 1px solid #f3f4f6;
+    font-size: 0.92rem;
+}
+
+.schedule-day {
+    font-weight: 600;
+    color: #111827; /* Darker text for day */
+}
+
+.schedule-hours {
+    font-weight: 500;
+    color: #6b7280; /* Gray text for hours */
+}
+
+.schedule-item.active-schedule {
+    background-color: #eff6ff; /* Light blue background */
+    border-color: #bfdbfe; /* Light blue border */
+}
+
+.schedule-item.active-schedule .schedule-day {
+    color: #1e40af; /* Dark blue for day */
+}
+
+.schedule-item.active-schedule .schedule-hours {
+    color: #1e40af; /* Dark blue for hours */
+    font-weight: 600;
+}
+
+
+
+/* -------------------------------------------------------------------------- */
+/* 5. Responsive Styles                                                      */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .contact-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-hero {
+        padding: 4rem 1.25rem 3.5rem;
+    }
+
+    .contact-title {
+        font-size: 2.15rem;
+    }
+
+    .contact-subtitle {
+        font-size: 1rem;
+    }
+
+    .contact-info-card {
+        padding: 1.75rem 1.5rem;
+    }
+
+    .contact-schedule-card {
+        padding: 1.75rem 1.25rem;
+    }
+
+    .schedule-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+}

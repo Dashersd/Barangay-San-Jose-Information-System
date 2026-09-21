@@ -1,0 +1,177 @@
+/* ==========================================================================
+   Barangay San Jose Web-Based Information System
+   About Us Stylesheet (about.css)
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------- */
+/* 2. Main Content Section (New Layout)                                       */
+/* -------------------------------------------------------------------------- */
+.about-main-section {
+    background-color: #f4f8fc; /* Soft light blue/gray matching the design */
+    padding: 5rem 0 7rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background waves decoration */
+.about-main-section::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 10% 80%, rgba(26, 115, 232, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 90% 20%, rgba(26, 115, 232, 0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.about-container-new {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Intro Section */
+.about-intro {
+    margin-bottom: 4rem;
+    max-width: 800px;
+}
+
+.heading-underline-blue {
+    width: 45px;
+    height: 4px;
+    background-color: #1a73e8; /* Blue underline */
+    margin-bottom: 1rem;
+}
+
+.about-section-heading {
+    font-size: 2rem;
+    color: #0f172a;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.about-section-desc {
+    font-size: 1.05rem;
+    color: #475569;
+    line-height: 1.7;
+}
+
+/* Cards Grid */
+.vmh-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.vmh-card {
+    background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    border: 1px solid rgba(255,255,255,1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vmh-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+}
+
+.vmh-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.vmh-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #1a73e8; /* Darker blue icon background */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
+}
+
+.vmh-title {
+    font-size: 1.3rem;
+    color: #0f172a;
+    font-weight: 700;
+    margin: 0;
+}
+
+.vmh-underline {
+    width: 30px;
+    height: 3px;
+    background-color: #1a73e8;
+    margin-left: calc(50px + 1rem);
+    margin-top: -0.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.vmh-text {
+    font-size: 0.95rem;
+    color: #475569;
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+}
+
+/* Faint background illustrations using custom SVGs */
+.vmh-bg-illustration {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    z-index: 1;
+    pointer-events: none;
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+}
+
+.vision-bg {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120'%3E%3Cpath d='M0 120 L0 80 Q100 20 200 80 T400 60 L400 120 Z' fill='%23e2edf8'/%3E%3Cpath d='M0 120 L0 100 Q150 70 300 110 T400 90 L400 120 Z' fill='%23d0e3f5'/%3E%3Cpolygon points='40 100, 60 85, 80 100' fill='%23c4d8ec'/%3E%3Crect x='45' y='100' width='30' height='20' fill='%23c4d8ec'/%3E%3Cpolygon points='250 95, 280 75, 310 95' fill='%23c4d8ec'/%3E%3Crect x='255' y='95' width='50' height='25' fill='%23c4d8ec'/%3E%3Ccircle cx='100' cy='105' r='15' fill='%23b6cde2'/%3E%3Ccircle cx='115' cy='110' r='10' fill='%23b6cde2'/%3E%3Ccircle cx='330' cy='95' r='18' fill='%23b6cde2'/%3E%3C/svg%3E");
+    opacity: 0.8;
+}
+
+.mission-bg {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120'%3E%3Cpath d='M0 100 Q 100 80 200 100 T 400 90 L 400 120 L 0 120 Z' fill='%23eaf3fd'/%3E%3Ccircle cx='160' cy='65' r='12' fill='%23d8e8f8'/%3E%3Cpath d='M135 115 Q 160 75 185 100 Z' fill='%23d8e8f8'/%3E%3Ccircle cx='240' cy='65' r='12' fill='%23d8e8f8'/%3E%3Cpath d='M265 115 Q 240 75 215 100 Z' fill='%23d8e8f8'/%3E%3Ccircle cx='200' cy='45' r='14' fill='%23d8e8f8'/%3E%3Cpath d='M200 115 C 200 115, 155 75, 175 55 C 190 40, 200 60, 200 60 C 200 60, 210 40, 225 55 C 245 75, 200 115, 200 115 Z' fill='%23c8def2'/%3E%3C/svg%3E");
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+}
+
+.history-bg {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120'%3E%3Cpath d='M0 120 Q 200 90 400 100 L 400 120 Z' fill='%23e2edf8'/%3E%3Cpolygon points='320 80, 340 50, 360 80' fill='%23c4d8ec'/%3E%3Crect x='325' y='80' width='30' height='40' fill='%23c4d8ec'/%3E%3Crect x='338' y='30' width='4' height='20' fill='%23b6cde2'/%3E%3Crect x='333' y='38' width='14' height='4' fill='%23b6cde2'/%3E%3Cpolygon points='280 95, 295 80, 310 95' fill='%23d0e3f5'/%3E%3Crect x='285' y='95' width='20' height='25' fill='%23d0e3f5'/%3E%3Ccircle cx='260' cy='100' r='15' fill='%23b6cde2'/%3E%3Ccircle cx='380' cy='95' r='20' fill='%23d0e3f5'/%3E%3C/svg%3E");
+    opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .vmh-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 768px) {
+    .vmh-grid {
+        grid-template-columns: 1fr;
+    }
+}

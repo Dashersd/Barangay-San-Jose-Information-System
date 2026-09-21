@@ -1,0 +1,244 @@
+/* Officials Page Styles */
+
+.officials-page-bg {
+    background-color: #f4f9ff;
+    padding: 4rem 0;
+    min-height: 80vh;
+}
+
+.officials-container {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+/* Top Section */
+.officials-top {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+}
+
+.officials-header-text {
+    flex: 1;
+}
+
+.officials-heading {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #0d3b66;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.officials-heading::before {
+    content: '';
+    width: 60px;
+    height: 4px;
+    background-color: #1a73e8;
+    margin-bottom: 0.8rem;
+    border-radius: 2px;
+}
+
+.officials-subtext {
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Captain Card */
+.captain-card {
+    flex: 1.8;
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    border-radius: 12px;
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.captain-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    /* Subtle overlay to simulate the mountains */
+    background: linear-gradient(to top, rgba(255,255,255,0.4) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.captain-img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 1;
+}
+
+.captain-info {
+    position: relative;
+    z-index: 1;
+}
+
+.badge-blue {
+    background-color: #1a73e8;
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 0.8rem;
+}
+
+.captain-name {
+    font-size: 1.6rem;
+    color: #0f172a;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.captain-role {
+    font-size: 0.9rem;
+    color: #475569;
+    margin-bottom: 0.5rem;
+}
+
+.captain-quote {
+    font-size: 0.85rem;
+    color: #475569;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+/* Middle Grid */
+.officials-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+}
+
+.official-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transition: transform 0.3s ease;
+}
+.official-card:hover {
+    transform: translateY(-5px);
+}
+
+.official-card img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    background-color: #f1f5f9;
+}
+
+.official-card .badge-blue {
+    padding: 0.2rem 0.8rem;
+    font-size: 0.7rem;
+    margin-bottom: 0.8rem;
+}
+
+.official-card h4 {
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.official-card p {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Bottom Row */
+.footer-cards {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-card {
+    flex: 1;
+    background-color: #e6f2ff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.footer-card-icon {
+    width: 65px;
+    height: 65px;
+    background-color: #0d3b66;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.footer-card-icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+.footer-card-content {
+    flex: 1;
+}
+
+.footer-card h4 {
+    font-size: 1.1rem;
+    color: #0d3b66;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+.footer-card p {
+    font-size: 0.85rem;
+    color: #475569;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.btn-view-all {
+    background-color: #0d3b66;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+}
+.btn-view-all:hover {
+    background-color: #0a2e50;
+    color: white;
+}
