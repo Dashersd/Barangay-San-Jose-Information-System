@@ -20,7 +20,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/officials.css">
+    <link rel="stylesheet" href="assets/css/skofficials.css">
 </head>
 
 <body>
@@ -65,7 +65,7 @@
     <section class="hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-subtitle">OFFICIALS</p>
+                <p class="hero-subtitle">SK OFFICIALS</p>
                 <h1 class="hero-title">BARANGAY SAN JOSE</h1>
                 <p class="hero-desc">The dedicated leaders who work together to ensure the progress,<br>peace, and well-being of our community.</p>
             </div>
@@ -78,17 +78,17 @@
             <!-- Top Section -->
             <div class="officials-top">
                 <div class="officials-header-text">
-                    <h1 class="officials-heading">Barangay Officials</h1>
-                    <p class="officials-subtext">The Barangay San Jose officials are dedicated leaders who work together to ensure the progress, peace, and well-being of our community.</p>
+                    <h1 class="officials-heading">Sangguniang Kabataan (SK) Officials</h1>
+                    <p class="officials-subtext">The SK officials are dedicated youth leaders who work together to empower the youth of Barangay San Jose.</p>
                 </div>
                 
                 <div class="captain-card">
-                    <img src="assets/images/default-avatar.png" alt="Hon. Juan Dela Cruz" class="captain-img" onerror="this.src='https://ui-avatars.com/api/?name=Juan+Dela+Cruz&background=random&color=fff&size=130'">
+                    <img src="assets/images/default-avatar.png" alt="Juan Dela Cruz" class="captain-img" onerror="this.src='https://ui-avatars.com/api/?name=Mark+Reyes&background=random&color=fff&size=130'">
                     <div class="captain-info">
-                        <span class="badge-blue">Barangay Captain</span>
-                        <h2 class="captain-name">Hon. Juan Dela Cruz</h2>
-                        <div class="captain-role">Punong Barangay</div>
-                        <p class="captain-quote">"Serbisyong totoo para sa mas maunlad na San Jose."</p>
+                        <span class="badge-blue">SK Chairperson</span>
+                        <h2 class="captain-name">Mark Reyes</h2>
+                        <div class="captain-role">SK Chairperson</div>
+                        <p class="captain-quote">"Empowering the youth of Barangay San Jose."</p>
                     </div>
                 </div>
             </div>
@@ -99,55 +99,55 @@
                     <img src="assets/images/default-avatar.png" alt="Ms. Liza Santos" onerror="this.src='https://ui-avatars.com/api/?name=Liza+Santos&background=random&color=fff'">
                     <span class="badge-blue" style="background-color: #0ea5e9;">Secretary</span>
                     <h4>Ms. Liza Santos</h4>
-                    <p>Barangay Secretary</p>
+                    <p>SK Secretary</p>
                 </div>
                 <div class="official-card">
                     <img src="assets/images/default-avatar.png" alt="Mr. Antonio Luna" onerror="this.src='https://ui-avatars.com/api/?name=Antonio+Luna&background=random&color=fff'">
                     <span class="badge-blue" style="background-color: #10b981;">Treasurer</span>
                     <h4>Mr. Antonio Luna</h4>
-                    <p>Barangay Treasurer</p>
+                    <p>SK Treasurer</p>
                 </div>
                 <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Hon. Ana Villanueva" onerror="this.src='https://ui-avatars.com/api/?name=Ana+Villanueva&background=random&color=fff'">
-                    <span class="badge-blue">Kagawad</span>
-                    <h4>Hon. Ana Villanueva</h4>
-                    <p>Kagawad</p>
+                    <img src="assets/images/default-avatar.png" alt="Ana Villanueva" onerror="this.src='https://ui-avatars.com/api/?name=Ana+Villanueva&background=random&color=fff'">
+                    <span class="badge-blue">SK Kagawad</span>
+                    <h4>Ana Villanueva</h4>
+                    <p>SK Kagawad</p>
                 </div>
                 <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Hon. Luis Garcia" onerror="this.src='https://ui-avatars.com/api/?name=Luis+Garcia&background=random&color=fff'">
-                    <span class="badge-blue">Kagawad</span>
-                    <h4>Hon. Luis Garcia</h4>
-                    <p>Kagawad</p>
+                    <img src="assets/images/default-avatar.png" alt="Luis Garcia" onerror="this.src='https://ui-avatars.com/api/?name=Luis+Garcia&background=random&color=fff'">
+                    <span class="badge-blue">SK Kagawad</span>
+                    <h4>Luis Garcia</h4>
+                    <p>SK Kagawad</p>
                 </div>
                 <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Hon. Maria Santos" onerror="this.src='https://ui-avatars.com/api/?name=Maria+Santos&background=random&color=fff'">
-                    <span class="badge-blue">Kagawad</span>
-                    <h4>Hon. Maria Santos</h4>
-                    <p>Kagawad</p>
+                    <img src="assets/images/default-avatar.png" alt="Maria Santos" onerror="this.src='https://ui-avatars.com/api/?name=Maria+Santos&background=random&color=fff'">
+                    <span class="badge-blue">SK Kagawad</span>
+                    <h4>Maria Santos</h4>
+                    <p>SK Kagawad</p>
                 </div>
                 <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Hon. Juanito Perez" onerror="this.src='https://ui-avatars.com/api/?name=Juanito+Perez&background=random&color=fff'">
-                    <span class="badge-blue">Kagawad</span>
-                    <h4>Hon. Juanito Perez</h4>
-                    <p>Kagawad</p>
+                    <img src="assets/images/default-avatar.png" alt="Juanito Perez" onerror="this.src='https://ui-avatars.com/api/?name=Juanito+Perez&background=random&color=fff'">
+                    <span class="badge-blue">SK Kagawad</span>
+                    <h4>Juanito Perez</h4>
+                    <p>SK Kagawad</p>
                 </div>
                 <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Hon. Elena Cruz" onerror="this.src='https://ui-avatars.com/api/?name=Elena+Cruz&background=random&color=fff'">
-                    <span class="badge-blue">Kagawad</span>
-                    <h4>Hon. Elena Cruz</h4>
-                    <p>Kagawad</p>
+                    <img src="assets/images/default-avatar.png" alt="Elena Cruz" onerror="this.src='https://ui-avatars.com/api/?name=Elena+Cruz&background=random&color=fff'">
+                    <span class="badge-blue">SK Kagawad</span>
+                    <h4>Elena Cruz</h4>
+                    <p>SK Kagawad</p>
                 </div>
                 <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Hon. Ricardo Gomez" onerror="this.src='https://ui-avatars.com/api/?name=Ricardo+Gomez&background=random&color=fff'">
-                    <span class="badge-blue">Kagawad</span>
-                    <h4>Hon. Ricardo Gomez</h4>
-                    <p>Kagawad</p>
+                    <img src="assets/images/default-avatar.png" alt="Ricardo Gomez" onerror="this.src='https://ui-avatars.com/api/?name=Ricardo+Gomez&background=random&color=fff'">
+                    <span class="badge-blue">SK Kagawad</span>
+                    <h4>Ricardo Gomez</h4>
+                    <p>SK Kagawad</p>
                 </div>
                 <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Hon. Pedro Reyes" onerror="this.src='https://ui-avatars.com/api/?name=Pedro+Reyes&background=random&color=fff'">
-                    <span class="badge-blue">Kagawad</span>
-                    <h4>Hon. Pedro Reyes</h4>
-                    <p>Kagawad</p>
+                    <img src="assets/images/default-avatar.png" alt="Pedro Reyes" onerror="this.src='https://ui-avatars.com/api/?name=Pedro+Reyes&background=random&color=fff'">
+                    <span class="badge-blue">SK Kagawad</span>
+                    <h4>Pedro Reyes</h4>
+                    <p>SK Kagawad</p>
                 </div>
             </div>
 
@@ -162,3 +162,5 @@
 </body>
 
 </html>
+
+

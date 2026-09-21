@@ -1,0 +1,140 @@
+/* =============================================
+   Announcement Page Specific Styles
+   ============================================= */
+
+/* Page Header */
+.page-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0d47a1 100%);
+    padding: 6rem 0 4rem;
+    text-align: center;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../images/San Jose Logo 2.png') no-repeat center center;
+    background-size: contain;
+    opacity: 0.05;
+    z-index: 1;
+}
+
+.page-header-container {
+    position: relative;
+    z-index: 2;
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Announcement List / Layout */
+.announcement-page-content {
+    padding: 5rem 0;
+    background-color: #f8fafc;
+}
+
+.announcement-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Detailed Announcement Card */
+.announcement-detail-card {
+    background: #ffffff;
+    border-radius: var(--radius-md);
+    padding: 2.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.announcement-detail-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.ad-date {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border-radius: var(--radius-sm);
+    padding: 0.8rem 1.2rem;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-weight: 700;
+    align-self: flex-start;
+}
+
+.ad-date .month {
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+.ad-date .day {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.ad-content {
+    flex: 1;
+}
+
+.ad-content h2 {
+    font-size: 1.8rem;
+    color: #0f172a;
+    margin-bottom: 1rem;
+    font-weight: 800;
+}
+
+.ad-4w {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+}
+
+.ad-4w li {
+    font-size: 1rem;
+    color: #475569;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.ad-4w strong {
+    color: #0f172a;
+    font-weight: 700;
+    display: inline-block;
+    width: 60px;
+}
+
+.ad-extra-desc {
+    font-size: 1rem;
+    color: #334155;
+    line-height: 1.8;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Responsive adjustments are naturally handled by CSS Grid */

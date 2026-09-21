@@ -33,7 +33,7 @@
                 <img src="assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="navbar-logo">
                 <div class="brand-text">
                     <span class="brand-title">BARANGAY SAN JOSE</span>
-                    <span class="brand-subtitle">Bayanihan &bull; Serbisyong Totoo &bull; Mas Maunlad na San Jose</span>
+                    <span class="brand-subtitle">Bayanihan &bull; Serbisyong Totoo</span>
                 </div>
             </a>
 
@@ -41,9 +41,16 @@
             <ul class="navbar-links">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="about.php" class="active">About Us</a></li>
-                <li><a href="officials.php">Officials</a></li>
-                <li><a href="javascript:void(0)">Gallery</a></li>
-                <li><a href="javascript:void(0)" style="cursor: default; pointer-events: none;">Spot Map</a></li>
+                                <li class="dropdown">
+                    <a href="javascript:void(0)" class="nav-link">Officials</a>
+                    <div class="dropdown-content">
+                        <a href="officials.php">Barangay Officials</a>
+                        <a href="skofficials.php">SK Officials</a>
+                    </div>
+                </li>
+                <li><a href="announcement.php">Announcement</a></li>
+                <li><a href="gallery.php">Gallery</a></li>
+                <li><a href="index.php#spot-map">Spot Map</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
 
