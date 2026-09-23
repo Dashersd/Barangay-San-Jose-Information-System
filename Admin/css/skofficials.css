@@ -1,0 +1,46 @@
+/* SK Officials Specific Styles */
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary, #1a73e8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+.badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-active {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.text-danger {
+    color: #ef4444 !important;
+}
+
+.btn-action.text-danger:hover {
+    background-color: #fef2f2;
+    color: #ef4444;
+}

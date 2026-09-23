@@ -50,6 +50,7 @@
                 <li><a href="gallery.php">Gallery</a></li>
                 <li><a href="index.php#spot-map">Spot Map</a></li>
                 <li><a href="contact.php">Contact</a></li>
+                <li><a href="Admin/dashboard.php">Admin Login</a></li>
             </ul>
 
             <!-- Right Side: Login -->

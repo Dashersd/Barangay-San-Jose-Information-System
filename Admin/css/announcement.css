@@ -1,0 +1,70 @@
+/* Announcement Specific Styles */
+
+.date-cell {
+    color: var(--muted, #6B7280);
+    white-space: nowrap;
+}
+
+.description-cell {
+    color: var(--muted, #6B7280);
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Modal Enhancements for Announcement */
+.modal-content {
+    max-height: 90vh;
+}
+
+.modal-body.custom-scrollbar {
+    overflow-y: auto;
+}
+
+.modal-body.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.modal-body.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.modal-body.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.form-group.half-width {
+    flex: 1;
+}
+
+.file-input {
+    padding: 0.5rem;
+    background-color: var(--white, #ffffff);
+}
+
+.file-input::file-selector-button {
+    padding: 0.4rem 0.8rem;
+    margin-right: 1rem;
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: 4px;
+    background-color: #f8fafc;
+    color: var(--text, #1C1917);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.file-input::file-selector-button:hover {
+    background-color: #e2e8f0;
+}
