@@ -53,10 +53,9 @@
                 <li><a href="index.php#spot-map">Spot Map</a></li>
                 <li><a href="contact.php" class="active">Contact</a></li>
             </ul>
-
-            <!-- Right Side: Login -->
+            <!-- Right Side: Admin Login -->
             <div class="navbar-right">
-                <a href="login.php" class="btn btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.95rem;">Login</a>
+                <a href="Admin/login.php" class="admin-login-link">Admin Login</a>
             </div>
         </div>
     </nav>

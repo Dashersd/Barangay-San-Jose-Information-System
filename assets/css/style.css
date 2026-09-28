@@ -319,6 +319,22 @@ img {
     flex: 1;
 }
 
+.admin-login-link {
+    color: #ffffff !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    position: relative;
+    padding: 0.4rem 1rem;
+    transition: all var(--transition-fast);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+}
+
+.admin-login-link:hover {
+    color: var(--white);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
 /* Hero Section */
 .hero {
     position: relative;

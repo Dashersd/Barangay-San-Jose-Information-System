@@ -7,10 +7,10 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Barangay San Jose Information System</title>
+    <title>Admin Login | Barangay San Jose Information System</title>
     
     <!-- Favicon / Tab Logo -->
-    <link rel="icon" type="image/png" href="assets/images/San Jose Logo 2.png">
+    <link rel="icon" type="image/png" href="../assets/images/San Jose Logo 2.png">
     
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,8 +18,8 @@ session_start();
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Base CSS & Modular Login CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/login.css">
 </head>
 <body>
 
@@ -27,8 +27,8 @@ session_start();
 <nav class="navbar">
     <div class="navbar-container">
         <!-- Brand & Logo -->
-        <a href="index.php" class="navbar-brand">
-            <img src="assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="navbar-logo">
+        <a href="../index.php" class="navbar-brand">
+            <img src="../assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="navbar-logo">
             <div class="brand-text">
                 <span class="brand-title">BARANGAY SAN JOSE</span>
                 <span class="brand-subtitle">Bayanihan &bull; Serbisyong Totoo</span>
@@ -37,23 +37,23 @@ session_start();
 
         <!-- Desktop Links -->
         <ul class="navbar-links">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="about.php">About Us</a></li>
+            <li><a href="../index.php">Home</a></li>
+            <li><a href="../about.php">About Us</a></li>
                             <li class="dropdown">
                     <a href="javascript:void(0)" class="nav-link">Officials</a>
                     <div class="dropdown-content">
-                        <a href="officials.php">Barangay Officials</a>
-                        <a href="skofficials.php">SK Officials</a>
+                        <a href="../officials.php">Barangay Officials</a>
+                        <a href="../skofficials.php">SK Officials</a>
                     </div>
                 </li>
-            <li><a href="announcement.php">Announcement</a></li>
-            <li><a href="gallery.php">Gallery</a></li>
-            <li><a href="index.php#spot-map">Spot Map</a></li>
-            <li><a href="contact.php">Contact</a></li>
+            <li><a href="../announcement.php">Announcement</a></li>
+            <li><a href="../gallery.php">Gallery</a></li>
+            <li><a href="../index.php#spot-map">Spot Map</a></li>
+            <li><a href="../contact.php">Contact</a></li>
         </ul>
             <!-- Right Side: Admin Login -->
             <div class="navbar-right">
-                <a href="Admin/login.php" class="admin-login-link">Admin Login</a>
+                <a href="login.php" class="admin-login-link">Admin Login</a>
             </div>
     </div>
 </nav>
@@ -64,10 +64,10 @@ session_start();
         <!-- Header -->
         <div class="auth-header">
             <div class="auth-icon-badge">
-                <img src="assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="auth-badge-logo">
+                <img src="../assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="auth-badge-logo">
             </div>
-            <h1 class="auth-title">Welcome Back</h1>
-            <p class="auth-subtitle">Sign in to access your Barangay San Jose resident portal and services.</p>
+            <h1 class="auth-title">Admin Portal</h1>
+            <p class="auth-subtitle">Sign in to access the administrator dashboard.</p>
         </div>
 
         <!-- Login Form -->
@@ -135,11 +135,7 @@ session_start();
             </button>
         </form>
 
-        <!-- Footer -->
-        <div class="auth-footer">
-            <span>Don't have an account yet?</span>
-            <a href="register.php">Register</a>
-        </div>
+        
     </div>
 </main>
 
@@ -176,9 +172,7 @@ session_start();
         submitBtn.textContent = 'Signing in...';
         
         setTimeout(() => {
-            alert(`Welcome, ${username}! Login demo authenticated successfully.`);
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Sign In';
+            window.location.href = 'dashboard.php';
         }, 600);
     }
 </script>
