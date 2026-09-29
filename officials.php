@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Barangay San Jose Web-Based Information System - Officials
 ?>
 <!DOCTYPE html>
@@ -44,7 +44,7 @@
                                 <li class="dropdown">
                     <a href="javascript:void(0)" class="nav-link active">Officials</a>
                     <div class="dropdown-content">
-                        <a href="officials.php">Barangay Officials</a>
+                        <a href="officials.php" class="active">Barangay Officials</a>
                         <a href="skofficials.php">SK Officials</a>
                     </div>
                 </li>

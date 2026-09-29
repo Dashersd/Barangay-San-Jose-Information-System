@@ -300,6 +300,7 @@ img {
     text-decoration: none;
     display: block;
     font-size: 0.85rem !important;
+    border-radius: 0 !important;
     text-align: center;
     white-space: nowrap;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
