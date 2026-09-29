@@ -12,6 +12,7 @@
 
     <!-- Favicon / Tab Logo -->
     <link rel="icon" type="image/png" href="assets/images/San Jose Logo 2.png">
+    <link rel="icon" type="image/png" href="assets/images/San Jose Logo 2.png">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -208,6 +209,7 @@
 </body>
 
 </html>
+
 
 
 

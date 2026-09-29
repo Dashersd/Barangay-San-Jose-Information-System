@@ -11,6 +11,7 @@
     <title>About Us | Barangay San Jose Information System</title>
 
     <!-- Favicon / Tab Logo -->
+    <link rel="icon" type="image/png" href="assets/images/San Jose Logo 2.png">
         
 
     <!-- Google Fonts: Plus Jakarta Sans & Inter -->
@@ -192,6 +193,7 @@
 </body>
 
 </html>
+
 
 
 
