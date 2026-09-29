@@ -93,6 +93,11 @@
                         <h3 class="vmh-title">Our Vision</h3>
                     </div>
                     <div class="vmh-underline"></div>
+                    <div class="vmh-text-wrapper">
+                        <p class="vmh-text">
+                            Usa ka malinawon, mauswagon, ug empowered nga barangay diin ang mga residente nagkinabuhi nga nagkahiusa adunay aksesa sa batakang serbisyo, ug aktibong miapil sa malungtarong kalambuan.
+                        </p>
+                    </div>
                     <div class="vmh-bg-illustration vision-bg"></div>
                 </div>
 
