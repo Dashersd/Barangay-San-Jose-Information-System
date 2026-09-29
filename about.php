@@ -110,6 +110,11 @@
                         <h3 class="vmh-title">Our Mission</h3>
                     </div>
                     <div class="vmh-underline"></div>
+                    <div class="vmh-text-wrapper">
+                        <p class="vmh-text">
+                            sa paghatag ug epiktibo, transparent ug maka-katawhang pagdumala nga nagpalambo sa kalinaw ug kahusay, naghatod ug kalidad nga mga serbisyong publiko, nagapalipod sa kinaiyahan, ug nagpalambo sa kaayohan sa matag residente pinaagi sa aktibong partisipasyon sa kumonidad ug matinud-anong liderato.
+                        </p>
+                    </div>
                     <div class="vmh-bg-illustration mission-bg"></div>
                 </div>
 
