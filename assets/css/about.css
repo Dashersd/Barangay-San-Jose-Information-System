@@ -124,12 +124,35 @@
     margin-bottom: 1.5rem;
 }
 
+.vmh-text-wrapper {
+    position: relative;
+    z-index: 2;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Custom Scrollbar for vmh text */
+.vmh-text-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+.vmh-text-wrapper::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05); 
+    border-radius: 4px;
+}
+.vmh-text-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(26, 115, 232, 0.4); 
+    border-radius: 4px;
+}
+.vmh-text-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(26, 115, 232, 0.7); 
+}
+
 .vmh-text {
     font-size: 0.95rem;
     color: #475569;
     line-height: 1.6;
-    position: relative;
-    z-index: 2;
+    margin: 0;
 }
 
 /* Faint background illustrations using custom SVGs */

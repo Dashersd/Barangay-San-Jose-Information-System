@@ -20,7 +20,7 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
-    <link rel="stylesheet" href="assets/css/about.css">
+    <link rel="stylesheet" href="assets/css/about.css?v=2">
 </head>
 
 <body>
@@ -117,6 +117,11 @@
                         <h3 class="vmh-title">Our History</h3>
                     </div>
                     <div class="vmh-underline"></div>
+                    <div class="vmh-text-wrapper">
+                        <p class="vmh-text">
+                            Barangay San Jose is once a "Forest". It Became sitio Dumihat of Barangay Dumara. The 1st Family who discover the Place and decided to live was Mr. TEMOTEO DELUNA and Mrs.EULOGEIA DELUNA. In year 1951, there was a group of strange people name APO Company who cut the trees. The family decided to make a farm to plant corn vegetables, and other plants to be eaten and sold in the future generation . they encourage other people to live with them in this place to make it a sitio before to start they the plan, the family decided to meet Datu lumok Imbing , datu n the subanen tribe to ask ,to ask permission ,year 1953, the family donated a lot to create a building for catholic religion, in march 1956, the building was erected a senior san jose chapel, a name before the celebration of patron Senior san jose In year 1957, Lapuyan become a Municipality by the Mayor coco sia. on November 20,1965 , the Municipal Mayor declared that sitio dumihat will become a barangay san jose name before the catholic church and that's the month of celebration every year. Later, the Subanen Tribe came to live in the Barangay and until the Subanen and Bisaya Tribe are living together in this place
+                        </p>
+                    </div>
                     <div class="vmh-bg-illustration history-bg"></div>
                 </div>
             </div>
