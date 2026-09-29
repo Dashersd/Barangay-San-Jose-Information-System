@@ -276,7 +276,6 @@ img {
     top: calc(100% + 15px);
     left: 50%;
     transform: translateX(-50%);
-    overflow: hidden;
     padding: 0;
 }
 
@@ -301,14 +300,20 @@ img {
     text-decoration: none;
     display: block;
     font-size: 0.85rem !important;
-    border-radius: 0 !important;
     text-align: center;
     white-space: nowrap;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.dropdown-content a:first-child {
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+}
+
 .dropdown-content a:last-child {
     border-bottom: none;
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
 }
 
 .dropdown-content a:hover {
