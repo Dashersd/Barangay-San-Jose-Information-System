@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Barangay San Jose Web-Based Information System - Contact Us
 ?>
 <!DOCTYPE html>
@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/contact.css">
 </head>
 
@@ -144,8 +144,8 @@
 
                         <ul class="schedule-list">
                             <li class="schedule-item active-schedule">
-                                <span class="schedule-day">Monday â€“ Friday</span>
-                                <span class="schedule-hours">8:00 AM â€“ 5:00 PM</span>
+                                <span class="schedule-day">Monday – Friday</span>
+                                <span class="schedule-hours">8:00 AM – 5:00 PM</span>
                             </li>
                             <li class="schedule-item">
                                 <span class="schedule-day">Saturday & Sunday</span>
@@ -211,10 +211,12 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=2"></script>
 
 </body>
 
 </html>
+
+
 
 

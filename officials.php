@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/officials.css">
 </head>
 
@@ -203,10 +203,12 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=2"></script>
 
 </body>
 
 </html>
+
+
 
 
