@@ -41,17 +41,19 @@
             <!-- Desktop Links -->
             <ul class="navbar-links">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="about.php">About Us</a></li>
-                                <li class="dropdown">
-                    <a href="javascript:void(0)" class="nav-link">Officials</a>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="nav-link">About Us <i class="fas fa-chevron-down" style="font-size: 0.8em; margin-left: 5px;"></i></a>
                     <div class="dropdown-content">
+                        <a href="about.php#history">History</a>
+                        <a href="vision.php">Vision</a>
+                        <a href="mission.php">Mission</a>
                         <a href="officials.php">Barangay Officials</a>
                         <a href="skofficials.php">SK Officials</a>
                     </div>
                 </li>
                 <li><a href="announcement.php">Announcement</a></li>
                 <li><a href="gallery.php">Gallery</a></li>
-                <li><a href="index.php#spot-map">Spot Map</a></li>
+                <li><a href="spotmap.php">Spot Map</a></li>
                 <li><a href="contact.php" class="active">Contact</a></li>
             </ul>
             <!-- Right Side: Admin Login -->

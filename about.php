@@ -41,17 +41,19 @@
             <!-- Desktop Links -->
             <ul class="navbar-links">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="about.php" class="active">About Us</a></li>
-                                <li class="dropdown">
-                    <a href="javascript:void(0)" class="nav-link">Officials</a>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="nav-link active">About Us <i class="fas fa-chevron-down" style="font-size: 0.8em; margin-left: 5px;"></i></a>
                     <div class="dropdown-content">
+                        <a href="about.php#history">History</a>
+                        <a href="vision.php">Vision</a>
+                        <a href="mission.php">Mission</a>
                         <a href="officials.php">Barangay Officials</a>
                         <a href="skofficials.php">SK Officials</a>
                     </div>
                 </li>
                 <li><a href="announcement.php">Announcement</a></li>
                 <li><a href="gallery.php">Gallery</a></li>
-                <li><a href="index.php#spot-map">Spot Map</a></li>
+                <li><a href="spotmap.php">Spot Map</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
             <!-- Right Side: Admin Login -->
@@ -76,64 +78,24 @@
     <main class="about-main-section">
         <div class="container about-container-new">
             
-            <!-- Intro Section -->
-            <div class="about-intro">
-                <div class="heading-underline-blue"></div>
-                <h2 class="about-section-heading">About Barangay San Jose</h2>
-                <p class="about-section-desc">Barangay San Jose is a vibrant and united community committed to providing quality public service, promoting peace and order, and creating a sustainable and progressive future for all its residents.<br>Through the Bayanihan spirit, we strive for a safer, healthier, and more prosperous San Jose.</p>
-            </div>
-
-            <!-- Vision, Mission, History Cards -->
-            <div class="vmh-grid">
-                <!-- Vision Card -->
-                <div class="vmh-card">
-                    <div class="vmh-header">
-                        <div class="vmh-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                        </div>
-                        <h3 class="vmh-title">Our Vision</h3>
-                    </div>
-                    <div class="vmh-underline"></div>
-                    <div class="vmh-text-wrapper">
-                        <p class="vmh-text">
-                            Usa ka malinawon, mauswagon, ug empowered nga barangay diin ang mga residente nagkinabuhi nga nagkahiusa adunay aksesa sa batakang serbisyo, ug aktibong miapil sa malungtarong kalambuan.
-                        </p>
-                    </div>
-                    <div class="vmh-bg-illustration vision-bg"></div>
+            <div class="history-layout">
+                <div class="history-header">
+                    <span class="history-subtitle">ABOUT US <hr></span>
+                    <h2 class="history-title">Our Barangay</h2>
                 </div>
 
-                <!-- Mission Card -->
-                <div class="vmh-card">
-                    <div class="vmh-header">
-                        <div class="vmh-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </div>
-                        <h3 class="vmh-title">Our Mission</h3>
-                    </div>
-                    <div class="vmh-underline"></div>
-                    <div class="vmh-text-wrapper">
-                        <p class="vmh-text">
-                            sa paghatag ug epiktibo, transparent ug maka-katawhang pagdumala nga nagpalambo sa kalinaw ug kahusay, naghatod ug kalidad nga mga serbisyong publiko, nagapalipod sa kinaiyahan, ug nagpalambo sa kaayohan sa matag residente pinaagi sa aktibong partisipasyon sa kumonidad ug matinud-anong liderato.
-                        </p>
-                    </div>
-                    <div class="vmh-bg-illustration mission-bg"></div>
-                </div>
+                <div class="history-content">
+                    <img src="assets/images/gallery/Brgy Hall.jpg" alt="Barangay Hall" class="history-center-img" onerror="this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Barangay+Hall'">
+                    
+                    <p>Maruing once under the jurisdiction of Margosatubig, before it was declared as a Municipality in 1964 during the time of late Diosdado Macapagal and then reverted into Barangay in 1965. According to the Subanen leaders of Elders, the term Maruing came from two[2] Subanen words "MARU" which means bad odor and "DUWING" a Subanen word a term for gigantic wild boar having fangs that grew out rares from his mouth because of the incredible strength. According to the story, a Subanen hunter went to the forest looking for wild animals. Using his spear the hunter was able to hit a wild boar or the DUWING but unluckily failed to catch it. Thus, the hunter kept on looking the animal until found a very nice place where two rivers meet creating a big river before it proceeds to the sea. Because he did not find the wild boar but instead the beautiful place, he went home and reported to his co-villagers about a beautiful place where they could establish their community because of its strategic location and abundance of water.</p>
 
-                <!-- History Card -->
-                <div class="vmh-card">
-                    <div class="vmh-header">
-                        <div class="vmh-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/><path d="M8 10h.01"/><path d="M16 10h.01"/></svg>
-                        </div>
-                        <h3 class="vmh-title">Our History</h3>
-                    </div>
-                    <div class="vmh-underline"></div>
-                    <div class="vmh-text-wrapper">
-                        <p class="vmh-text">
-                            Barangay San Jose is once a "Forest". It Became sitio Dumihat of Barangay Dumara. The 1st Family who discover the Place and decided to live was Mr. TEMOTEO DELUNA and Mrs.EULOGEIA DELUNA. In year 1951, there was a group of strange people name APO Company who cut the trees. The family decided to make a farm to plant corn vegetables, and other plants to be eaten and sold in the future generation . they encourage other people to live with them in this place to make it a sitio before to start they the plan, the family decided to meet Datu lumok Imbing , datu n the subanen tribe to ask ,to ask permission ,year 1953, the family donated a lot to create a building for catholic religion, in march 1956, the building was erected a senior san jose chapel, a name before the celebration of patron Senior san jose In year 1957, Lapuyan become a Municipality by the Mayor coco sia. on November 20,1965 , the Municipal Mayor declared that sitio dumihat will become a barangay san jose name before the catholic church and that's the month of celebration every year. Later, the Subanen Tribe came to live in the Barangay and until the Subanen and Bisaya Tribe are living together in this place
-                        </p>
-                    </div>
-                    <div class="vmh-bg-illustration history-bg"></div>
+                    <p>After few days, the hunter and his community decided to visit the said beautiful place and there they observed "MARU" or bad odor where they believed to be the "DUWING" that escaped from hunting. Since they do not know the name of the place, they combined the two words of MARU and DUWING and they called the place Marwing. It was only changed to MARUING during the time of Barangay Captain Lorenzo Bugao.</p>
+
+                    <p>Barangay Maruing is the home of the Subanen, one of the 18 major tribes of the Lumad in Mindanao. The first Subanen families who inhabited the place were the families of Mangangot, Balabad, Bugao and Hupa and the first chinesse families were Pula, Wasing and Costan whom later killed by bandits. From the Muslim tribes, it was the families of Manopod who went and settle first in Maruing.</p>
+
+                    <p>Based on the record, of the Municipal Planning Development Office of Lapuyan, Zamboanga del Sur, Maruing was created into Barangay on January 17, 1958 by Virtue of Republic Act 226 from from being a Sitio of once Barangay Lapuyan, which was under the Municipality of Margosatubig. Even before the formal creation of Barangay Maruing, the American Government had already appointed a Teniente del Barrio or Chief Executive aside from the traditional political set-up of Datu System, which is headed by Datu Sapalao. In fact, there were times that Datu Sapalao was also appointed as Teniente del Barrio, particularly Datu Sapalao Consing Bugao in 1930's and Datu Sapalao Mandag Humoa in 1940's.</p>
+
+                    <p>The second Teniente del Barrio or Barrio at Large after Maruing was fully recognized as a Barangay was Tere Mangangot who served from 1958-1961. His councillors include Ajerol Arip, John Banagan, Tumandio Lesayao, Tumindeg Tahupis, and Tumanghis Antay. During his term, they constructed a bridged at the center of Barangay and they actively participated the clean and green Revolution Program of the National Government. In 1961, Timuay Tumindeg Tahupis, member of the Tribal Leaders of Maruing succeeded Tere Mangangot until 1964. He continued the projects of his predecessor and led in developing the sports activities and competitions with other municipalities.</p>
                 </div>
             </div>
 

@@ -39,17 +39,19 @@
             <!-- Desktop Links -->
             <ul class="navbar-links">
                 <li><a href="index.php" class="active">Home</a></li>
-                <li><a href="about.php">About Us</a></li>
-                                <li class="dropdown">
-                    <a href="javascript:void(0)" class="nav-link">Officials</a>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="nav-link">About Us <i class="fas fa-chevron-down" style="font-size: 0.8em; margin-left: 5px;"></i></a>
                     <div class="dropdown-content">
+                        <a href="about.php#history">History</a>
+                        <a href="vision.php">Vision</a>
+                        <a href="mission.php">Mission</a>
                         <a href="officials.php">Barangay Officials</a>
                         <a href="skofficials.php">SK Officials</a>
                     </div>
                 </li>
                 <li><a href="announcement.php">Announcement</a></li>
                 <li><a href="gallery.php">Gallery</a></li>
-                <li><a href="index.php#spot-map">Spot Map</a></li>
+                <li><a href="spotmap.php">Spot Map</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
             <!-- Right Side: Admin Login -->
@@ -114,6 +116,9 @@
                         <h3 class="official-name">Hon. Juan Dela Cruz</h3>
                         <p class="official-title">Barangay Captain</p>
                         <p class="official-quote">"Committed to providing transparent and dedicated public service for the betterment of every resident in Barangay San Jose."</p>
+                        <div class="official-action" style="margin-top: 20px; text-align: center;">
+                            <a href="officials.php" class="btn btn-primary">View Barangay Officials</a>
+                        </div>
                     </div>
                 </div>
 
@@ -126,6 +131,9 @@
                         <h3 class="official-name">Hon. Mark Reyes</h3>
                         <p class="official-title">Sangguniang Kabataan Chairman</p>
                         <p class="official-quote">"Empowering the youth of Barangay San Jose through active participation in sports, education, and community development."</p>
+                        <div class="official-action" style="margin-top: 20px; text-align: center;">
+                            <a href="skofficials.php" class="btn btn-primary">View SK Officials</a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,303 @@
+/* Spot Map Layout Specific Styles */
+.spotmap-section {
+    padding: 60px 0;
+    background-color: #f8fafc;
+}
+
+.sm-layout-container {
+    display: flex;
+    gap: 40px;
+    align-items: stretch;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.sm-sidebar {
+    width: 400px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.sm-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.sm-badge-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #10b981;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.sm-badge-title svg {
+    width: 14px;
+    height: 14px;
+}
+
+.sm-card-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #002e5b;
+    margin: 0 0 25px 0;
+}
+
+.sm-legend-section {
+    border-top: 1px solid #f1f5f9;
+    padding-top: 25px;
+}
+
+.sm-legend-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #002e5b;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sm-legend-title svg {
+    width: 20px;
+    height: 20px;
+}
+
+.sm-legend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 10px;
+}
+
+.sm-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.sm-icon-bg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: #f8fafc;
+}
+
+.sm-icon-bg svg {
+    width: 14px;
+    height: 14px;
+}
+
+.sm-purok-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.sm-purok-badge {
+    background-color: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.sm-purok-badge:hover {
+    background-color: #fdb913;
+    color: #ffffff;
+    border-color: #fdb913;
+}
+
+.sm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #fdb913;
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.sm-btn:hover {
+    background-color: #e5a710;
+    color: #ffffff;
+}
+
+.sm-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Map Image Section */
+.sm-map-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.sm-map-image-wrapper {
+    width: 100%;
+    height: 100%;
+    background-color: #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    min-height: 500px;
+    transition: transform 0.3s ease;
+}
+
+.sm-map-image-wrapper:hover {
+    transform: scale(1.01);
+}
+
+.sm-map-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Map Pin Styling */
+.map-pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.map-pin:hover {
+    transform: translate(-50%, -110%) scale(1.1);
+}
+
+.map-pin svg {
+    width: 100%;
+    height: 100%;
+    drop-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.pin-pulse {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 15px;
+    background-color: rgba(239, 68, 68, 0.6);
+    border-radius: 50%;
+    z-index: -1;
+    animation: pulse 1.5s infinite;
+}
+
+.pin-label {
+    position: absolute;
+    top: -25px;
+    background-color: #ffffff;
+    color: #002e5b;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.map-pin:hover .pin-label {
+    opacity: 1;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translateX(-50%) scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-50%) scale(2.5);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 992px) {
+    .sm-layout-container {
+        flex-direction: column;
+    }
+    .sm-sidebar {
+        width: 100%;
+    }
+    .sm-map-image-wrapper {
+        min-height: 400px;
+    }
+}
+
+.sm-overview-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #002e5b; /* San Jose Blue */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 46, 91, 0.2);
+}
+
+.sm-overview-btn:hover {
+    background-color: #fdb913; /* San Jose Yellow */
+    color: #002e5b;
+    transform: translateY(-2px);
+}
+
+.sm-overview-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.sm-floating-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    margin-bottom: 0;
+}

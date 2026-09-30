@@ -1,0 +1,101 @@
+/* Vision Specific Styles */
+
+.vision-section {
+    padding: 80px 0;
+    background-color: #f8fafc;
+}
+
+.vm-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.vm-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 50px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vm-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.vm-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.vm-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #f0f7ff;
+    color: #004b93;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.vm-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.vm-underline {
+    width: 60px;
+    height: 4px;
+    background-color: #fdb913;
+    margin-bottom: 25px;
+    border-radius: 2px;
+}
+
+.vm-text-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+.vm-text {
+    font-size: 1.15rem;
+    color: #475569;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+/* Decorative background elements */
+.vm-card::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(0,75,147,0.05) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+@media (max-width: 768px) {
+    .vm-card {
+        padding: 30px;
+    }
+    
+    .vm-title {
+        font-size: 1.6rem;
+    }
+    
+    .vm-text {
+        font-size: 1.05rem;
+    }
+}

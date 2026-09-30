@@ -22,6 +22,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/skofficials.css">
+    <link rel="stylesheet" href="assets/css/org-chart.css">
 </head>
 
 <body>
@@ -41,17 +42,19 @@
             <!-- Desktop Links -->
             <ul class="navbar-links">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="about.php">About Us</a></li>
-                                <li class="dropdown">
-                    <a href="javascript:void(0)" class="nav-link active">Officials</a>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="nav-link active">About Us <i class="fas fa-chevron-down" style="font-size: 0.8em; margin-left: 5px;"></i></a>
                     <div class="dropdown-content">
+                        <a href="about.php#history">History</a>
+                        <a href="vision.php">Vision</a>
+                        <a href="mission.php">Mission</a>
                         <a href="officials.php">Barangay Officials</a>
                         <a href="skofficials.php" class="active">SK Officials</a>
                     </div>
                 </li>
                 <li><a href="announcement.php">Announcement</a></li>
                 <li><a href="gallery.php">Gallery</a></li>
-                <li><a href="index.php#spot-map">Spot Map</a></li>
+                <li><a href="spotmap.php">Spot Map</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
             <!-- Right Side: Admin Login -->
@@ -72,88 +75,130 @@
         </div>
     </section>
 
-    <!-- Officials Content -->
-    <section class="officials-page-bg">
-        <div class="officials-container">
-            <!-- Top Section -->
-            <div class="officials-top">
-                <div class="officials-header-text">
-                    <h1 class="officials-heading">Sangguniang Kabataan (SK) Officials</h1>
-                    <p class="officials-subtext">The SK officials are dedicated youth leaders who work together to empower the youth of Barangay San Jose.</p>
-                </div>
-                
-                <div class="captain-card">
-                    <img src="assets/images/default-avatar.png" alt="Juan Dela Cruz" class="captain-img" onerror="this.src='https://ui-avatars.com/api/?name=Mark+Reyes&background=random&color=fff&size=130'">
-                    <div class="captain-info">
-                        <span class="badge-blue">SK Chairperson</span>
-                        <h2 class="captain-name">Mark Reyes</h2>
-                        <div class="captain-role">SK Chairperson</div>
-                        <p class="captain-quote">"Empowering the youth of Barangay San Jose."</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Middle Row -->
-            <div class="officials-row">
-                <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Ms. Liza Santos" onerror="this.src='https://ui-avatars.com/api/?name=Liza+Santos&background=random&color=fff'">
-                    <span class="badge-blue" style="background-color: #0ea5e9;">Secretary</span>
-                    <h4>Ms. Liza Santos</h4>
-                    <p>SK Secretary</p>
-                </div>
-                <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Mr. Antonio Luna" onerror="this.src='https://ui-avatars.com/api/?name=Antonio+Luna&background=random&color=fff'">
-                    <span class="badge-blue" style="background-color: #10b981;">Treasurer</span>
-                    <h4>Mr. Antonio Luna</h4>
-                    <p>SK Treasurer</p>
-                </div>
-                <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Ana Villanueva" onerror="this.src='https://ui-avatars.com/api/?name=Ana+Villanueva&background=random&color=fff'">
-                    <span class="badge-blue">SK Kagawad</span>
-                    <h4>Ana Villanueva</h4>
-                    <p>SK Kagawad</p>
-                </div>
-                <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Luis Garcia" onerror="this.src='https://ui-avatars.com/api/?name=Luis+Garcia&background=random&color=fff'">
-                    <span class="badge-blue">SK Kagawad</span>
-                    <h4>Luis Garcia</h4>
-                    <p>SK Kagawad</p>
-                </div>
-                <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Maria Santos" onerror="this.src='https://ui-avatars.com/api/?name=Maria+Santos&background=random&color=fff'">
-                    <span class="badge-blue">SK Kagawad</span>
-                    <h4>Maria Santos</h4>
-                    <p>SK Kagawad</p>
-                </div>
-                <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Juanito Perez" onerror="this.src='https://ui-avatars.com/api/?name=Juanito+Perez&background=random&color=fff'">
-                    <span class="badge-blue">SK Kagawad</span>
-                    <h4>Juanito Perez</h4>
-                    <p>SK Kagawad</p>
-                </div>
-                <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Elena Cruz" onerror="this.src='https://ui-avatars.com/api/?name=Elena+Cruz&background=random&color=fff'">
-                    <span class="badge-blue">SK Kagawad</span>
-                    <h4>Elena Cruz</h4>
-                    <p>SK Kagawad</p>
-                </div>
-                <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Ricardo Gomez" onerror="this.src='https://ui-avatars.com/api/?name=Ricardo+Gomez&background=random&color=fff'">
-                    <span class="badge-blue">SK Kagawad</span>
-                    <h4>Ricardo Gomez</h4>
-                    <p>SK Kagawad</p>
-                </div>
-                <div class="official-card">
-                    <img src="assets/images/default-avatar.png" alt="Pedro Reyes" onerror="this.src='https://ui-avatars.com/api/?name=Pedro+Reyes&background=random&color=fff'">
-                    <span class="badge-blue">SK Kagawad</span>
-                    <h4>Pedro Reyes</h4>
-                    <p>SK Kagawad</p>
-                </div>
-            </div>
-
-
-
+    <!-- Officials Content (Org Chart Layout) -->
+    <section class="org-chart-container">
+        
+        <!-- Level 1: Executive Leadership -->
+        <div class="org-section-header">
+            <h2 class="org-section-title">SK Executive Leadership</h2>
+            <p class="org-section-subtitle">Head of the Sangguniang Kabataan</p>
+            <div class="org-divider"></div>
         </div>
+
+        <div class="org-level">
+            <div class="org-card-wide">
+                <div class="org-avatar-wide">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <div class="org-info-wide">
+                    <h3 class="org-name-wide">Hon. Mark Reyes</h3>
+                    <p class="org-role-wide">SK Chairperson</p>
+                    <p class="org-desc-wide">Presiding officer of the Sangguniang Kabataan, leading youth empowerment and community development programs in Barangay San Jose.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 2: SK Officers -->
+        <div class="org-section-header" style="margin-top: 50px;">
+            <h2 class="org-section-title">SK Officers</h2>
+            <p class="org-section-subtitle">SK Secretary & Treasurer</p>
+            <div class="org-divider"></div>
+        </div>
+
+        <div class="org-level">
+            <div class="org-card">
+                <div class="org-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <h3 class="org-name">Ms. Liza Santos</h3>
+                <p class="org-role">SK Secretary</p>
+
+            </div>
+            
+            <div class="org-card">
+                <div class="org-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <h3 class="org-name">Mr. Antonio Luna</h3>
+                <p class="org-role">SK Treasurer</p>
+
+            </div>
+        </div>
+
+        <!-- Level 3: SK Members -->
+        <div class="org-section-header" style="margin-top: 50px;">
+            <h2 class="org-section-title">SK Kagawads</h2>
+            <p class="org-section-subtitle">Committee Chairpersons</p>
+            <div class="org-divider"></div>
+        </div>
+
+        <div class="org-level">
+            <div class="org-card">
+                <div class="org-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <h3 class="org-name">Hon. Ana Villanueva</h3>
+                <p class="org-role">SK Kagawad 1</p>
+
+            </div>
+
+            <div class="org-card">
+                <div class="org-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <h3 class="org-name">Hon. Luis Garcia</h3>
+                <p class="org-role">SK Kagawad 2</p>
+
+            </div>
+
+            <div class="org-card">
+                <div class="org-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <h3 class="org-name">Hon. Maria Santos</h3>
+                <p class="org-role">SK Kagawad 3</p>
+
+            </div>
+        </div>
+
+        <div class="org-level">
+            <div class="org-card">
+                <div class="org-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <h3 class="org-name">Hon. Juanito Perez</h3>
+                <p class="org-role">SK Kagawad 4</p>
+
+            </div>
+
+            <div class="org-card">
+                <div class="org-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <h3 class="org-name">Hon. Elena Cruz</h3>
+                <p class="org-role">SK Kagawad 5</p>
+
+            </div>
+
+            <div class="org-card">
+                <div class="org-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <h3 class="org-name">Hon. Ricardo Gomez</h3>
+                <p class="org-role">SK Kagawad 6</p>
+
+            </div>
+
+            <div class="org-card">
+                <div class="org-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <h3 class="org-name">Hon. Pedro Reyes</h3>
+                <p class="org-role">SK Kagawad 7</p>
+
+            </div>
+        </div>
+
     </section>
 
     <!-- Footer Section -->

@@ -1,0 +1,194 @@
+/* org-chart.css - Organizational Chart Layout for Officials */
+
+.org-chart-container {
+    padding: 60px 20px;
+    background-color: #f8fafc;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+}
+
+.org-section-header {
+    margin-bottom: 25px;
+}
+
+.org-section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #002e5b; /* Branding dark blue */
+    margin: 0 0 5px 0;
+}
+
+.org-section-subtitle {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.org-divider {
+    width: 60px;
+    height: 4px;
+    background-color: #fdb913; /* Branding yellow */
+    margin: 15px auto 40px auto;
+    border-radius: 2px;
+}
+
+/* Flex rows for pyramid structure */
+.org-level {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+/* Top Wide Card */
+.org-card-wide {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    max-width: 650px;
+    width: 100%;
+    margin: 0 auto;
+    border-left: 5px solid #fdb913;
+    transition: transform 0.3s ease;
+}
+
+.org-card-wide:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.org-avatar-wide {
+    width: 80px;
+    height: 80px;
+    background-color: #f0f7ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 25px;
+    flex-shrink: 0;
+    border: 3px solid #e0f2fe;
+}
+
+.org-avatar-wide svg {
+    width: 40px;
+    height: 40px;
+    color: #004b93;
+}
+
+.org-info-wide {
+    text-align: left;
+}
+
+.org-name-wide {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 5px 0;
+}
+
+.org-role-wide {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #004b93;
+    margin: 0 0 8px 0;
+}
+
+.org-desc-wide {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Regular Grid Cards */
+.org-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 25px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top: 4px solid #004b93;
+    transition: transform 0.3s ease;
+}
+
+.org-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.org-avatar {
+    width: 65px;
+    height: 65px;
+    background-color: #f0f7ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    border: 3px solid #e0f2fe;
+}
+
+.org-avatar svg {
+    width: 32px;
+    height: 32px;
+    color: #004b93;
+}
+
+.org-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 5px 0;
+    text-align: center;
+}
+
+.org-role {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #004b93;
+    margin: 0 0 15px 0;
+    text-align: center;
+}
+
+.org-committee {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    color: #475569;
+    width: 100%;
+    background-color: #f8fafc;
+    text-align: center;
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    .org-card-wide {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .org-avatar-wide {
+        margin: 0 0 15px 0;
+    }
+    
+    .org-info-wide {
+        text-align: center;
+    }
+    
+    .org-card {
+        width: 100%;
+        max-width: 300px;
+    }
+}
