@@ -62,13 +62,21 @@
                         <li><a href="skofficials.php">SK Officials</a></li>
                     </ul>
                 </li>
-                <li>
-                    <a href="#">
+                <li class="admin-dropdown">
+                    <a href="javascript:void(0)" class="dropdown-toggle">
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                         </span>
                         Spot Map
+                        <svg class="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </a>
+                    <ul class="admin-dropdown-menu">
+                        <li><a href="legends.php">Legends</a></li>
+                        <li><a href="purok1.php">Purok 1</a></li>
+                        <li><a href="purok2.php">Purok 2</a></li>
+                        <li><a href="purok3.php">Purok 3</a></li>
+                        <li><a href="purok4.php">Purok 4</a></li>
+                    </ul>
                 </li>
                 <li>
                     <a href="mediagallery.php">

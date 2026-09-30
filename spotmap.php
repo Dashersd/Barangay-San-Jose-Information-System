@@ -194,8 +194,8 @@
                 // Handle Pin Click
                 if (pin && mainImage) {
                     pin.addEventListener('click', function() {
-                        // Change the image source to map2.png
-                        mainImage.src = 'assets/images/Map/map2.png';
+                        // Change the image source to dont_change_or_and_anything_20260930103702.jpg
+                        mainImage.src = 'assets/images/Map/dont_change_or_and_anything_20260930103702.jpg';
                         // Optionally hide the pin after click
                         pin.style.display = 'none';
                     });

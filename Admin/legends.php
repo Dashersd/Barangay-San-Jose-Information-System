@@ -1,12 +1,12 @@
 <?php
-// Manage Services
+// Manage Legends
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Services - Admin Panel</title>
+    <title>Manage Legends - Admin Panel</title>
 
     <!-- Favicon / Tab Logo -->
     <link rel="icon" type="image/png" href="../assets/images/San Jose Logo 2.png">
@@ -20,7 +20,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/service.css">
+    <link rel="stylesheet" href="css/legends_v2.css">
 </head>
 <body>
 
@@ -41,7 +41,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="adminabout.php">
+                    <a href="adminabout.php" class="active">
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                         </span>
@@ -86,7 +86,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="service.php" class="active">
+                    <a href="service.php">
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                         </span>
@@ -124,7 +124,7 @@
         <main class="admin-main">
             <!-- Header -->
             <header class="admin-header">
-                <h1>Manage Services</h1>
+                <h1>Manage Legends</h1>
                 <div class="header-user-profile">
                     <div class="user-text">
                         <span class="user-name">System Admin</span>
@@ -135,93 +135,66 @@
             </header>
 
             <!-- Content Area -->
+            <!-- Content Area -->
             <div class="admin-content">
-                <div class="content-header d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem;">
-                    <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--text, #1C1917);">Barangay Services</h2>
-                    <button id="addServiceBtn" class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600;">
-                        + Add New Service
-                    </button>
+                <div class="content-header">
+                    <h2>Add House to Map</h2>
+                    <p>Upload a marker, add members, and drag the icon to save to the map</p>
                 </div>
 
-                <div class="section-panel">
-                    <div class="panel-table-wrapper">
-                        <table class="panel-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 60px;">Icon</th>
-                                    <th>Service Name</th>
-                                    <th>Description</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="service-icon">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                                        </div>
-                                    </td>
-                                    <td><strong>Barangay Clearance</strong></td>
-                                    <td class="description-cell">Essential document for employment, business...</td>
-                                    <td><span class="badge badge-active">Active</span></td>
-                                    <td>
-                                        <button class="btn-action edit-btn">Edit</button>
-                                        <button class="btn-action delete-btn">Delete</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="map-preview-area" id="mapPreviewArea">
+                    <img src="../assets/images/Map/dont_change_or_and_anything_20260930103702.jpg" alt="Map Background" class="map-preview-image">
                 </div>
+
+                <form action="#" method="POST" enctype="multipart/form-data" class="legend-form">
+                    
+                    <div class="form-group">
+                        <label for="houseNumber">House Number</label>
+                        <input type="text" id="houseNumber" name="houseNumber" class="form-control" placeholder="e.g. 123">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="markerImage">Marker Image (Icon shown on map)</label>
+                        <input type="file" id="markerImage" name="markerImage" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="markerWidth">Marker Width (px)</label>
+                            <input type="number" id="markerWidth" name="markerWidth" class="form-control" value="40">
+                        </div>
+                        <div class="form-col">
+                            <label for="markerHeight">Marker Height (px)</label>
+                            <input type="number" id="markerHeight" name="markerHeight" class="form-control" value="40">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="topPosition">Top position (%)</label>
+                            <input type="number" id="topPosition" name="topPosition" class="form-control" value="50.00" step="0.01">
+                        </div>
+                        <div class="form-col">
+                            <label for="leftPosition">Left position (%)</label>
+                            <input type="number" id="leftPosition" name="leftPosition" class="form-control" value="50.00" step="0.01">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-save-map">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        Save to Map
+                    </button>
+                </form>
 
             </div>
         </main>
     </div>
 
-    <!-- Add Service Modal -->
-    <div id="serviceModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add New Service</h2>
-                <button type="button" class="modal-close">&times;</button>
-            </div>
-            <form action="#" method="POST">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Service Name</label>
-                        <input type="text" placeholder="e.g., Barangay Clearance" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea placeholder="Brief description of the service..." rows="4" class="form-control"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Icon</label>
-                        <select class="form-control">
-                            <option value="">Select an icon...</option>
-                            <option value="document">Document</option>
-                            <option value="certificate">Certificate</option>
-                            <option value="id-card">ID Card</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select class="form-control">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Service</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script src="js/dashboard.js"></script>
 </body>
 </html>
+
+
+
+
 
