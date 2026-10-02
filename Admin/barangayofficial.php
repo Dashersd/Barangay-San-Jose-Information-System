@@ -163,42 +163,197 @@
                     </button>
                 </div>
 
-                <div class="section-panel">
-                    <div class="panel-table-wrapper">
-                        <table class="panel-table">
-                            <thead>
-                                <tr>
-                                    <th>Photo</th>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Term Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><div class="avatar-placeholder">JD</div></td>
-                                    <td><strong>Hon. Juan Dela Cruz</strong></td>
-                                    <td>Punong Barangay</td>
-                                    <td><span class="badge badge-active">Active</span></td>
-                                    <td>
-                                        <button class="btn-action">Edit</button>
-                                        <button class="btn-action text-danger">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><div class="avatar-placeholder">MS</div></td>
-                                    <td><strong>Maria Santos</strong></td>
-                                    <td>Barangay Secretary</td>
-                                    <td><span class="badge badge-active">Active</span></td>
-                                    <td>
-                                        <button class="btn-action">Edit</button>
-                                        <button class="btn-action text-danger">Delete</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <style>
+.org-chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px 0;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.org-level {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.official-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 170px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.official-image-container {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    background: #e2e8f0;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    box-sizing: border-box;
+    color: #475569;
+    font-size: 14px;
+}
+
+.official-name-pill {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e3a8a;
+    color: white;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.official-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+.btn-edit-official {
+    width: 100%;
+    background: #f1f5f9;
+    color: #0f172a;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+}
+
+.btn-edit-official:hover {
+    background: #e2e8f0;
+}
+</style>
+
+                <div class="org-chart-container">
+                    <!-- Level 1: Captain -->
+                    <div class="org-level">
+                        <div class="official-card">
+                            <div class="official-image-container">
+                                Barangay Captain
+                                <div class="official-name-pill">Name</div>
+                            </div>
+                            <div class="official-title">BARANGAY CAPTAIN</div>
+                            <button class="btn-edit-official">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                Edit
+                            </button>
+                        </div>
                     </div>
+
+                    <!-- Level 2: Secretary & Treasurer -->
+                    <div class="org-level">
+                        <div class="official-card">
+                            <div class="official-image-container">
+                                Barangay Secretary
+                                <div class="official-name-pill">Name</div>
+                            </div>
+                            <div class="official-title">BARANGAY SECRETARY</div>
+                            <button class="btn-edit-official">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                Edit
+                            </button>
+                        </div>
+                        <div class="official-card">
+                            <div class="official-image-container">
+                                Barangay Treasurer
+                                <div class="official-name-pill">Name</div>
+                            </div>
+                            <div class="official-title">BARANGAY TREASURER</div>
+                            <button class="btn-edit-official">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Level 3: Kagawads -->
+                    <div class="org-level">
+                        <div class="official-card">
+                            <div class="official-image-container">
+                                Barangay Kagawad
+                                <div class="official-name-pill">Name</div>
+                            </div>
+                            <div class="official-title">BARANGAY KAGAWAD</div>
+                            <button class="btn-edit-official">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                Edit
+                            </button>
+                        </div>
+                        <div class="official-card">
+                            <div class="official-image-container">
+                                Barangay Kagawad
+                                <div class="official-name-pill">Name</div>
+                            </div>
+                            <div class="official-title">BARANGAY KAGAWAD</div>
+                            <button class="btn-edit-official">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                Edit
+                            </button>
+                        </div>
+                        <div class="official-card">
+                            <div class="official-image-container">
+                                Barangay Kagawad
+                                <div class="official-name-pill">Name</div>
+                            </div>
+                            <div class="official-title">BARANGAY KAGAWAD</div>
+                            <button class="btn-edit-official">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                Edit
+                            </button>
+                        </div>
+                        <div class="official-card">
+                            <div class="official-image-container">
+                                Barangay Kagawad
+                                <div class="official-name-pill">Name</div>
+                            </div>
+                            <div class="official-title">BARANGAY KAGAWAD</div>
+                            <button class="btn-edit-official">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                Edit
+                            </button>
+                        </div>
+                        <div class="official-card">
+                            <div class="official-image-container">
+                                Barangay Kagawad
+                                <div class="official-name-pill">Name</div>
+                            </div>
+                            <div class="official-title">BARANGAY KAGAWAD</div>
+                            <button class="btn-edit-official">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                Edit
+                            </button>
+                        </div>
+                    </div></div>
                 </div>
 
             </div>
