@@ -1,12 +1,64 @@
 <?php
-// Manage Purok 2
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $houseNumber = $_POST['houseNumber'] ?? '';
+    $husbandName = $_POST['husbandName'] ?? '';
+    $spouseName = $_POST['spouseName'] ?? '';
+    $markerWidth = $_POST['markerWidth'] ?? '40';
+    $markerHeight = $_POST['markerHeight'] ?? '40';
+    $topPosition = $_POST['topPosition'] ?? '50.00';
+    $leftPosition = $_POST['leftPosition'] ?? '50.00';
+    $dateAdded = date('Y-m-d H:i:s');
+
+    // Handle file uploads
+    $houseImagePath = '';
+    if (isset($_FILES['houseImage']) && $_FILES['houseImage']['error'] === UPLOAD_ERR_OK) {
+        $houseImageName = time() . '_' . basename($_FILES['houseImage']['name']);
+        $targetDir = '../assets/images/households/';
+        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+        move_uploaded_file($_FILES['houseImage']['tmp_name'], $targetDir . $houseImageName);
+        $houseImagePath = 'assets/images/households/' . $houseImageName;
+    }
+
+    $markerImagePath = '';
+    if (isset($_FILES['markerImage']) && $_FILES['markerImage']['error'] === UPLOAD_ERR_OK) {
+        $markerImageName = time() . '_' . basename($_FILES['markerImage']['name']);
+        $targetDir = '../assets/images/markers/';
+        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+        move_uploaded_file($_FILES['markerImage']['tmp_name'], $targetDir . $markerImageName);
+        $markerImagePath = 'assets/images/markers/' . $markerImageName;
+    }
+
+    $newRecord = [
+        'id' => uniqid(),
+        'houseNumber' => $houseNumber,
+        'husbandName' => $husbandName,
+        'spouseName' => $spouseName,
+        'houseImage' => $houseImagePath,
+        'markerImage' => $markerImagePath,
+        'markerWidth' => $markerWidth,
+        'markerHeight' => $markerHeight,
+        'topPosition' => $topPosition,
+        'leftPosition' => $leftPosition,
+        'dateAdded' => $dateAdded
+    ];
+
+    $jsonFile = 'data/purok2.json';
+    $data = file_exists($jsonFile) ? json_decode(file_get_contents($jsonFile), true) : [];
+    if (!is_array($data)) $data = [];
+    $data[] = $newRecord;
+    file_put_contents($jsonFile, json_encode($data, JSON_PRETTY_PRINT));
+    
+    header("Location: " . $_SERVER['PHP_SELF'] . "?success=1");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Purok 2 - Admin Panel</title>
+    <title>Manage Legends - Admin Panel</title>
 
     <!-- Favicon / Tab Logo -->
     <link rel="icon" type="image/png" href="../assets/images/San Jose Logo 2.png">
@@ -20,7 +72,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/purok2.css">
+    <link rel="stylesheet" href="css/legends_v2.css">
 </head>
 <body>
 
@@ -41,7 +93,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="adminabout.php" class="active">
+                    <a href="adminabout.php">
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                         </span>
@@ -72,9 +124,25 @@
                     <ul class="admin-dropdown-menu">
                         <li><a href="legends.php">Legends</a></li>
                         <li><a href="purok1.php">Purok 1</a></li>
-                        <li><a href="purok2.php">Purok 2</a></li>
+                        <li><a href="purok2.php" class="active">Purok 2</a></li>
                         <li><a href="purok3.php">Purok 3</a></li>
                         <li><a href="purok4.php">Purok 4</a></li>
+                    </ul>
+                </li>
+                <li class="admin-dropdown">
+                    <a href="javascript:void(0)" class="dropdown-toggle">
+                        <span class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        </span>
+                        Household
+                        <svg class="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <ul class="admin-dropdown-menu">
+                        <li><a href="legend_files.php">Legend Files</a></li>
+                        <li><a href="resident1.php">Resident 1</a></li>
+                        <li><a href="resident2.php">Resident 2</a></li>
+                        <li><a href="resident3.php">Resident 3</a></li>
+                        <li><a href="resident4.php">Resident 4</a></li>
                     </ul>
                 </li>
                 <li>
@@ -124,7 +192,7 @@
         <main class="admin-main">
             <!-- Header -->
             <header class="admin-header">
-                <h1>Manage Purok 2</h1>
+                <h1>Manage Legends</h1>
                 <div class="header-user-profile">
                     <div class="user-text">
                         <span class="user-name">System Admin</span>
@@ -135,48 +203,89 @@
             </header>
 
             <!-- Content Area -->
+            <!-- Content Area -->
             <div class="admin-content">
+                                <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+                    <div style="background-color: #d1fae5; color: #065f46; padding: 12px 16px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid #10b981; display: flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 10px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <strong>Success!</strong>&nbsp; Household marker has been successfully saved to the map.
+                    </div>
+                <?php endif; ?>
+                
                 <div class="content-header">
-                    <h2>About Us Content</h2>
-                    <p>Update the information displayed on the public About Us page.</p>
+                    <h2>Add House to Map</h2>
+                    <p>Upload a marker, add members, and drag the icon to save to the map</p>
                 </div>
 
-                <form action="#" method="POST" enctype="multipart/form-data" class="about-form">
-                    <div class="form-columns">
-                        <!-- Left Column: Image -->
-                        <div class="form-left">
-                            <div class="form-card">
-                                <label class="card-label">ADD IMAGE</label>
-                                <div class="image-upload-area">
-                                    <input type="file" id="aboutImage" hidden accept="image/*">
-                                    <label for="aboutImage" class="btn-upload">Choose File</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Column: Textareas -->
-                        <div class="form-right">
-                            <div class="form-card">
-                                <label class="card-label">HISTORY</label>
-                                <textarea placeholder="Enter barangay history here..." rows="5"></textarea>
-                            </div>
-                            <div class="form-card">
-                                <label class="card-label">VISION</label>
-                                <textarea placeholder="Enter barangay vision here..." rows="4"></textarea>
-                            </div>
-                            <div class="form-card">
-                                <label class="card-label">MISSION</label>
-                                <textarea placeholder="Enter barangay mission here..." rows="4"></textarea>
-                            </div>
-                        </div>
-                    </div>
+                                <div class="map-preview-area" id="mapPreviewArea" style="position: relative; display: inline-block; width: 100%;">
+                    <img src="../assets/images/Purok/Purok 2.jpg" alt="Map Background" class="map-preview-image" style="width: 100%; display: block;">
                     
-                    <div class="form-actions">
-                        <button type="submit" class="btn-save">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                            Save Changes
-                        </button>
+                    <?php
+                    $jsonFileMap = 'data/purok2.json';
+                    if (file_exists($jsonFileMap)) {
+                        $recordsMap = json_decode(file_get_contents($jsonFileMap), true);
+                        if (is_array($recordsMap)) {
+                            foreach ($recordsMap as $recordMap) {
+                                if (!empty($recordMap['markerImage'])) {
+                                    $top = htmlspecialchars($recordMap['topPosition']);
+                                    $left = htmlspecialchars($recordMap['leftPosition']);
+                                    $width = htmlspecialchars($recordMap['markerWidth']);
+                                    $height = htmlspecialchars($recordMap['markerHeight']);
+                                    $src = htmlspecialchars($recordMap['markerImage']);
+                                    $title = htmlspecialchars($recordMap['houseNumber'] . " - " . $recordMap['husbandName']);
+                                    echo "<img src='../$src' style='position: absolute; top: {$top}%; left: {$left}%; width: {$width}px; height: {$height}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='$title'>";
+                                }
+                            }
+                        }
+                    }
+                    ?>
+                </div>
+
+                <form action="" method="POST" enctype="multipart/form-data" class="legend-form">
+                    
+                    <div class="form-group">
+                        <label for="houseNumber">House Number</label>
+                        <input type="text" id="houseNumber" name="houseNumber" class="form-control" placeholder="e.g. 123">
                     </div>
+
+
+
+                    <div class="form-group">
+                        <label for="houseImage">House Image (Actual Photo)</label>
+                        <input type="file" id="houseImage" name="houseImage" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="markerImage">Marker Image (Icon shown on map)</label>
+                        <input type="file" id="markerImage" name="markerImage" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="markerWidth">Marker Width (px)</label>
+                            <input type="number" id="markerWidth" name="markerWidth" class="form-control" value="40">
+                        </div>
+                        <div class="form-col">
+                            <label for="markerHeight">Marker Height (px)</label>
+                            <input type="number" id="markerHeight" name="markerHeight" class="form-control" value="40">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="topPosition">Top position (%)</label>
+                            <input type="number" id="topPosition" name="topPosition" class="form-control" value="50.00" step="0.01">
+                        </div>
+                        <div class="form-col">
+                            <label for="leftPosition">Left position (%)</label>
+                            <input type="number" id="leftPosition" name="leftPosition" class="form-control" value="50.00" step="0.01">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-save-map">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        Save to Map
+                    </button>
                 </form>
 
             </div>
@@ -184,7 +293,13 @@
     </div>
 
     <script src="js/dashboard.js"></script>
+    <script src="js/map-marker-preview.js"></script>
 </body>
 </html>
+
+
+
+
+
 
 

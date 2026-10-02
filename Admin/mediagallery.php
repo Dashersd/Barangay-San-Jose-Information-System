@@ -77,6 +77,22 @@
                         <li><a href="purok4.php">Purok 4</a></li>
                     </ul>
                 </li>
+                <li class="admin-dropdown">
+                    <a href="javascript:void(0)" class="dropdown-toggle">
+                        <span class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        </span>
+                        Household
+                        <svg class="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <ul class="admin-dropdown-menu">
+                        <li><a href="legend_files.php">Legend Files</a></li>
+                        <li><a href="resident1.php">Resident 1</a></li>
+                        <li><a href="resident2.php">Resident 2</a></li>
+                        <li><a href="resident3.php">Resident 3</a></li>
+                        <li><a href="resident4.php">Resident 4</a></li>
+                    </ul>
+                </li>
                 <li>
                     <a href="mediagallery.php" class="active">
                         <span class="nav-icon">

@@ -1,12 +1,47 @@
 <?php
-// Manage Announcements
+$jsonFile = 'data/purok1.json';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit') {
+    $records = file_exists($jsonFile) ? json_decode(file_get_contents($jsonFile), true) : [];
+    if (!is_array($records)) $records = [];
+    
+    $editId = $_POST['edit_id'] ?? '';
+    $updated = false;
+    
+    foreach ($records as &$rec) {
+        if ($rec['id'] === $editId) {
+            $rec['houseNumber'] = $_POST['edit_houseNumber'] ?? '';
+            $rec['husbandName'] = $_POST['edit_husbandName'] ?? '';
+            $rec['spouseName'] = $_POST['edit_spouseName'] ?? '';
+            
+            if (isset($_FILES['edit_houseImage']) && $_FILES['edit_houseImage']['error'] === UPLOAD_ERR_OK) {
+                $houseImageName = time() . '_' . basename($_FILES['edit_houseImage']['name']);
+                $targetDir = '../assets/images/households/';
+                if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+                move_uploaded_file($_FILES['edit_houseImage']['tmp_name'], $targetDir . $houseImageName);
+                $rec['houseImage'] = 'assets/images/households/' . $houseImageName;
+            }
+            $updated = true;
+            break;
+        }
+    }
+    
+    if ($updated) {
+        file_put_contents($jsonFile, json_encode($records, JSON_PRETTY_PRINT));
+        header("Location: " . $_SERVER['PHP_SELF'] . "?edited=1");
+        exit;
+    }
+}
+
+$records = file_exists($jsonFile) ? json_decode(file_get_contents($jsonFile), true) : [];
+if (!is_array($records)) $records = [];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Announcements - Admin Panel</title>
+    <title>Resident 1 - Barangay San Jose</title>
 
     <!-- Favicon / Tab Logo -->
     <link rel="icon" type="image/png" href="../assets/images/San Jose Logo 2.png">
@@ -20,8 +55,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/service.css"> <!-- Reuse modal styles -->
-    <link rel="stylesheet" href="css/announcement.css">
+    <link rel="stylesheet" href="css/resident1.css">
 </head>
 <body>
 
@@ -88,7 +122,7 @@
                     </a>
                     <ul class="admin-dropdown-menu">
                         <li><a href="legend_files.php">Legend Files</a></li>
-                        <li><a href="resident1.php">Resident 1</a></li>
+                        <li><a href="resident1.php" class="active">Resident 1</a></li>
                         <li><a href="resident2.php">Resident 2</a></li>
                         <li><a href="resident3.php">Resident 3</a></li>
                         <li><a href="resident4.php">Resident 4</a></li>
@@ -111,7 +145,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="announcement.php" class="active">
+                    <a href="announcement.php">
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                         </span>
@@ -137,11 +171,11 @@
             </ul>
         </aside>
 
-        <!-- Main Content -->
+                <!-- Main Content -->
         <main class="admin-main">
             <!-- Header -->
             <header class="admin-header">
-                <h1>Manage Announcements</h1>
+                <h1>Households</h1>
                 <div class="header-user-profile">
                     <div class="user-text">
                         <span class="user-name">System Admin</span>
@@ -151,96 +185,126 @@
                 </div>
             </header>
 
-            <!-- Content Area -->
             <div class="admin-content">
-                <div class="content-header d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem;">
-                    <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--text, #1C1917);">Announcements & Updates</h2>
-                    <button id="addAnnouncementBtn" class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        Add New Announcement
-                    </button>
+                                <?php if (isset($_GET['edited']) && $_GET['edited'] == 1): ?>
+                    <div style="background-color: #d1fae5; color: #065f46; padding: 12px 16px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid #10b981; display: flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 10px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <strong>Success!</strong>&nbsp; Record details have been successfully updated.
+                    </div>
+                <?php endif; ?>
+                
+                <div class="records-header">
+                    <h2>Resident 1 Records</h2>
                 </div>
-
-                <div class="section-panel">
-                    <div class="panel-table-wrapper">
-                        <table class="panel-table">
-                            <thead>
+                
+                <div class="records-card">
+                    <table class="records-table">
+                        <thead>
+                            <tr>
+                                <th>House Image</th>
+                                <th>House Number</th>
+                                
+                                
+                                <th>Date Added</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                                                <tbody>
+                            <?php if (empty($records)): ?>
+                            <tr>
+                                <td colspan="6" class="no-records">No records found.</td>
+                            </tr>
+                            <?php else: ?>
+                                <?php foreach ($records as $record): ?>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Title</th>
-                                    <th>Description</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="date-cell">Sep 20, 2026</td>
-                                    <td><strong>Upcoming Medical Mission</strong></td>
-                                    <td class="description-cell">Free medical check-ups and distribution...</td>
-                                    <td><span class="badge badge-active">Published</span></td>
                                     <td>
-                                        <button class="btn-action edit-btn">Edit</button>
-                                        <button class="btn-action delete-btn">Delete</button>
+                                        <?php if (!empty($record['houseImage'])): ?>
+                                            <img src="../<?= htmlspecialchars($record['houseImage']) ?>" alt="House" style="width: 80px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                        <?php else: ?>
+                                            <span style="color: #94a3b8; font-style: italic;">No image</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?= htmlspecialchars($record['houseNumber'] ?? '') ?></td>
+                                    
+                                    
+                                    <td><?= date('M d, Y', strtotime($record['dateAdded'])) ?></td>
+                                    <td>
+                                        <button type="button" class="btn-action edit-btn" style="padding: 5px 10px; background: #0f766e; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;" 
+                                            data-id="<?= htmlspecialchars($record['id']) ?>"
+                                            data-house="<?= htmlspecialchars($record['houseNumber'] ?? '') ?>"
+                                            data-husband="<?= htmlspecialchars($record['husbandName'] ?? '') ?>"
+                                            data-spouse="<?= htmlspecialchars($record['spouseName'] ?? '') ?>">
+                                            Edit
+                                        </button>
+                                        <button type="button" class="btn-action" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
         </main>
     </div>
 
-    <!-- Add Announcement Modal -->
-    <div id="announcementModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add New Announcement</h2>
-                <button type="button" class="modal-close">&times;</button>
-            </div>
-            <form action="#" method="POST" enctype="multipart/form-data">
-                <div class="modal-body custom-scrollbar">
-                    <div class="form-group">
-                        <label>Announcement Title</label>
-                        <input type="text" placeholder="e.g., Upcoming Medical Mission" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Cover Image</label>
-                        <input type="file" class="form-control file-input">
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label>Who</label>
-                            <input type="text" placeholder="e.g., All residents" class="form-control">
-                        </div>
-                        <div class="form-group half-width">
-                            <label>When</label>
-                            <input type="text" placeholder="e.g., Sept 20, 2026, 8:00 AM" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>What</label>
-                        <input type="text" placeholder="e.g., Free Medical Check-ups" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Why</label>
-                        <textarea placeholder="e.g., To ensure the health of our community." rows="3" class="form-control"></textarea>
-                    </div>
+    <script src="js/dashboard.js"></script>
+<!-- Edit Modal -->
+    <div id="editModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="modal-content" style="background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 500px;">
+            <h2 style="margin-top: 0; margin-bottom: 20px; color: #1e293b;">Edit Record Details</h2>
+            <form action="" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="edit_id" id="edit_id">
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #475569;">House Number</label>
+                    <input type="text" name="edit_houseNumber" id="edit_houseNumber" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Publish Announcement</button>
+                
+
+
+
+
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 5px; color: #475569;">Update House Image (Optional)</label>
+                    <input type="file" name="edit_houseImage" class="form-control" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button type="submit" style="padding: 12px; background: #0f766e; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 16px;">Save Changes</button>
+                    <button type="button" onclick="document.getElementById('editModal').style.display='none'" style="padding: 12px; background: #e2e8f0; color: #475569; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 16px;">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="js/dashboard.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editBtns = document.querySelectorAll('.edit-btn');
+        const editModal = document.getElementById('editModal');
+        
+        editBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('edit_id').value = this.getAttribute('data-id');
+                document.getElementById('edit_houseNumber').value = this.getAttribute('data-house');
+                
+                
+                
+                editModal.style.display = 'flex';
+            });
+        });
+        
+        // Close modal when clicking outside
+        if (editModal) {
+            editModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>
 
