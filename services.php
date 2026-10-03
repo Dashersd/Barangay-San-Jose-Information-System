@@ -1,5 +1,5 @@
 <?php
-// Barangay San Jose Web-Based Information System - Announcements Page
+// Barangay San Jose Web-Based Information System - Services
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,24 +7,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcements | Barangay San Jose</title>
+    <meta name="description" content="Services offered by Barangay San Jose">
+    <title>Services | Barangay San Jose Information System</title>
 
     <!-- Favicon / Tab Logo -->
     <link rel="icon" type="image/png" href="assets/images/San Jose Logo 2.png">
-    <link rel="icon" type="image/png" href="assets/images/San Jose Logo 2.png">
-
-    <!-- Google Fonts: Inter -->
+        
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Custom CSS -->
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
-    <link rel="stylesheet" href="assets/css/announcement.css">
+    <link rel="stylesheet" href="assets/css/services.css?v=1">
 </head>
 
 <body>
 
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
             <!-- Logo & Brand -->
@@ -49,10 +50,10 @@
                         <a href="skofficials.php">SK Officials</a>
                     </div>
                 </li>
-                <li><a href="announcement.php" class="active">Announcement</a></li>
+                <li><a href="announcement.php">Announcement</a></li>
                 <li><a href="gallery.php">Gallery</a></li>
                 <li><a href="spotmap.php">Spot Map</a></li>
-                <li><a href="services.php">Services</a></li>
+                <li><a href="services.php" class="active">Services</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
             <!-- Right Side: Admin Login -->
@@ -62,85 +63,67 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- 1. Hero Section for Services -->
+    <section class="hero hero-services">
         <div class="container hero-container">
             <div class="hero-content">
                 <p class="hero-subtitle">BARANGAY SAN JOSE</p>
-                <h1 class="hero-title">ANNOUNCEMENTS</h1>
-                <p class="hero-desc">Stay informed about the latest news, events, and important notices in our community.</p>
+                <h1 class="hero-title" style="font-size: 3.5rem;">SERVICES</h1>
+                <p class="hero-desc" style="margin-bottom: 0;">Providing essential documents and assistance for all residents.</p>
             </div>
         </div>
     </section>
 
-    <!-- Main Content -->
-    <section class="announcement-page-content">
-        <div class="container">
-            <div class="announcement-list">
+    <!-- 2. Services Content Section -->
+    <main class="services-page-section">
+        <div class="container services-page-container">
+            
+            <div class="services-cards-grid">
                 
-                <!-- Announcement 1 -->
-                <article class="announcement-detail-card">
-                    <div class="ad-date">
-                        <span class="month">OCT</span>
-                        <span class="day">15</span>
+                <!-- Card 1 -->
+                <div class="srv-card">
+                    <div class="srv-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     </div>
-                    <div class="ad-content">
-                        <h2>General Assembly Meeting</h2>
-                        <ul class="ad-4w">
-                            <li><strong>What:</strong> Bi-annual General Assembly Meeting</li>
-                            <li><strong>When:</strong> October 15, 2025 at 9:00 AM</li>
-                            <li><strong>Why:</strong> To discuss upcoming infrastructure projects and budget allocations.</li>
-                            <li><strong>Who:</strong> All residents of Barangay San Jose</li>
-                        </ul>
-                        <div class="ad-extra-desc">
-                            <p>We highly encourage at least one representative per household to attend this important assembly. Your voice and feedback are essential as we plan for the community's future developments.</p>
-                        </div>
-                    </div>
-                </article>
+                    <h3 class="srv-title">Barangay Clearance</h3>
+                    <p class="srv-desc">Request a Barangay Clearance for employment, banking, or other legal purposes. Essential for verifying your residency and good standing.</p>
+                    <a href="#" class="srv-btn">Request Document &rarr;</a>
+                </div>
 
-                <!-- Announcement 2 -->
-                <article class="announcement-detail-card">
-                    <div class="ad-date">
-                        <span class="month">OCT</span>
-                        <span class="day">22</span>
+                <!-- Card 2 -->
+                <div class="srv-card">
+                    <div class="srv-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline><path d="M12 15a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path></svg>
                     </div>
-                    <div class="ad-content">
-                        <h2>Free Medical & Dental Mission</h2>
-                        <ul class="ad-4w">
-                            <li><strong>What:</strong> Free Medical and Dental Checkups</li>
-                            <li><strong>When:</strong> October 22, 2025 starting at 8:00 AM</li>
-                            <li><strong>Why:</strong> To provide accessible healthcare services to those in need.</li>
-                            <li><strong>Who:</strong> Priority for Senior Citizens and Children</li>
-                        </ul>
-                        <div class="ad-extra-desc">
-                            <p>In partnership with the City Health Office and volunteer doctors, we will be providing free checkups, basic tooth extractions, and essential medicines. Please bring your valid ID and PhilHealth card if available.</p>
-                        </div>
-                    </div>
-                </article>
+                    <h3 class="srv-title">Certificate of Indigency</h3>
+                    <p class="srv-desc">Obtain a Certificate of Indigency to avail of government assistance, scholarships, and medical support programs.</p>
+                    <a href="#" class="srv-btn">Request Document &rarr;</a>
+                </div>
 
-                <!-- Announcement 3 -->
-                <article class="announcement-detail-card">
-                    <div class="ad-date">
-                        <span class="month">NOV</span>
-                        <span class="day">01</span>
+                <!-- Card 3 -->
+                <div class="srv-card">
+                    <div class="srv-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                     </div>
-                    <div class="ad-content">
-                        <h2>Undas 2025 Traffic Advisory</h2>
-                        <ul class="ad-4w">
-                            <li><strong>What:</strong> Temporary Road Closures and Rerouting</li>
-                            <li><strong>When:</strong> November 01, 2025 (All Day)</li>
-                            <li><strong>Why:</strong> To manage the expected high volume of traffic heading to the public cemetery.</li>
-                            <li><strong>Who:</strong> All Motorists and Residents</li>
-                        </ul>
-                        <div class="ad-extra-desc">
-                            <p>Please be advised that Main Avenue will be strictly one-way leading towards the cemetery. Expect heavy traffic. Barangay Tanods and City Traffic Enforcers will be deployed to guide motorists.</p>
-                        </div>
+                    <h3 class="srv-title">Business Clearance</h3>
+                    <p class="srv-desc">Required for all new and renewing businesses operating within the barangay jurisdiction prior to Mayor's permit application.</p>
+                    <a href="#" class="srv-btn">Request Document &rarr;</a>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="srv-card">
+                    <div class="srv-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><circle cx="12" cy="15" r="2"></circle></svg>
                     </div>
-                </article>
+                    <h3 class="srv-title">Certificate of Residency</h3>
+                    <p class="srv-desc">Proof of your residency within the barangay. Often required for school enrollments, ID applications, and other local transactions.</p>
+                    <a href="#" class="srv-btn">Request Document &rarr;</a>
+                </div>
 
             </div>
+
         </div>
-    </section>
+    </main>
 
     <!-- Footer Section -->
     <footer class="main-footer">
@@ -194,9 +177,5 @@
     <script src="assets/js/main.js?v=2"></script>
 
 </body>
+
 </html>
-
-
-
-
-

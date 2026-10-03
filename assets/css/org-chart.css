@@ -64,8 +64,8 @@
 }
 
 .org-avatar-wide {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     background-color: #f0f7ff;
     border-radius: 50%;
     display: flex;
@@ -127,8 +127,8 @@
 }
 
 .org-avatar {
-    width: 65px;
-    height: 65px;
+    width: 100px;
+    height: 100px;
     background-color: #f0f7ff;
     border-radius: 50%;
     display: flex;

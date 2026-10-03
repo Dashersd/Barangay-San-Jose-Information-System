@@ -268,14 +268,14 @@
                         <div class="official-duty-card">
                             <div class="duty-avatar jd-bg">JD</div>
                             <div class="duty-info">
-                                <strong>Hon. Juan Dela Cruz</strong>
+                                <strong>Hon. Diego Logronio</strong>
                                 <span>Punong Barangay</span>
                             </div>
                         </div>
                         <div class="official-duty-card">
-                            <div class="duty-avatar ms-bg">MS</div>
+                            <div class="duty-avatar ms-bg">MD</div>
                             <div class="duty-info">
-                                <strong>Maria Santos</strong>
+                                <strong>Hon. Michelle Deluna</strong>
                                 <span>Barangay Secretary</span>
                             </div>
                         </div>

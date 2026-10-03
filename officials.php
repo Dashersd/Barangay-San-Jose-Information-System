@@ -55,6 +55,7 @@
                 <li><a href="announcement.php">Announcement</a></li>
                 <li><a href="gallery.php">Gallery</a></li>
                 <li><a href="spotmap.php">Spot Map</a></li>
+                <li><a href="services.php">Services</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
             <!-- Right Side: Admin Login -->
@@ -88,10 +89,10 @@
         <div class="org-level">
             <div class="org-card-wide">
                 <div class="org-avatar-wide">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/captain.Diego Logronio.jpg" alt="Hon. Diego Logronio" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
                 <div class="org-info-wide">
-                    <h3 class="org-name-wide">Hon. Juan Dela Cruz</h3>
+                    <h3 class="org-name-wide">Hon. Diego Logronio</h3>
                     <p class="org-role-wide">Punong Barangay</p>
                     <p class="org-desc-wide">Presiding officer of the Sangguniang Barangay, leading executive policies, community welfare programs, and peace and order in Barangay San Jose.</p>
                 </div>
@@ -108,18 +109,18 @@
         <div class="org-level">
             <div class="org-card">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/secretary michelle deluna.jpg" alt="Hon. Michelle Deluna" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Ms. Liza Santos</h3>
+                <h3 class="org-name">Hon. Michelle Deluna</h3>
                 <p class="org-role">Barangay Secretary</p>
 
             </div>
             
             <div class="org-card">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/treasurer alfredo alasaas.jpg" alt="Hon. Alfredo Alasaas" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Mr. Antonio Luna</h3>
+                <h3 class="org-name">Hon. Alfredo Alasaas</h3>
                 <p class="org-role">Barangay Treasurer</p>
 
             </div>
@@ -128,27 +129,27 @@
         <div class="org-level">
             <div class="org-card">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/1.Fedelina Thundas.jpg" alt="Hon. Fedelina Thundas" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Ana Villanueva</h3>
+                <h3 class="org-name">Hon. Fedelina Thundas</h3>
                 <p class="org-role">Barangay Kagawad 1</p>
 
             </div>
 
             <div class="org-card">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/2 Mario godines.jpg" alt="Hon. Mario Godines" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Luis Garcia</h3>
+                <h3 class="org-name">Hon. Mario Godines</h3>
                 <p class="org-role">Barangay Kagawad 2</p>
 
             </div>
 
             <div class="org-card">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/3 jennifer dolen.jpg" alt="Hon. Jennifer Dolen" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Maria Santos</h3>
+                <h3 class="org-name">Hon. Jennifer Dolen</h3>
                 <p class="org-role">Barangay Kagawad 3</p>
 
             </div>
@@ -157,36 +158,36 @@
         <div class="org-level">
             <div class="org-card">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/4 calixto mamac.jpg" alt="Hon. Calixto Mamac" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Juanito Perez</h3>
+                <h3 class="org-name">Hon. Calixto Mamac</h3>
                 <p class="org-role">Barangay Kagawad 4</p>
 
             </div>
 
             <div class="org-card">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/captain.Diego Logronio.jpg" alt="Hon. Rodrigo Godinez" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Elena Cruz</h3>
+                <h3 class="org-name">Hon. Rodrigo Godinez</h3>
                 <p class="org-role">Barangay Kagawad 5</p>
 
             </div>
 
             <div class="org-card">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/6 rodelio besirel.jpg" alt="Hon. Rodelio Basirel" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Ricardo Gomez</h3>
+                <h3 class="org-name">Hon. Rodelio Basirel</h3>
                 <p class="org-role">Barangay Kagawad 6</p>
 
             </div>
 
             <div class="org-card">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <img src="assets/images/Barangay Official/7 jimmy daligdig.jpg" alt="Hon. Jimmy Daligdig" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Pedro Reyes</h3>
+                <h3 class="org-name">Hon. Jimmy Daligdig</h3>
                 <p class="org-role">Barangay Kagawad 7</p>
 
             </div>
@@ -215,6 +216,7 @@
                     <a href="announcement.php">ANNOUNCEMENTS</a>
                     <a href="gallery.php">GALLERY</a>
                     <a href="index.php#spot-map">SPOT MAP</a>
+                    <a href="services.php">SERVICES</a>
                     <a href="contact.php">CONTACT US</a>
                 </div>
             </div>

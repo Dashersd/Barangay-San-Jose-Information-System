@@ -361,7 +361,7 @@ img {
 /* Hero Section */
 .hero {
     position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('../images/San Jose.png');
+    background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('../images/Barangay Hall.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1216,5 +1216,172 @@ img {
     }
     .brand-title {
         font-size: 1.1rem;
+    }
+}
+/* =============================================
+   Contact Home Section
+   ============================================= */
+.contact-home-section {
+    padding: 6rem 0;
+    background-color: #f8fafc;
+}
+.contact-home-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+.contact-home-left, .contact-home-right {
+    padding: 4rem;
+    flex: 1;
+    min-width: 320px;
+}
+.contact-home-left {
+    background-color: #ffffff;
+    border-right: 1px solid #e2e8f0;
+}
+.contact-home-right {
+    background-color: #ffffff;
+}
+.contact-heading {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1rem;
+}
+.contact-desc {
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+.contact-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+.contact-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+.contact-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+.contact-icon svg {
+    width: 20px;
+    height: 20px;
+}
+.contact-text h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.2rem;
+}
+.contact-text p {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+.contact-divider {
+    border: 0;
+    height: 1px;
+    background: #e2e8f0;
+    margin-bottom: 1.5rem;
+}
+.social-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 1rem;
+}
+.contact-socials {
+    display: flex;
+    gap: 0.8rem;
+}
+.social-circle {
+    width: 36px;
+    height: 36px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: background-color 0.3s;
+}
+.social-circle:hover {
+    background-color: var(--primary-hover);
+    color: #ffffff;
+}
+.social-circle svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Form Styles */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+}
+.contact-form .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.contact-form .form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 0.5rem;
+}
+.contact-form .form-group input, .contact-form .form-group select, .contact-form .form-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #0f172a;
+    background-color: #f8fafc;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.contact-form .form-group input:focus, .contact-form .form-group select:focus, .contact-form .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+.contact-submit {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    margin-top: 1rem;
+    border-radius: 99px;
+}
+
+@media (max-width: 992px) {
+    .contact-home-left, .contact-home-right {
+        padding: 2.5rem;
+    }
+    .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
     }
 }

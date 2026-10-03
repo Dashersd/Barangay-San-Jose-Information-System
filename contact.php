@@ -75,93 +75,105 @@
     </section>
 
     <!-- 2. Main Content Section -->
-    <main class="contact-main-section">
-        <div class="container">
-            <div class="contact-content-wrapper">
-
-                <!-- Quick Info Cards (2 Columns) -->
-                <div class="contact-info-grid">
+    <main class="contact-home-section">
+        <div class="container contact-home-container">
+            <div class="contact-home-card">
+                <!-- Left Side -->
+                <div class="contact-home-left">
+                    <h2 class="contact-heading">Get in touch</h2>
+                    <p class="contact-desc">Reach out to our barangay office for public inquiries, government assistance, and community concerns.</p>
                     
-                    <!-- Card 1: Barangay Hall -->
-                    <div class="contact-info-card">
-                        <div class="contact-card-icon-box">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
-                                <path d="M9 22v-4h6v4"/>
-                                <path d="M8 6h.01"/>
-                                <path d="M16 6h.01"/>
-                                <path d="M12 6h.01"/>
-                                <path d="M12 10h.01"/>
-                                <path d="M12 14h.01"/>
-                                <path d="M16 10h.01"/>
-                                <path d="M16 14h.01"/>
-                                <path d="M8 10h.01"/>
-                                <path d="M8 14h.01"/>
-                            </svg>
+                    <div class="contact-info-list">
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 0-18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Head Office</h4>
+                                <p>Barangay San Jose Hall<br>San Jose, Municipality</p>
+                            </div>
                         </div>
-                        <h2 class="contact-card-title">Barangay Hall</h2>
-                        <div class="contact-card-content">
-                            <p><strong>Barangay San Jose Hall</strong></p>
-                            <p>Poblacion San Jose, Lapuyan</p>
-                            <p>Zamboanga del Sur, 7037</p>
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c2 0 3 1 3 3v10c0 2-1 3-3 3H4c-2 0-3-1-3-3V7c0-2 1-3 3-3z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Email Us</h4>
+                                <p>support@sanjose.gov.ph<br>info@sanjose.gov.ph</p>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Call Us</h4>
+                                <p>Phone: 09XX-XXX-XXXX<br>Tanod: 09XX-XXX-XXXX</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Card 2: Emergency & Hotlines -->
-                    <div class="contact-info-card">
-                        <div class="contact-card-icon-box">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                            </svg>
-                        </div>
-                        <h2 class="contact-card-title">Hotlines & Emergency</h2>
-                        <div class="contact-card-content">
-                            <p><strong>Office Desk:</strong> (062) 925-2011</p>
-                            <p><strong>Tanod Patrol (24/7):</strong> 0912-345-6789</p>
-                            <p><strong>Health Station:</strong> 0998-765-4321</p>
-                            <p><strong>MDRRMO / Police:</strong> 911 / 117</p>
-                        </div>
-                    </div>
+                    <hr class="contact-divider">
 
-                </div>
-
-                <!-- Operating Schedule -->
-                <div class="contact-schedule-wrapper">
-                    <div class="contact-schedule-card">
-                        <div class="contact-section-header">
-                            <div class="contact-section-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <polyline points="12 6 12 12 16 14"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="contact-section-title">Office Operating Hours</h3>
-                                <span class="contact-section-subtitle">Barangay Hall Services</span>
-                            </div>
-                        </div>
-
-                        <p class="schedule-description">
-                            Our administrative staff and council members are ready to assist residents with clearances, certificates, inquiries, and public transactions during standard government hours.
-                        </p>
-
-                        <ul class="schedule-list">
-                            <li class="schedule-item active-schedule">
-                                <span class="schedule-day">Monday – Friday</span>
-                                <span class="schedule-hours">8:00 AM – 5:00 PM</span>
-                            </li>
-                            <li class="schedule-item">
-                                <span class="schedule-day">Saturday & Sunday</span>
-                                <span class="schedule-hours">Closed (Duty Tanod Only)</span>
-                            </li>
-                            <li class="schedule-item">
-                                <span class="schedule-day">Public & National Holidays</span>
-                                <span class="schedule-hours">Emergency Hotline Active</span>
-                            </li>
-                        </ul>
+                    <h4 class="social-heading">Follow our social media</h4>
+                    <div class="contact-socials">
+                        <a href="#" class="social-circle" aria-label="Facebook">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        </a>
+                        <a href="#" class="social-circle" aria-label="Instagram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="#" class="social-circle" aria-label="Twitter">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                        </a>
+                        <a href="#" class="social-circle" aria-label="YouTube">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.17 1 12 1 12s0 3.83.46 5.58a2.78 2.78 0 0 0 1.94 2C5.12 20 12 20 12 20s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.83 23 12 23 12s0-3.83-.46-5.58z"></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon></svg>
+                        </a>
                     </div>
                 </div>
 
+                <!-- Right Side -->
+                <div class="contact-home-right">
+                    <h2 class="contact-heading">Send us a message</h2>
+                    <form class="contact-form" action="#" method="POST">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" placeholder="Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Service Type</label>
+                                <select required>
+                                    <option value="" disabled selected>Select service</option>
+                                    <option value="clearance">Barangay Clearance</option>
+                                    <option value="indigency">Certificate of Indigency</option>
+                                    <option value="business">Business Clearance</option>
+                                    <option value="residency">Certificate of Residency</option>
+                                    <option value="other">Other Inquiry</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="text" placeholder="Phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" placeholder="Email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input type="text" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea rows="4" placeholder="Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary contact-submit">SEND</button>
+                    </form>
+                </div>
             </div>
         </div>
     </main>
@@ -187,6 +199,7 @@
                     <a href="announcement.php">ANNOUNCEMENTS</a>
                     <a href="gallery.php">GALLERY</a>
                     <a href="index.php#spot-map">SPOT MAP</a>
+                    <a href="services.php">SERVICES</a>
                     <a href="contact.php">CONTACT US</a>
                 </div>
             </div>

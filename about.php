@@ -54,6 +54,7 @@
                 <li><a href="announcement.php">Announcement</a></li>
                 <li><a href="gallery.php">Gallery</a></li>
                 <li><a href="spotmap.php">Spot Map</a></li>
+                <li><a href="services.php">Services</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
             <!-- Right Side: Admin Login -->
@@ -85,7 +86,7 @@
                 </div>
 
                 <div class="history-content">
-                    <img src="assets/images/gallery/Brgy Hall.jpg" alt="Barangay Hall" class="history-center-img" onerror="this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Barangay+Hall'">
+                    <img src="assets/images/Barangay Hall.png" alt="Barangay Hall" class="history-center-img" onerror="this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Barangay+Hall'">
                     
                     <p>Maruing once under the jurisdiction of Margosatubig, before it was declared as a Municipality in 1964 during the time of late Diosdado Macapagal and then reverted into Barangay in 1965. According to the Subanen leaders of Elders, the term Maruing came from two[2] Subanen words "MARU" which means bad odor and "DUWING" a Subanen word a term for gigantic wild boar having fangs that grew out rares from his mouth because of the incredible strength. According to the story, a Subanen hunter went to the forest looking for wild animals. Using his spear the hunter was able to hit a wild boar or the DUWING but unluckily failed to catch it. Thus, the hunter kept on looking the animal until found a very nice place where two rivers meet creating a big river before it proceeds to the sea. Because he did not find the wild boar but instead the beautiful place, he went home and reported to his co-villagers about a beautiful place where they could establish their community because of its strategic location and abundance of water.</p>
 
@@ -123,6 +124,7 @@
                     <a href="announcement.php">ANNOUNCEMENTS</a>
                     <a href="gallery.php">GALLERY</a>
                     <a href="index.php#spot-map">SPOT MAP</a>
+                    <a href="services.php">SERVICES</a>
                     <a href="contact.php">CONTACT US</a>
                 </div>
             </div>

@@ -47,6 +47,7 @@
                 <li><a href="announcement.php">Announcement</a></li>
                 <li><a href="gallery.php" class="active">Gallery</a></li>
                 <li><a href="spotmap.php">Spot Map</a></li>
+                <li><a href="services.php">Services</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
             <!-- Right Side: Admin Login -->
@@ -124,6 +125,7 @@
                     <a href="announcement.php">ANNOUNCEMENTS</a>
                     <a href="gallery.php">GALLERY</a>
                     <a href="index.php#spot-map">SPOT MAP</a>
+                    <a href="services.php">SERVICES</a>
                     <a href="contact.php">CONTACT US</a>
                 </div>
             </div>

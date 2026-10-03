@@ -1,0 +1,99 @@
+/* Services Page specific styles */
+
+.services-page-section {
+    padding: 5rem 0 8rem;
+    background-color: #f8fafc;
+}
+
+.services-page-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.services-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    justify-content: center;
+}
+
+.srv-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.srv-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.srv-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background-color: var(--primary-light); /* Light blue */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: var(--primary); /* Primary blue */
+}
+
+.srv-icon-wrapper svg {
+    width: 28px;
+    height: 28px;
+}
+
+.srv-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #0f172a; /* Very dark slate/blue */
+    margin-bottom: 1rem;
+}
+
+.srv-desc {
+    font-size: 0.95rem;
+    color: #64748b; /* Slate grey */
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    flex-grow: 1; /* Pushes the button to the bottom if cards have different heights */
+}
+
+.srv-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.5rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary); /* Primary blue */
+    background-color: transparent;
+    border: 1px solid var(--primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.srv-btn:hover {
+    background-color: var(--primary);
+    color: #ffffff;
+}
+
+/* Adjusting the hero section specifically for services */
+.hero-services {
+    min-height: 55vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../images/Barangay Hall.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+}
