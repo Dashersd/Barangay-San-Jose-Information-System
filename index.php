@@ -21,6 +21,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/gallery.css">
+
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -66,10 +69,10 @@
     <section class="hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-subtitle">WELCOME TO</p>
-                <h1 class="hero-title">BARANGAY SAN JOSE</h1>
-                <p class="hero-desc">A progressive and united community working together<br>for a safer, healthier, and more prosperous San Jose.</p>
-                <a href="about.php" class="btn btn-hero">
+                <p class="hero-subtitle" data-aos="fade-up">WELCOME TO</p>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">BARANGAY SAN JOSE</h1>
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="200">A progressive and united community working together<br>for a safer, healthier, and more prosperous San Jose.</p>
+                <a href="about.php" class="btn btn-hero" data-aos="fade-up" data-aos-delay="300">
                     Learn More About Us &rarr;
                 </a>
             </div>
@@ -80,11 +83,11 @@
     <section class="about-section">
         <div class="container about-section-container">
             <!-- Image Side -->
-            <div class="about-section-image">
+            <div class="about-section-image" data-aos="fade-right">
                 <img src="assets/images/Barangay Hall.png" alt="About Barangay San Jose">
             </div>
             <!-- Text Side -->
-            <div class="about-section-text">
+            <div class="about-section-text" data-aos="fade-left">
                 <p class="about-eyebrow">WHO WE ARE</p>
                 <h2 class="about-section-heading">About <span class="highlight-text">Barangay San Jose</span></h2>
                 <div class="about-section-underline"></div>
@@ -100,7 +103,7 @@
     <!-- 3. Officials Section -->
     <section class="officials-section">
         <div class="container officials-container">
-            <div class="section-header text-center">
+            <div class="section-header text-center" data-aos="fade-up">
                 <p class="section-eyebrow">BARANGAY OFFICIALS</p>
                 <h2 class="section-heading-main">Meet Our <span class="highlight-text">Leaders</span></h2>
                 <div class="heading-underline center-underline"></div>
@@ -108,7 +111,7 @@
             </div>
             
             <div class="officials-top-wrapper">
-                <div class="official-card captain-card">
+                <div class="official-card captain-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="official-image-wrapper">
                         <img src="assets/images/Barangay Official/captain.Diego Logronio.jpg" alt="Hon. Diego Logronio" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Logronio&background=random&size=250'">
                         <div class="role-badge">Punong Barangay</div>
@@ -123,7 +126,7 @@
                     </div>
                 </div>
 
-                <div class="official-card captain-card">
+                <div class="official-card captain-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="official-image-wrapper">
                         <img src="assets/images/SK Official/sk chairperson artem mamac.jpg" alt="Hon. Artem Macmac" onerror="this.src='https://ui-avatars.com/api/?name=Artem+Macmac&background=random&size=250'">
                         <div class="role-badge">SK Chairman</div>
@@ -144,7 +147,7 @@
     <!-- 4. Services Section -->
     <section class="services-section">
         <div class="container services-container">
-            <div class="section-header text-center">
+            <div class="section-header text-center" data-aos="fade-up">
                 <p class="section-eyebrow">WHAT WE OFFER</p>
                 <h2 class="section-heading-main">Barangay <span class="highlight-text">Services</span></h2>
                 <div class="heading-underline center-underline"></div>
@@ -152,7 +155,7 @@
             </div>
             
             <div class="services-grid">
-                <div class="service-card">
+                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="service-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     </div>
@@ -160,7 +163,7 @@
                     <p>Get your Barangay Clearance, Certificate of Indigency, and other important documents with ease.</p>
                 </div>
                 
-                <div class="service-card">
+                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="service-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
                     </div>
@@ -168,7 +171,7 @@
                     <p>Free consultations, vaccinations, and maternal care services for every San Jose resident.</p>
                 </div>
                 
-                <div class="service-card">
+                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="service-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                     </div>
@@ -176,7 +179,7 @@
                     <p>File a blotter or request assistance from our active Barangay Tanods who patrol 24/7.</p>
                 </div>
                 
-                <div class="service-card">
+                <div class="service-card" data-aos="fade-up" data-aos-delay="400">
                     <div class="service-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                     </div>
@@ -193,7 +196,7 @@
       <!-- 5. Announcements Section -->
     <section class="announcements-section">
         <div class="container announcements-container">
-            <div class="section-header text-center">
+            <div class="section-header text-center" data-aos="fade-up">
                 <p class="section-eyebrow">STAY UPDATED</p>
                 <h2 class="section-heading-main">Latest <span class="highlight-text">Announcements</span></h2>
                 <div class="heading-underline center-underline"></div>
@@ -201,7 +204,7 @@
             </div>
             
             <div class="announcements-grid">
-                <div class="announcement-card">
+                <div class="announcement-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="announcement-date">
                         <span class="month">OCT</span>
                         <span class="day">15</span>
@@ -217,7 +220,7 @@
                     </div>
                 </div>
 
-                <div class="announcement-card">
+                <div class="announcement-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="announcement-date">
                         <span class="month">OCT</span>
                         <span class="day">22</span>
@@ -233,7 +236,7 @@
                     </div>
                 </div>
 
-                <div class="announcement-card">
+                <div class="announcement-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="announcement-date">
                         <span class="month">NOV</span>
                         <span class="day">01</span>
@@ -259,7 +262,7 @@
     <!-- 6. Gallery Section -->
     <section id="gallery" class="gallery-section">
         <div class="container gallery-container">
-            <div class="section-header text-center">
+            <div class="section-header text-center" data-aos="fade-up">
                 <p class="section-eyebrow">COMMUNITY IN ACTION</p>
                 <h2 class="section-heading-main">Our <span class="highlight-text">Gallery</span></h2>
                 <div class="heading-underline center-underline"></div>
@@ -267,28 +270,28 @@
             </div>
             
             <div class="gallery-grid">
-                <div class="gallery-item">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
                     <img src="assets/images/gallery_community_event_1789988183333.jpg" alt="Community Event">
                     <div class="gallery-overlay">
                         <h4>Community Fiesta</h4>
                         <p>Celebrating together</p>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
                     <img src="assets/images/gallery_clean_up_1789988204683.jpg" alt="Clean Up Drive">
                     <div class="gallery-overlay">
                         <h4>Clean Up Drive</h4>
                         <p>Keeping our barangay green</p>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
                     <img src="assets/images/gallery_sports_league_1789988228547.jpg" alt="Sports League">
                     <div class="gallery-overlay">
                         <h4>SK Basketball League</h4>
                         <p>Youth sports program</p>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="400">
                     <img src="assets/images/San Jose.png" alt="Barangay Hall">
                     <div class="gallery-overlay">
                         <h4>Barangay Hall</h4>
@@ -301,10 +304,10 @@
                 <a href="gallery.php" class="btn btn-outline">View Full Gallery</a>
             </div>
         </div>
-    </section><!-- 7. Spot Map Section -->
+    </section>    <!-- 7. Spot Map Section -->
     <section id="spot-map" class="spot-map-section">
         <div class="container">
-            <div class="section-header text-center" style="margin-bottom: 3rem;">
+            <div class="section-header text-center" style="margin-bottom: 3rem;" data-aos="fade-up">
                 <p class="section-eyebrow">OUR JURISDICTION</p>
                 <h2 class="section-heading-main">Barangay <span class="highlight-text">Spot Map</span></h2>
                 <div class="heading-underline center-underline"></div>
@@ -313,7 +316,7 @@
             
             <div class="spot-map-container-split">
                 <!-- Left Side: Content -->
-                <div class="spot-map-content">
+                <div class="spot-map-content" data-aos="fade-right">
                     <div class="spot-map-header">
                         <span class="eyebrow-text">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -329,8 +332,8 @@
                     </div>
 
                 <!-- Right Side: Map -->
-                <div class="spot-map-frame">
-                    <iframe src="https://maps.google.com/maps?q=San%20Jose,%20Lapuyan,%20Zamboanga%20del%20Sur&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="spot-map-frame" data-aos="fade-left">
+                    <img src="assets/images/Map/ChatGPT Image Oct 6, 2026, 08_49_30 AM.png" alt="Barangay San Jose Map" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
             </div>
         </div>
@@ -345,7 +348,7 @@
         <div class="container contact-home-container">
             <div class="contact-home-card">
                 <!-- Left Side -->
-                <div class="contact-home-left">
+                <div class="contact-home-left" data-aos="fade-right">
                     <h2 class="contact-heading">Get in touch</h2>
                     <p class="contact-desc">Reach out to our barangay office for public inquiries, government assistance, and community concerns.</p>
                     
@@ -399,7 +402,7 @@
                 </div>
 
                 <!-- Right Side -->
-                <div class="contact-home-right">
+                <div class="contact-home-right" data-aos="fade-left">
                     <h2 class="contact-heading">Send us a message</h2>
                     <form class="contact-form" action="#" method="POST">
                         <div class="form-row">
@@ -493,6 +496,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js?v=2"></script>

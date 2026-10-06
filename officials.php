@@ -23,6 +23,9 @@
     <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/officials.css">
     <link rel="stylesheet" href="assets/css/org-chart.css">
+
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -69,9 +72,9 @@
     <section class="hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-subtitle">OFFICIALS</p>
-                <h1 class="hero-title">BARANGAY SAN JOSE</h1>
-                <p class="hero-desc">The dedicated leaders who work together to ensure the progress,<br>peace, and well-being of our community.</p>
+                <p class="hero-subtitle" data-aos="fade-up">OFFICIALS</p>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">BARANGAY SAN JOSE</h1>
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="200">The dedicated leaders who work together to ensure the progress,<br>peace, and well-being of our community.</p>
             </div>
         </div>
     </section>
@@ -80,14 +83,14 @@
     <section class="org-chart-container">
         
         <!-- Level 1: Executive Leadership -->
-        <div class="org-section-header">
+        <div class="org-section-header" data-aos="fade-up">
             <h2 class="org-section-title">Executive Leadership</h2>
             <p class="org-section-subtitle">Head of the Barangay Government</p>
             <div class="org-divider"></div>
         </div>
 
         <div class="org-level">
-            <div class="org-card-wide">
+            <div class="org-card-wide" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar-wide">
                     <img src="assets/images/Barangay Official/captain.Diego Logronio.jpg" alt="Hon. Diego Logronio" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -100,14 +103,14 @@
         </div>
 
         <!-- Level 2: Sangguniang Barangay Members -->
-        <div class="org-section-header" style="margin-top: 50px;">
+        <div class="org-section-header" style="margin-top: 50px;" data-aos="fade-up">
             <h2 class="org-section-title">Sangguniang Barangay Members</h2>
             <p class="org-section-subtitle">Barangay Kagawads & Committee Chairpersons</p>
             <div class="org-divider"></div>
         </div>
 
         <div class="org-level">
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
                     <img src="assets/images/Barangay Official/secretary michelle deluna.jpg" alt="Hon. Michelle Deluna" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -116,7 +119,7 @@
 
             </div>
             
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
                     <img src="assets/images/Barangay Official/treasurer alfredo alasaas.jpg" alt="Hon. Alfredo Alasaas" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -127,7 +130,7 @@
         </div>
 
         <div class="org-level">
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
                     <img src="assets/images/Barangay Official/1.Fedelina Thundas.jpg" alt="Hon. Fedelina Thundas" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -136,7 +139,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
                     <img src="assets/images/Barangay Official/2 Mario godines.jpg" alt="Hon. Mario Godines" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -145,7 +148,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="org-avatar">
                     <img src="assets/images/Barangay Official/3 jennifer dolen.jpg" alt="Hon. Jennifer Dolen" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -156,7 +159,7 @@
         </div>
 
         <div class="org-level">
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
                     <img src="assets/images/Barangay Official/4 calixto mamac.jpg" alt="Hon. Calixto Mamac" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -165,7 +168,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
                     <img src="assets/images/Barangay Official/captain.Diego Logronio.jpg" alt="Hon. Rodrigo Godinez" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -174,7 +177,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="org-avatar">
                     <img src="assets/images/Barangay Official/6 rodelio besirel.jpg" alt="Hon. Rodelio Basirel" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -183,7 +186,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="400">
                 <div class="org-avatar">
                     <img src="assets/images/Barangay Official/7 jimmy daligdig.jpg" alt="Hon. Jimmy Daligdig" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -242,6 +245,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js?v=2"></script>

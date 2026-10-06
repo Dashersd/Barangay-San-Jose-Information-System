@@ -21,6 +21,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/announcement.css">
+    
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -66,9 +69,9 @@
     <section class="hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-subtitle">BARANGAY SAN JOSE</p>
-                <h1 class="hero-title">ANNOUNCEMENTS</h1>
-                <p class="hero-desc">Stay informed about the latest news, events, and important notices in our community.</p>
+                <p class="hero-subtitle" data-aos="fade-up">BARANGAY SAN JOSE</p>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">ANNOUNCEMENTS</h1>
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="200">Stay informed about the latest news, events, and important notices in our community.</p>
             </div>
         </div>
     </section>
@@ -79,7 +82,7 @@
             <div class="announcement-list">
                 
                 <!-- Announcement 1 -->
-                <article class="announcement-detail-card">
+                <article class="announcement-detail-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="ad-date">
                         <span class="month">OCT</span>
                         <span class="day">15</span>
@@ -99,7 +102,7 @@
                 </article>
 
                 <!-- Announcement 2 -->
-                <article class="announcement-detail-card">
+                <article class="announcement-detail-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="ad-date">
                         <span class="month">OCT</span>
                         <span class="day">22</span>
@@ -119,7 +122,7 @@
                 </article>
 
                 <!-- Announcement 3 -->
-                <article class="announcement-detail-card">
+                <article class="announcement-detail-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="ad-date">
                         <span class="month">NOV</span>
                         <span class="day">01</span>
@@ -189,6 +192,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js?v=2"></script>

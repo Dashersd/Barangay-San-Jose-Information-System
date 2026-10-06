@@ -16,6 +16,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/mission.css">
+    
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
 
@@ -61,9 +64,9 @@
     <section class="hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-subtitle">ABOUT US</p>
-                <h1 class="hero-title">OUR MISSION</h1>
-                <p class="hero-desc">Discover the core values, goals, and guiding principles that drive Barangay San Jose forward.</p>
+                <p class="hero-subtitle" data-aos="fade-up">ABOUT US</p>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">OUR MISSION</h1>
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="200">Discover the core values, goals, and guiding principles that drive Barangay San Jose forward.</p>
             </div>
         </div>
     </section>
@@ -74,7 +77,7 @@
             <div class="container vm-container">
                 
                 <!-- Mission Card -->
-                <div class="vm-card" id="mission">
+                <div class="vm-card" id="mission" data-aos="zoom-in-up">
                     <div class="vm-header">
                         <div class="vm-icon">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -93,22 +96,56 @@
         </section>
     </main>
 
-    <!-- Footer -->
+    <!-- Footer Section -->
     <footer class="main-footer">
-        <div class="container footer-container">
-            <div class="footer-bottom">
-                <div class="footer-logo-wrap">
+        <div class="container">
+            <div class="footer-container">
+                <!-- Left Side: Logo & Brand -->
+                <div class="footer-brand">
                     <img src="assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="footer-logo">
-                    <div class="footer-brand">
-                        <h4>Barangay San Jose</h4>
+                    <div class="footer-brand-text">
+                        <h2>BARANGAY<br>SAN JOSE</h2>
                         <p>Bayanihan &bull; Serbisyong Totoo</p>
                     </div>
+                </div>
+
+                <!-- Right Side: Links -->
+                <div class="footer-links-wrapper">
+                    <a href="index.php">HOME</a>
+                    <a href="about.php">ABOUT US</a>
+                    <a href="officials.php">OFFICIALS</a>
+                    <a href="announcement.php">ANNOUNCEMENTS</a>
+                    <a href="gallery.php">GALLERY</a>
+                    <a href="index.php#spot-map">SPOT MAP</a>
+                    <a href="services.php">SERVICES</a>
+                    <a href="contact.php">CONTACT US</a>
+                </div>
+            </div>
+
+            <!-- Divider & Bottom Section -->
+            <div class="footer-bottom">
+                <hr class="footer-divider">
+                
+                <!-- Social Icons -->
+                <div class="footer-socials">
+                    <a href="#" class="social-icon" aria-label="Facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Twitter">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Email">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </a>
                 </div>
                 
                 <p class="footer-copyright">&copy; Copyright. All rights reserved.</p>
             </div>
         </div>
     </footer>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js?v=2"></script>

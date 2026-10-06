@@ -16,6 +16,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/gallery.css">
+    
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
 
@@ -61,9 +64,9 @@
     <section class="hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-subtitle">GALLERY</p>
-                <h1 class="hero-title">BARANGAY SAN JOSE</h1>
-                <p class="hero-desc">Take a look at the latest events, activities, and programs organized for the residents of our community.</p>
+                <p class="hero-subtitle" data-aos="fade-up">GALLERY</p>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">BARANGAY SAN JOSE</h1>
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="200">Take a look at the latest events, activities, and programs organized for the residents of our community.</p>
             </div>
         </div>
     </section>
@@ -72,28 +75,28 @@
     <section id="gallery" class="gallery-section">
         <div class="container gallery-container">
             <div class="gallery-grid">
-                <div class="gallery-item">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
                     <img src="assets/images/gallery_community_event_1789988183333.jpg" alt="Community Event">
                     <div class="gallery-overlay">
                         <h4>Community Fiesta</h4>
                         <p>Celebrating together</p>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
                     <img src="assets/images/gallery_clean_up_1789988204683.jpg" alt="Clean Up Drive">
                     <div class="gallery-overlay">
                         <h4>Clean Up Drive</h4>
                         <p>Keeping our barangay green</p>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
                     <img src="assets/images/gallery_sports_league_1789988228547.jpg" alt="Sports League">
                     <div class="gallery-overlay">
                         <h4>SK Basketball League</h4>
                         <p>Youth sports program</p>
                     </div>
                 </div>
-                <div class="gallery-item">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="400">
                     <img src="assets/images/San Jose.png" alt="Barangay Hall">
                     <div class="gallery-overlay">
                         <h4>Barangay Hall</h4>
@@ -151,6 +154,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js?v=2"></script>

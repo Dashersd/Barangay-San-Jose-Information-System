@@ -23,6 +23,9 @@
     <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/skofficials.css">
     <link rel="stylesheet" href="assets/css/org-chart.css">
+
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -69,9 +72,9 @@
     <section class="hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-subtitle">SK OFFICIALS</p>
-                <h1 class="hero-title">BARANGAY SAN JOSE</h1>
-                <p class="hero-desc">The dedicated leaders who work together to ensure the progress,<br>peace, and well-being of our community.</p>
+                <p class="hero-subtitle" data-aos="fade-up">SK OFFICIALS</p>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">BARANGAY SAN JOSE</h1>
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="200">The dedicated leaders who work together to ensure the progress,<br>peace, and well-being of our community.</p>
             </div>
         </div>
     </section>
@@ -80,14 +83,14 @@
     <section class="org-chart-container">
         
         <!-- Level 1: Executive Leadership -->
-        <div class="org-section-header">
+        <div class="org-section-header" data-aos="fade-up">
             <h2 class="org-section-title">SK Executive Leadership</h2>
             <p class="org-section-subtitle">Head of the Sangguniang Kabataan</p>
             <div class="org-divider"></div>
         </div>
 
         <div class="org-level">
-            <div class="org-card-wide">
+            <div class="org-card-wide" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar-wide" style="padding: 0; background: none; overflow: hidden;">
                     <img src="assets/images/SK Official/sk chairperson artem mamac.jpg" alt="Hon. Artem Macmac" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -100,14 +103,14 @@
         </div>
 
         <!-- Level 2: SK Officers -->
-        <div class="org-section-header" style="margin-top: 50px;">
+        <div class="org-section-header" style="margin-top: 50px;" data-aos="fade-up">
             <h2 class="org-section-title">SK Officers</h2>
             <p class="org-section-subtitle">SK Secretary & Treasurer</p>
             <div class="org-divider"></div>
         </div>
 
         <div class="org-level">
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
@@ -116,7 +119,7 @@
 
             </div>
             
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
@@ -127,14 +130,14 @@
         </div>
 
         <!-- Level 3: SK Members -->
-        <div class="org-section-header" style="margin-top: 50px;">
+        <div class="org-section-header" style="margin-top: 50px;" data-aos="fade-up">
             <h2 class="org-section-title">SK Kagawads</h2>
             <p class="org-section-subtitle">Committee Chairpersons</p>
             <div class="org-divider"></div>
         </div>
 
         <div class="org-level">
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
@@ -143,7 +146,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
@@ -152,7 +155,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="org-avatar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
@@ -163,7 +166,7 @@
         </div>
 
         <div class="org-level">
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
@@ -172,7 +175,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
@@ -181,7 +184,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="org-avatar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
@@ -190,7 +193,7 @@
 
             </div>
 
-            <div class="org-card">
+            <div class="org-card" data-aos="fade-up" data-aos-delay="400">
                 <div class="org-avatar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
@@ -249,6 +252,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js?v=2"></script>

@@ -22,6 +22,9 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/contact.css">
+    
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -67,9 +70,9 @@
     <section class="hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-subtitle">CONTACT US</p>
-                <h1 class="hero-title">BARANGAY SAN JOSE</h1>
-                <p class="hero-desc">We are here to serve. Reach out to our barangay office for public inquiries,<br>government assistance, document services, and 24/7 community safety hotlines.</p>
+                <p class="hero-subtitle" data-aos="fade-up">CONTACT US</p>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">BARANGAY SAN JOSE</h1>
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="200">We are here to serve. Reach out to our barangay office for public inquiries,<br>government assistance, document services, and 24/7 community safety hotlines.</p>
             </div>
         </div>
     </section>
@@ -79,7 +82,7 @@
         <div class="container contact-home-container">
             <div class="contact-home-card">
                 <!-- Left Side -->
-                <div class="contact-home-left">
+                <div class="contact-home-left" data-aos="fade-right">
                     <h2 class="contact-heading">Get in touch</h2>
                     <p class="contact-desc">Reach out to our barangay office for public inquiries, government assistance, and community concerns.</p>
                     
@@ -133,7 +136,7 @@
                 </div>
 
                 <!-- Right Side -->
-                <div class="contact-home-right">
+                <div class="contact-home-right" data-aos="fade-left">
                     <h2 class="contact-heading">Send us a message</h2>
                     <form class="contact-form" action="#" method="POST">
                         <div class="form-row">
@@ -225,6 +228,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js?v=2"></script>

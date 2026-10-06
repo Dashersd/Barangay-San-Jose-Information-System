@@ -16,6 +16,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="assets/css/spotmap.css">
+    
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
 
@@ -61,9 +64,9 @@
     <section class="hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-subtitle">SPOT MAP</p>
-                <h1 class="hero-title">BARANGAY SAN JOSE</h1>
-                <p class="hero-desc">Overview and geographical layout of Barangay San Jose.</p>
+                <p class="hero-subtitle" data-aos="fade-up">SPOT MAP</p>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">BARANGAY SAN JOSE</h1>
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="200">Overview and geographical layout of Barangay San Jose.</p>
             </div>
         </div>
     </section>
@@ -76,7 +79,7 @@
                 <div class="sm-sidebar">
                     
                     <!-- Map Legend Card -->
-                    <div class="sm-card">
+                    <div class="sm-card" data-aos="fade-right">
                         <div class="sm-card-header">
                             <div class="sm-badge-title">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -117,7 +120,7 @@
                     </div>
 
                     <!-- Puroks Card -->
-                    <div class="sm-card">
+                    <div class="sm-card" data-aos="fade-right" data-aos-delay="100">
                         <div class="sm-card-header">
                             <h3 class="sm-legend-title" style="margin-bottom: 20px;">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="#fdb913" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
@@ -136,7 +139,7 @@
                 </div>
 
                 <!-- Right Column: Map Image -->
-                <div class="sm-map-content">
+                <div class="sm-map-content" data-aos="zoom-in">
                     <div class="sm-map-image-wrapper">
                         <button class="sm-overview-btn sm-floating-btn" onclick="resetMap()">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
@@ -210,6 +213,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js?v=2"></script>
