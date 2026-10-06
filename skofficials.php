@@ -88,11 +88,11 @@
 
         <div class="org-level">
             <div class="org-card-wide">
-                <div class="org-avatar-wide">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <div class="org-avatar-wide" style="padding: 0; background: none; overflow: hidden;">
+                    <img src="assets/images/SK Official/sk chairperson artem mamac.jpg" alt="Hon. Artem Macmac" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
                 <div class="org-info-wide">
-                    <h3 class="org-name-wide">Hon. Mark Reyes</h3>
+                    <h3 class="org-name-wide">Hon. Artem Macmac</h3>
                     <p class="org-role-wide">SK Chairperson</p>
                     <p class="org-desc-wide">Presiding officer of the Sangguniang Kabataan, leading youth empowerment and community development programs in Barangay San Jose.</p>
                 </div>

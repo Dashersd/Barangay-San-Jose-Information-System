@@ -142,11 +142,11 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                             Overview Map
                         </button>
-                        <!-- Initial image is san jose.png -->
-                        <img src="assets/images/Map/san jose.png" alt="Barangay Spot Map" id="mainMapImage" onerror="this.src='https://placehold.co/1200x800/e2e8f0/64748b?text=Spot+Map+Image'">
+                        <!-- Initial image is mindanao.jpg -->
+                        <img src="assets/images/Map/mindanao.jpg" alt="Barangay Spot Map" id="mainMapImage" onerror="this.src='https://placehold.co/1200x800/e2e8f0/64748b?text=Spot+Map+Image'" style="cursor: pointer;">
                         
                         <!-- Interactive Pin on San Jose -->
-                        <div class="map-pin" id="sanJosePin" title="Click to view San Jose Satellite Map">
+                        <div class="map-pin" id="sanJosePin" title="Click to view San Jose Satellite Map" style="display: none;">
                             <svg viewBox="0 0 24 24" fill="#ef4444" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                 <circle cx="12" cy="10" r="3" fill="#ffffff"></circle>
@@ -160,49 +160,7 @@
         </section>
 
         <!-- Script to handle pin and badge clicks -->
-        <script>
-            // Global function to reset map to default
-            function resetMap() {
-                var mainImage = document.getElementById('mainMapImage');
-                var pin = document.getElementById('sanJosePin');
-                
-                if (mainImage) {
-                    mainImage.src = 'assets/images/Map/san jose.png';
-                    if (pin) {
-                        pin.style.display = 'block';
-                    }
-                }
-            }
-
-            // Global function to change map on Purok click
-            function changeMap(element) {
-                var newSrc = element.getAttribute('data-image');
-                var mainImage = document.getElementById('mainMapImage');
-                var pin = document.getElementById('sanJosePin');
-                
-                if (newSrc && mainImage) {
-                    mainImage.src = newSrc;
-                    if (pin) {
-                        pin.style.display = 'none';
-                    }
-                }
-            }
-
-            document.addEventListener('DOMContentLoaded', function() {
-                const pin = document.getElementById('sanJosePin');
-                const mainImage = document.getElementById('mainMapImage');
-
-                // Handle Pin Click
-                if (pin && mainImage) {
-                    pin.addEventListener('click', function() {
-                        // Change the image source to Legend.jpg
-                        mainImage.src = 'assets/images/Map/Legend.jpg';
-                        // Optionally hide the pin after click
-                        pin.style.display = 'none';
-                    });
-                }
-            });
-        </script>
+        <script src="assets/js/spotmap.js"></script>
     </main>
 
     <!-- Footer -->

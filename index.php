@@ -125,11 +125,11 @@
 
                 <div class="official-card captain-card">
                     <div class="official-image-wrapper">
-                        <img src="assets/images/default-avatar.png" alt="Hon. Mark Reyes" onerror="this.src='https://ui-avatars.com/api/?name=Mark+Reyes&background=random&size=250'">
+                        <img src="assets/images/SK Official/sk chairperson artem mamac.jpg" alt="Hon. Artem Macmac" onerror="this.src='https://ui-avatars.com/api/?name=Artem+Macmac&background=random&size=250'">
                         <div class="role-badge">SK Chairman</div>
                     </div>
                     <div class="official-details">
-                        <h3 class="official-name">Hon. Mark Reyes</h3>
+                        <h3 class="official-name">Hon. Artem Macmac</h3>
                         <p class="official-title">Sangguniang Kabataan Chairman</p>
                         <p class="official-quote">"Empowering the youth of Barangay San Jose through active participation in sports, education, and community development."</p>
                         <div class="official-action" style="margin-top: 20px; text-align: center;">
