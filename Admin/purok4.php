@@ -29,25 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $markerImagePath = 'assets/images/markers/' . $markerImageName;
     }
 
-    $newRecord = [
-        'id' => uniqid(),
-        'houseNumber' => $houseNumber,
-        'husbandName' => $husbandName,
-        'spouseName' => $spouseName,
-        'houseImage' => $houseImagePath,
-        'markerImage' => $markerImagePath,
-        'markerWidth' => $markerWidth,
-        'markerHeight' => $markerHeight,
-        'topPosition' => $topPosition,
-        'leftPosition' => $leftPosition,
-        'dateAdded' => $dateAdded
-    ];
+    require_once '../db_connect.php';
 
-    $jsonFile = 'data/purok4.json';
-    $data = file_exists($jsonFile) ? json_decode(file_get_contents($jsonFile), true) : [];
-    if (!is_array($data)) $data = [];
-    $data[] = $newRecord;
-    file_put_contents($jsonFile, json_encode($data, JSON_PRETTY_PRINT));
+    $stmt = $conn->prepare("INSERT INTO purok4_locations (legend_id, house_number, husband_name, spouse_name, house_image, marker_image, marker_width, marker_height, top_position, left_position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $legend_id = 1; // Assuming default to Household
+    $stmt->bind_param("isssssiidd", $legend_id, $houseNumber, $husbandName, $spouseName, $houseImagePath, $markerImagePath, $markerWidth, $markerHeight, $topPosition, $leftPosition);
+    $stmt->execute();
+    $stmt->close();
     
     header("Location: " . $_SERVER['PHP_SELF'] . "?success=1");
     exit;
@@ -221,20 +209,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <img src="../assets/images/Purok/Purok 4.jpg" alt="Map Background" class="map-preview-image" style="width: 100%; display: block;">
                     
                     <?php
-                    $jsonFileMap = 'data/purok4.json';
-                    if (file_exists($jsonFileMap)) {
-                        $recordsMap = json_decode(file_get_contents($jsonFileMap), true);
-                        if (is_array($recordsMap)) {
-                            foreach ($recordsMap as $recordMap) {
-                                if (!empty($recordMap['markerImage'])) {
-                                    $top = htmlspecialchars($recordMap['topPosition']);
-                                    $left = htmlspecialchars($recordMap['leftPosition']);
-                                    $width = htmlspecialchars($recordMap['markerWidth']);
-                                    $height = htmlspecialchars($recordMap['markerHeight']);
-                                    $src = htmlspecialchars($recordMap['markerImage']);
-                                    $title = htmlspecialchars($recordMap['houseNumber'] . " - " . $recordMap['husbandName']);
-                                    echo "<img src='../$src' style='position: absolute; top: {$top}%; left: {$left}%; width: {$width}px; height: {$height}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='$title'>";
-                                }
+                    $result = $conn->query("SELECT * FROM purok4_locations");
+                    if ($result) {
+                        while ($row = $result->fetch_assoc()) {
+                            if (!empty($row['marker_image'])) {
+                                $top = htmlspecialchars($row['top_position']);
+                                $left = htmlspecialchars($row['left_position']);
+                                $width = htmlspecialchars($row['marker_width']);
+                                $height = htmlspecialchars($row['marker_height']);
+                                $src = htmlspecialchars($row['marker_image']);
+                                $title = htmlspecialchars($row['house_number'] . " - " . $row['husband_name']);
+                                echo "<img src='../$src' style='position: absolute; top: {$top}%; left: {$left}%; width: {$width}px; height: {$height}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='$title'>";
                             }
                         }
                     }
@@ -247,9 +232,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="houseNumber">House Number</label>
                         <input type="text" id="houseNumber" name="houseNumber" class="form-control" placeholder="e.g. 123">
                     </div>
-
-
-
+                    <div class="form-group">
+                        <label>Household Name</label>
+                        <div class="form-row" style="display: flex; gap: 15px;">
+                            <div class="form-col" style="flex: 1;">
+                                <input type="text" name="husbandName" class="form-control" placeholder="Name of the Husband (e.g. Juan Dela Cruz)">
+                            </div>
+                            <div class="form-col" style="flex: 1;">
+                                <input type="text" name="spouseName" class="form-control" placeholder="Name of the Spouse (Maiden) (e.g. Maria Santos)">
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="houseImage">House Image (Actual Photo)</label>
                         <input type="file" id="houseImage" name="houseImage" class="form-control" accept="image/*">

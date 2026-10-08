@@ -1,40 +1,71 @@
 <?php
-$jsonFile = 'data/purok3.json';
+require_once '../db_connect.php';
 
+// Handle Delete
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    $deleteId = $_POST['delete_id'] ?? '';
+    if ($deleteId) {
+        $stmt = $conn->prepare("DELETE FROM purok3_locations WHERE id = ?");
+        $stmt->bind_param("i", $deleteId);
+        $stmt->execute();
+        $stmt->close();
+        header("Location: " . $_SERVER['PHP_SELF'] . "?deleted=1");
+        exit;
+    }
+}
+
+// Handle Edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit') {
-    $records = file_exists($jsonFile) ? json_decode(file_get_contents($jsonFile), true) : [];
-    if (!is_array($records)) $records = [];
-    
     $editId = $_POST['edit_id'] ?? '';
-    $updated = false;
+    $houseNumber = $_POST['edit_houseNumber'] ?? '';
+    $husbandName = $_POST['edit_husbandName'] ?? '';
+    $spouseName = $_POST['edit_spouseName'] ?? '';
     
-    foreach ($records as &$rec) {
-        if ($rec['id'] === $editId) {
-            $rec['houseNumber'] = $_POST['edit_houseNumber'] ?? '';
-            $rec['husbandName'] = $_POST['edit_husbandName'] ?? '';
-            $rec['spouseName'] = $_POST['edit_spouseName'] ?? '';
-            
-            if (isset($_FILES['edit_houseImage']) && $_FILES['edit_houseImage']['error'] === UPLOAD_ERR_OK) {
-                $houseImageName = time() . '_' . basename($_FILES['edit_houseImage']['name']);
-                $targetDir = '../assets/images/households/';
-                if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
-                move_uploaded_file($_FILES['edit_houseImage']['tmp_name'], $targetDir . $houseImageName);
-                $rec['houseImage'] = 'assets/images/households/' . $houseImageName;
-            }
-            $updated = true;
-            break;
-        }
+    $updateQuery = "UPDATE purok3_locations SET house_number=?, husband_name=?, spouse_name=?";
+    $params = [$houseNumber, $husbandName, $spouseName];
+    $types = "sss";
+    
+    if (isset($_FILES['edit_houseImage']) && $_FILES['edit_houseImage']['error'] === UPLOAD_ERR_OK) {
+        $houseImageName = time() . '_' . basename($_FILES['edit_houseImage']['name']);
+        $targetDir = '../assets/images/households/';
+        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+        move_uploaded_file($_FILES['edit_houseImage']['tmp_name'], $targetDir . $houseImageName);
+        $houseImagePath = 'assets/images/households/' . $houseImageName;
+        
+        $updateQuery .= ", house_image=?";
+        $params[] = $houseImagePath;
+        $types .= "s";
     }
     
-    if ($updated) {
-        file_put_contents($jsonFile, json_encode($records, JSON_PRETTY_PRINT));
+    $updateQuery .= " WHERE id=?";
+    $params[] = $editId;
+    $types .= "i";
+    
+    $stmt = $conn->prepare($updateQuery);
+    $stmt->bind_param($types, ...$params);
+    if ($stmt->execute()) {
+        $stmt->close();
         header("Location: " . $_SERVER['PHP_SELF'] . "?edited=1");
         exit;
     }
 }
 
-$records = file_exists($jsonFile) ? json_decode(file_get_contents($jsonFile), true) : [];
-if (!is_array($records)) $records = [];
+// Fetch all records
+$records = [];
+$result = $conn->query("SELECT * FROM purok3_locations ORDER BY id DESC");
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $records[] = [
+            'id' => $row['id'],
+            'houseNumber' => $row['house_number'],
+            'husbandName' => $row['husband_name'],
+            'spouseName' => $row['spouse_name'],
+            'houseImage' => $row['house_image'],
+            'markerImage' => $row['marker_image'],
+            'dateAdded' => $row['date_added']
+        ];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -236,7 +267,11 @@ if (!is_array($records)) $records = [];
                                             data-spouse="<?= htmlspecialchars($record['spouseName'] ?? '') ?>">
                                             Edit
                                         </button>
-                                        <button type="button" class="btn-action" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
+                                        <form method="POST" action="" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="delete_id" value="<?= htmlspecialchars($record['id']) ?>">
+                                            <button type="submit" class="btn-action" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -261,11 +296,14 @@ if (!is_array($records)) $records = [];
                     <label style="display: block; margin-bottom: 5px; color: #475569;">House Number</label>
                     <input type="text" name="edit_houseNumber" id="edit_houseNumber" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
                 </div>
-                
-
-
-
-
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #475569;">Husband Name</label>
+                    <input type="text" name="edit_husbandName" id="edit_husbandName" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #475569;">Spouse Name (Maiden)</label>
+                    <input type="text" name="edit_spouseName" id="edit_spouseName" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                </div>
                 <div class="form-group" style="margin-bottom: 25px;">
                     <label style="display: block; margin-bottom: 5px; color: #475569;">Update House Image (Optional)</label>
                     <input type="file" name="edit_houseImage" class="form-control" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
@@ -288,9 +326,8 @@ if (!is_array($records)) $records = [];
             btn.addEventListener('click', function() {
                 document.getElementById('edit_id').value = this.getAttribute('data-id');
                 document.getElementById('edit_houseNumber').value = this.getAttribute('data-house');
-                
-                
-                
+                document.getElementById('edit_husbandName').value = this.getAttribute('data-husband');
+                document.getElementById('edit_spouseName').value = this.getAttribute('data-spouse');
                 editModal.style.display = 'flex';
             });
         });
