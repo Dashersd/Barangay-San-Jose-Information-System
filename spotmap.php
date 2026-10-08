@@ -1,3 +1,4 @@
+<?php require_once 'db_connect.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -148,7 +149,6 @@
                         <!-- Initial image is Philippines.png -->
                         <img src="assets/images/Map/Philippines.png" alt="Barangay Spot Map" id="mainMapImage" onerror="this.src='https://placehold.co/1200x800/e2e8f0/64748b?text=Spot+Map+Image'" style="cursor: pointer;">
                         
-                        <!-- Interactive Pin on San Jose -->
                         <div class="map-pin" id="sanJosePin" title="Click to view San Jose Satellite Map" style="display: none;">
                             <svg viewBox="0 0 24 24" fill="#ef4444" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -157,13 +157,102 @@
                             <div class="pin-pulse"></div>
                             <span class="pin-label">San Jose</span>
                         </div>
+
+                        <!-- Markers Layers -->
+                        <div id="markers-purok1" class="purok-markers" style="display: none;">
+                            <?php
+                            if(isset($conn)){
+                                $res1 = $conn->query("SELECT * FROM purok1_locations");
+                                if($res1){
+                                    while($row = $res1->fetch_assoc()){
+                                        if(!empty($row['marker_image'])){
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                        }
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+                        
+                        <div id="markers-purok2" class="purok-markers" style="display: none;">
+                            <?php
+                            if(isset($conn)){
+                                $res2 = $conn->query("SELECT * FROM purok2_locations");
+                                if($res2){
+                                    while($row = $res2->fetch_assoc()){
+                                        if(!empty($row['marker_image'])){
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                        }
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+
+                        <div id="markers-purok3" class="purok-markers" style="display: none;">
+                            <?php
+                            if(isset($conn)){
+                                $res3 = $conn->query("SELECT * FROM purok3_locations");
+                                if($res3){
+                                    while($row = $res3->fetch_assoc()){
+                                        if(!empty($row['marker_image'])){
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                        }
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+
+                        <div id="markers-purok4" class="purok-markers" style="display: none;">
+                            <?php
+                            if(isset($conn)){
+                                $res4 = $conn->query("SELECT * FROM purok4_locations");
+                                if($res4){
+                                    while($row = $res4->fetch_assoc()){
+                                        if(!empty($row['marker_image'])){
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                        }
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Household Details Modal -->
+        <div class="household-modal-overlay" id="householdModal">
+            <div class="household-modal-box">
+                <span class="household-modal-close" onclick="document.getElementById('householdModal').style.display='none'">&times;</span>
+                <h3 class="household-modal-title">Household Details</h3>
+                <p class="household-modal-subtitle">Barangay San Jose</p>
+                
+                <div class="household-modal-img-container">
+                    <img src="" id="modalHouseImage" alt="Household Image" onerror="this.src='https://placehold.co/400x400/e2e8f0/64748b?text=No+Photo'">
+                </div>
+                
+                <div class="household-modal-details">
+                    <div class="hm-row">
+                        <span class="hm-label">House Number</span>
+                        <span class="hm-value" id="modalHouseNumber"></span>
+                    </div>
+                    <div class="hm-row">
+                        <span class="hm-label">Husband/Head</span>
+                        <span class="hm-value" id="modalHusbandName"></span>
+                    </div>
+                    <div class="hm-row">
+                        <span class="hm-label">Spouse Name</span>
+                        <span class="hm-value" id="modalSpouseName"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Script to handle pin and badge clicks -->
-        <script src="assets/js/spotmap.js"></script>
+        <script src="assets/js/spotmap.js?v=2"></script>
     </main>
 
     <!-- Footer -->

@@ -234,8 +234,8 @@ if ($result) {
                             <tr>
                                 <th>House Image</th>
                                 <th>House Number</th>
-                                
-                                
+                                <th>Husband Name</th>
+                                <th>Spouse Name</th>
                                 <th>Date Added</th>
                                 <th>Actions</th>
                             </tr>
@@ -256,8 +256,8 @@ if ($result) {
                                         <?php endif; ?>
                                     </td>
                                     <td><?= htmlspecialchars($record['houseNumber'] ?? '') ?></td>
-                                    
-                                    
+                                    <td><?= htmlspecialchars($record['husbandName'] ?? '') ?></td>
+                                    <td><?= htmlspecialchars($record['spouseName'] ?? '') ?></td>
                                     <td><?= date('M d, Y', strtotime($record['dateAdded'])) ?></td>
                                     <td>
                                         <button type="button" class="btn-action edit-btn" style="padding: 5px 10px; background: #0f766e; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;" 

@@ -302,3 +302,92 @@
     z-index: 10;
     margin-bottom: 0;
 }
+
+/* Household Details Modal */
+.household-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.household-modal-box {
+    background-color: #ffffff;
+    width: 350px;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+}
+
+.household-modal-close {
+    position: absolute;
+    top: 15px; right: 15px;
+    font-size: 24px;
+    color: #64748b;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.household-modal-close:hover {
+    color: #ef4444;
+}
+
+.household-modal-title {
+    color: #064e3b;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+}
+
+.household-modal-subtitle {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0 0 25px 0;
+}
+
+.household-modal-img-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 25px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #f1f5f9;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.household-modal-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.household-modal-details {
+    background-color: #f8fafc;
+    border-radius: 12px;
+    padding: 15px 20px;
+}
+
+.hm-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 0.9rem;
+}
+
+.hm-label {
+    color: #64748b;
+}
+
+.hm-value {
+    color: #1e293b;
+    font-weight: 700;
+    text-align: right;
+}
+

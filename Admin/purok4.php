@@ -209,6 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <img src="../assets/images/Purok/Purok 4.jpg" alt="Map Background" class="map-preview-image" style="width: 100%; display: block;">
                     
                     <?php
+                    require_once '../db_connect.php';
                     $result = $conn->query("SELECT * FROM purok4_locations");
                     if ($result) {
                         while ($row = $result->fetch_assoc()) {

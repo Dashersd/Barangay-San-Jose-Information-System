@@ -1,12 +1,6 @@
 CREATE DATABASE IF NOT EXISTS barangay_sanjose_db;
 USE barangay_sanjose_db;
 
-CREATE TABLE IF NOT EXISTS puroks (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    description TEXT
-);
-
 CREATE TABLE IF NOT EXISTS legends (
     id INT AUTO_INCREMENT PRIMARY KEY,
     category_name VARCHAR(50) NOT NULL,
