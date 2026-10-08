@@ -1,9 +1,10 @@
 const mapImagesSequence = [
+    'assets/images/Map/Philippines.png',
     'assets/images/Map/mindanao.jpg',
     'assets/images/Map/Zamboanga del sur.jpg',
     'assets/images/Map/Lapuyan.gif',
     'assets/images/Map/san jose.png',
-    'assets/images/Map/ChatGPT Image Oct 6, 2026, 08_49_30 AM.png',
+    'assets/images/Map/Legend.png',
 ];
 let currentImageIndex = 0;
 
@@ -49,24 +50,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (mainImage) {
         mainImage.addEventListener('click', function() {
-            if (currentImageIndex < mapImagesSequence.length - 1) {
-                currentImageIndex++;
-                mainImage.src = mapImagesSequence[currentImageIndex];
-                updatePinVisibility();
-                
-                if (currentImageIndex === mapImagesSequence.length - 1) {
-                    mainImage.style.cursor = 'default';
-                }
-            }
+            currentImageIndex = (currentImageIndex + 1) % mapImagesSequence.length;
+            mainImage.src = mapImagesSequence[currentImageIndex];
+            updatePinVisibility();
+            mainImage.style.cursor = 'pointer';
         });
     }
 
     // Handle Pin Click
     if (pin && mainImage) {
         pin.addEventListener('click', function() {
-            // Change the image source to ChatGPT Image
-            currentImageIndex = mapImagesSequence.indexOf('assets/images/Map/ChatGPT Image Oct 6, 2026, 08_49_30 AM.png');
-            if (currentImageIndex === -1) currentImageIndex = 4;
+            // Change the image source to Legend.png
+            currentImageIndex = mapImagesSequence.indexOf('assets/images/Map/Legend.png');
+            if (currentImageIndex === -1) currentImageIndex = 5;
             mainImage.src = mapImagesSequence[currentImageIndex];
             mainImage.style.cursor = 'pointer';
             updatePinVisibility();

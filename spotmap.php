@@ -145,8 +145,8 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                             Overview Map
                         </button>
-                        <!-- Initial image is mindanao.jpg -->
-                        <img src="assets/images/Map/mindanao.jpg" alt="Barangay Spot Map" id="mainMapImage" onerror="this.src='https://placehold.co/1200x800/e2e8f0/64748b?text=Spot+Map+Image'" style="cursor: pointer;">
+                        <!-- Initial image is Philippines.png -->
+                        <img src="assets/images/Map/Philippines.png" alt="Barangay Spot Map" id="mainMapImage" onerror="this.src='https://placehold.co/1200x800/e2e8f0/64748b?text=Spot+Map+Image'" style="cursor: pointer;">
                         
                         <!-- Interactive Pin on San Jose -->
                         <div class="map-pin" id="sanJosePin" title="Click to view San Jose Satellite Map" style="display: none;">
