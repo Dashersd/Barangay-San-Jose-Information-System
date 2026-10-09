@@ -1,15 +1,14 @@
 <?php
-// Manage About Us
+// Feedback Chat
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage About Us - Admin Panel</title>
+    <title>Feedback Chat - Admin Panel</title>
 
     <!-- Favicon / Tab Logo -->
-    <link rel="icon" type="image/png" href="../assets/images/San Jose Logo 2.png">
     <link rel="icon" type="image/png" href="../assets/images/San Jose Logo 2.png">
 
     <!-- Google Fonts: Inter -->
@@ -20,7 +19,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/adminabout.css">
+    <link rel="stylesheet" href="css/feedbackchat.css">
 </head>
 <body>
 
@@ -41,7 +40,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="adminabout.php" class="active">
+                    <a href="adminabout.php">
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                         </span>
@@ -118,7 +117,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="feedbackchat.php">
+                    <a href="feedbackchat.php" class="active">
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                         </span>
@@ -148,7 +147,7 @@
         <main class="admin-main">
             <!-- Header -->
             <header class="admin-header">
-                <h1>Manage About Us</h1>
+                <h1>Feedback Chat</h1>
                 <div class="header-user-profile">
                     <div class="user-text">
                         <span class="user-name">System Admin</span>
@@ -159,55 +158,123 @@
             </header>
 
             <!-- Content Area -->
-            <div class="admin-content">
-                <div class="content-header">
-                    <h2>About Us Content</h2>
-                    <p>Update the information displayed on the public About Us page.</p>
+            <div class="admin-content chat-page-wrapper">
+                
+                <div class="chat-container">
+                    <!-- Chat Sidebar (Conversations List) -->
+                    <div class="chat-sidebar">
+                        <div class="chat-sidebar-header">
+                            <h3>Conversations</h3>
+                        </div>
+                        <div class="conversation-list" id="conversation-list">
+                            <!-- Dynamically loaded conversations -->
+                        </div>
+                    </div>
+
+                    <!-- Chat Main Area -->
+                    <div class="chat-main" id="chat-main-area" style="display:none;">
+                        <div class="chat-main-header">
+                            <h3 id="current-chat-name">Select a conversation</h3>
+                        </div>
+                        
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- Messages will be loaded here -->
+                        </div>
+
+                        <div class="chat-input-area">
+                            <input type="text" class="chat-input" id="admin-chat-input" placeholder="Type your reply here...">
+                            <button class="btn-send" id="admin-send-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                Send
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                <form action="#" method="POST" enctype="multipart/form-data" class="about-form">
-                    <div class="form-columns">
-                        <!-- Left Column: Image -->
-                        <div class="form-left">
-                            <div class="form-card">
-                                <label class="card-label">ADD IMAGE</label>
-                                <div class="image-upload-area">
-                                    <input type="file" id="aboutImage" hidden accept="image/*">
-                                    <label for="aboutImage" class="btn-upload">Choose File</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Column: Textareas -->
-                        <div class="form-right">
-                            <div class="form-card">
-                                <label class="card-label">HISTORY</label>
-                                <textarea placeholder="Enter barangay history here..." rows="5"></textarea>
-                            </div>
-                            <div class="form-card">
-                                <label class="card-label">VISION</label>
-                                <textarea placeholder="Enter barangay vision here..." rows="4"></textarea>
-                            </div>
-                            <div class="form-card">
-                                <label class="card-label">MISSION</label>
-                                <textarea placeholder="Enter barangay mission here..." rows="4"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn-save">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                            Save Changes
-                        </button>
-                    </div>
-                </form>
 
             </div>
         </main>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/dashboard.js"></script>
+    <script>
+    $(document).ready(function() {
+        let activeSessionId = null;
+        
+        function fetchSessions() {
+            $.get('api/admin_fetch_sessions.php', function(res) {
+                if(res.sessions) {
+                    let html = '';
+                    res.sessions.forEach(s => {
+                        const activeClass = (s.id == activeSessionId) ? 'active' : '';
+                        html += `
+                            <div class="conversation-item ${activeClass}" data-id="${s.id}" data-name="${s.user_name}">
+                                <div class="conv-header">
+                                    <span class="conv-name">${s.user_name}</span>
+                                    <span class="conv-time">${s.time || ''}</span>
+                                </div>
+                                <div class="conv-preview">
+                                    [${s.service_type}] ${s.last_msg || ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    $('#conversation-list').html(html);
+                }
+            });
+        }
+        
+        function fetchMessages() {
+            if(!activeSessionId) return;
+            $.get('api/admin_fetch_messages.php', {session_id: activeSessionId}, function(res) {
+                if(res.status === 'success') {
+                    let html = '';
+                    res.messages.forEach(msg => {
+                        const typeClass = msg.sender === 'admin' ? 'admin-message' : 'user-message';
+                        html += `
+                            <div class="message-wrapper ${typeClass}">
+                                <div class="message-bubble">
+                                    <p>${msg.message}</p>
+                                    <span class="msg-time">${msg.time}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    $('#chat-messages').html(html);
+                    // scroll to bottom
+                    $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+                }
+            });
+        }
+        
+        setInterval(fetchSessions, 3000);
+        setInterval(fetchMessages, 3000);
+        fetchSessions();
+        
+        $(document).on('click', '.conversation-item', function() {
+            activeSessionId = $(this).data('id');
+            const name = $(this).data('name');
+            $('.conversation-item').removeClass('active');
+            $(this).addClass('active');
+            
+            $('#chat-main-area').show();
+            $('#current-chat-name').text(name);
+            fetchMessages();
+        });
+        
+        $('#admin-send-btn').on('click', function() {
+            const msg = $('#admin-chat-input').val();
+            if(!activeSessionId || msg.trim() === '') return;
+            
+            $.post('api/admin_send_message.php', {session_id: activeSessionId, message: msg}, function(res) {
+                if(res.status === 'success') {
+                    $('#admin-chat-input').val('');
+                    fetchMessages();
+                    fetchSessions();
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>
-

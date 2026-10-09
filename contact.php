@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+// Reset chat session after 1 day (86400 seconds)
+if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'] > 86400)) {
+    unset($_SESSION['chat_token']);
+    unset($_SESSION['chat_start_time']);
+}
 // Barangay San Jose Web-Based Information System - Contact Us
 ?>
 <!DOCTYPE html>
@@ -116,50 +123,47 @@
                             </div>
                         </div>
                     </div>
+                    
 
                 </div>
 
                 <!-- Right Side -->
                 <div class="contact-home-right" data-aos="fade-left">
-                    <h2 class="contact-heading">Send us a message</h2>
-                    <form class="contact-form" action="#" method="POST">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" placeholder="Name" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Service Type</label>
-                                <select required>
-                                    <option value="" disabled selected>Select service</option>
-                                    <option value="clearance">Barangay Clearance</option>
-                                    <option value="indigency">Certificate of Indigency</option>
-                                    <option value="business">Business Clearance</option>
-                                    <option value="residency">Certificate of Residency</option>
-                                    <option value="other">Other Inquiry</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Phone</label>
-                                <input type="text" placeholder="Phone" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" placeholder="Email" required>
-                            </div>
+                    <h2 class="contact-heading">Start a Live Chat</h2>
+                    <?php $has_chat = isset($_SESSION['chat_token']) && !empty($_SESSION['chat_token']); ?>
+                    <form class="contact-form" id="live-chat-form" action="#" method="POST" style="<?php echo $has_chat ? 'display:none;' : ''; ?>">
+                        <div class="form-group">
+                            <label>Your Name</label>
+                            <input type="text" placeholder="Enter your name" required>
                         </div>
                         <div class="form-group">
-                            <label>Subject</label>
-                            <input type="text" placeholder="Subject" required>
+                            <label>Service Type</label>
+                            <select required>
+                                <option value="" disabled selected>Select service</option>
+                                <option value="clearance">Barangay Clearance</option>
+                                <option value="indigency">Certificate of Indigency</option>
+                                <option value="business">Business Clearance</option>
+                                <option value="residency">Certificate of Residency</option>
+                                <option value="other">Other Inquiry</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label>Message</label>
-                            <textarea rows="4" placeholder="Message" required></textarea>
+                            <label>Initial Message</label>
+                            <textarea rows="4" placeholder="How can we help you?" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary contact-submit">SEND</button>
+                        <button type="submit" class="btn btn-primary contact-submit">START CHAT</button>
                     </form>
+
+                    <!-- Chat UI (Hidden Initially) -->
+                    <div id="live-chat-ui" style="<?php echo $has_chat ? '' : 'display:none;'; ?> border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; overflow:hidden;">
+                        <div id="user-chat-messages" style="height: 300px; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:10px;">
+                            <!-- Messages -->
+                        </div>
+                        <div style="display:flex; border-top:1px solid #e2e8f0; padding:15px; background:#fff;">
+                            <input type="text" id="user-chat-input" placeholder="Type a message..." style="flex:1; border:1px solid #cbd5e1; border-radius:8px; padding:10px 15px; margin-right:10px; outline:none; font-family:inherit;">
+                            <button id="user-chat-send" class="btn btn-primary" style="padding:10px 20px; border-radius:8px;">SEND</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -217,8 +221,84 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="assets/js/main.js?v=2"></script>
+    <script>
+    $(document).ready(function() {
+        let chatPolling;
+        
+        // If chat is already active on load
+        if ($('#live-chat-ui').is(':visible')) {
+            $('.contact-heading').text("Live Chat Support");
+            fetchUserMessages();
+            chatPolling = setInterval(fetchUserMessages, 3000);
+        }
 
+        $('#live-chat-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            const name = $(this).find('input[type="text"]').eq(0).val();
+            const service = $(this).find('select').val();
+            const message = $(this).find('textarea').val();
+
+            $.post('api/chat_init.php', {name: name, service: service, message: message}, function(res) {
+                if(res.status === 'success') {
+                    $('#live-chat-form').hide();
+                    $('.contact-heading').text("Live Chat Support");
+                    $('#live-chat-ui').fadeIn();
+                    
+                    fetchUserMessages();
+                    chatPolling = setInterval(fetchUserMessages, 3000);
+                }
+            });
+        });
+
+        function fetchUserMessages() {
+            $.get('api/chat_fetch.php', function(res) {
+                if(res.status === 'success') {
+                    let html = '';
+                    res.messages.forEach(msg => {
+                        const isUser = msg.sender === 'user';
+                        const align = isUser ? 'flex-end' : 'flex-start';
+                        const bg = isUser ? 'var(--primary)' : '#e2e8f0';
+                        const color = isUser ? '#fff' : '#1e293b';
+                        const nameDisplay = isUser ? '' : '<strong style="display:block; margin-bottom:5px; font-size:0.85em;">Admin</strong>';
+                        
+                        html += `
+                            <div style="align-self:${align}; max-width:80%;">
+                                <div style="background:${bg}; color:${color}; padding:12px 16px; border-radius:12px; font-size:14px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                                    ${nameDisplay}
+                                    <p style="margin:0; line-height:1.4;">${msg.message}</p>
+                                    <span style="display:block; text-align:right; font-size:0.75em; margin-top:8px; opacity:0.8;">${msg.time}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    $('#user-chat-messages').html(html);
+                    $('#user-chat-messages').scrollTop($('#user-chat-messages')[0].scrollHeight);
+                }
+            });
+        }
+
+        $('#user-chat-send').on('click', function() {
+            const msg = $('#user-chat-input').val();
+            if(msg.trim() === '') return;
+            
+            $.post('api/chat_send.php', {message: msg}, function(res) {
+                if(res.status === 'success') {
+                    $('#user-chat-input').val('');
+                    fetchUserMessages();
+                }
+            });
+        });
+        
+        $('#user-chat-input').keypress(function(e) {
+            if(e.which == 13) {
+                $('#user-chat-send').click();
+            }
+        });
+    });
+    </script>
 </body>
 
 </html>
