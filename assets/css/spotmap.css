@@ -230,18 +230,19 @@
     top: -25px;
     background-color: #ffffff;
     color: #002e5b;
-    padding: 2px 8px;
-    border-radius: 4px;
+    padding: 3px 10px;
+    border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 700;
     white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    opacity: 1;
+    pointer-events: none;
+    transition: transform 0.2s ease;
 }
 
 .map-pin:hover .pin-label {
-    opacity: 1;
+    transform: scale(1.08);
 }
 
 @keyframes pulse {

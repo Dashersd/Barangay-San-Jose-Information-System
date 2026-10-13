@@ -147,15 +147,50 @@
                             Overview Map
                         </button>
                         <!-- Initial image is Philippines.png -->
-                        <img src="assets/images/Map/Philippines.png" alt="Barangay Spot Map" id="mainMapImage" onerror="this.src='https://placehold.co/1200x800/e2e8f0/64748b?text=Spot+Map+Image'" style="cursor: pointer;">
+                        <img src="assets/images/Map/Philippines.png" alt="Barangay Spot Map" id="mainMapImage" onerror="this.src='https://placehold.co/1200x800/e2e8f0/64748b?text=Spot+Map+Image'" style="cursor: default;">
                         
+                        <!-- Pin on Philippines Map pointing to San Jose / Zamboanga del Sur (Mindanao) -->
+                        <div class="map-pin" id="philippinesPin" title="Click to view Barangay San Jose" style="left: 56%; top: 78%; display: flex;">
+                            <svg viewBox="0 0 24 24" fill="#ef4444" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3" fill="#ffffff"></circle>
+                            </svg>
+                            <div class="pin-pulse"></div>
+                        </div>
+
+                        <!-- Pin on Mindanao Map -->
+                        <div class="map-pin" id="mindanaoPin" title="Click to view Zamboanga del Sur" style="left: 58.3%; top: 67%; display: none;">
+                            <svg viewBox="0 0 24 24" fill="#ef4444" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3" fill="#ffffff"></circle>
+                            </svg>
+                            <div class="pin-pulse"></div>
+                        </div>
+
+                        <!-- Pin on Zamboanga del Sur Map (Lapuyan text) -->
+                        <div class="map-pin" id="lapuyanPin" title="Click to view Lapuyan" style="left: 56.7%; top: 61.3%; display: none;">
+                            <svg viewBox="0 0 24 24" fill="#ef4444" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3" fill="#ffffff"></circle>
+                            </svg>
+                            <div class="pin-pulse"></div>
+                        </div>
+
+                        <!-- Pin on Lapuyan Map (Lapuyan text) -->
+                        <div class="map-pin" id="lapuyanGifPin" title="Click to view Barangay San Jose" style="left: 54%; top: 49%; display: none;">
+                            <svg viewBox="0 0 24 24" fill="#ef4444" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3" fill="#ffffff"></circle>
+                            </svg>
+                            <div class="pin-pulse"></div>
+                        </div>
+
                         <div class="map-pin" id="sanJosePin" title="Click to view San Jose Satellite Map" style="display: none;">
                             <svg viewBox="0 0 24 24" fill="#ef4444" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                 <circle cx="12" cy="10" r="3" fill="#ffffff"></circle>
                             </svg>
                             <div class="pin-pulse"></div>
-                            <span class="pin-label">San Jose</span>
                         </div>
 
                         <!-- Markers Layers -->
@@ -252,7 +287,7 @@
         </div>
 
         <!-- Script to handle pin and badge clicks -->
-        <script src="assets/js/spotmap.js?v=2"></script>
+        <script src="assets/js/spotmap.js?v=<?= time() ?>"></script>
     </main>
 
     <!-- Footer -->

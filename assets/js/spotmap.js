@@ -10,25 +10,56 @@ let currentImageIndex = 0;
 
 function updatePinVisibility() {
     var mainImage = document.getElementById('mainMapImage');
-    var pin = document.getElementById('sanJosePin');
-    if (mainImage && pin) {
-        var src = mainImage.getAttribute('src');
-        if (src === 'assets/images/Map/san jose.png') {
-            pin.style.display = 'block';
+    var philPin = document.getElementById('philippinesPin');
+    var minPin = document.getElementById('mindanaoPin');
+    var lapPin = document.getElementById('lapuyanPin');
+    var lapGifPin = document.getElementById('lapuyanGifPin');
+    var sjPin = document.getElementById('sanJosePin');
+    
+    if (mainImage) {
+        var src = mainImage.getAttribute('src') || '';
+        
+        // Philippines Pin (only on Philippines.png)
+        if (philPin) {
+            philPin.style.display = src.includes('Philippines.png') ? 'flex' : 'none';
+        }
+
+        // Mindanao Pin (only on mindanao.jpg)
+        if (minPin) {
+            minPin.style.display = src.includes('mindanao.jpg') ? 'flex' : 'none';
+        }
+
+        // Lapuyan Pin (only on Zamboanga del sur.jpg)
+        if (lapPin) {
+            lapPin.style.display = src.includes('Zamboanga del sur.jpg') ? 'flex' : 'none';
+        }
+
+        // Lapuyan GIF Pin (only on Lapuyan.gif)
+        if (lapGifPin) {
+            lapGifPin.style.display = src.includes('Lapuyan.gif') ? 'flex' : 'none';
+        }
+        
+        // San Jose Pin (only on san jose.png)
+        if (sjPin) {
+            sjPin.style.display = src.includes('san jose.png') ? 'flex' : 'none';
+        }
+
+        // On images with specific pins or on the final interactive legend, map image itself is not clickable
+        if (src.includes('Philippines.png') || src.includes('mindanao.jpg') || src.includes('Zamboanga del sur.jpg') || src.includes('Lapuyan.gif') || src.includes('san jose.png') || src.includes('Legend.png')) {
+            mainImage.style.cursor = 'default';
         } else {
-            pin.style.display = 'none';
+            mainImage.style.cursor = 'pointer';
         }
     }
 }
 
-// Global function to reset map to default
+// Global function to reset map to default (Philippines overview)
 function resetMap() {
     var mainImage = document.getElementById('mainMapImage');
     
     if (mainImage) {
         currentImageIndex = 0;
         mainImage.src = mapImagesSequence[currentImageIndex];
-        mainImage.style.cursor = 'pointer';
         updatePinVisibility();
         
         // Hide all markers
@@ -72,17 +103,25 @@ function changeMap(element) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const pin = document.getElementById('sanJosePin');
+    const philPin = document.getElementById('philippinesPin');
+    const minPin = document.getElementById('mindanaoPin');
+    const lapPin = document.getElementById('lapuyanPin');
+    const lapGifPin = document.getElementById('lapuyanGifPin');
+    const sjPin = document.getElementById('sanJosePin');
     const mainImage = document.getElementById('mainMapImage');
 
-    if (mainImage) {
-        mainImage.addEventListener('click', function() {
-            currentImageIndex = (currentImageIndex + 1) % mapImagesSequence.length;
+    // Make sure initial state has correct pin visibility and cursor
+    updatePinVisibility();
+
+    // 1. Click handler for Pin on Philippines Map -> goes to mindanao.jpg
+    if (philPin && mainImage) {
+        philPin.addEventListener('click', function(e) {
+            e.stopPropagation();
+            currentImageIndex = mapImagesSequence.indexOf('assets/images/Map/mindanao.jpg');
+            if (currentImageIndex === -1) currentImageIndex = 1;
             mainImage.src = mapImagesSequence[currentImageIndex];
             updatePinVisibility();
-            mainImage.style.cursor = 'pointer';
             
-            // Hide all markers when cycling maps
             var allMarkers = document.querySelectorAll('.purok-markers');
             allMarkers.forEach(function(el) {
                 el.style.display = 'none';
@@ -90,36 +129,100 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle Pin Click
-    if (pin && mainImage) {
-        pin.addEventListener('click', function() {
-            // Change the image source to Legend.png
+    // 2. Click handler for Pin on Mindanao Map -> goes to Zamboanga del sur.jpg
+    if (minPin && mainImage) {
+        minPin.addEventListener('click', function(e) {
+            e.stopPropagation();
+            currentImageIndex = mapImagesSequence.indexOf('assets/images/Map/Zamboanga del sur.jpg');
+            if (currentImageIndex === -1) currentImageIndex = 2;
+            mainImage.src = mapImagesSequence[currentImageIndex];
+            updatePinVisibility();
+            
+            var allMarkers = document.querySelectorAll('.purok-markers');
+            allMarkers.forEach(function(el) {
+                el.style.display = 'none';
+            });
+        });
+    }
+
+    // 3. Click handler for Pin on Zamboanga del Sur Map -> goes to Lapuyan.gif
+    if (lapPin && mainImage) {
+        lapPin.addEventListener('click', function(e) {
+            e.stopPropagation();
+            currentImageIndex = mapImagesSequence.indexOf('assets/images/Map/Lapuyan.gif');
+            if (currentImageIndex === -1) currentImageIndex = 3;
+            mainImage.src = mapImagesSequence[currentImageIndex];
+            updatePinVisibility();
+            
+            var allMarkers = document.querySelectorAll('.purok-markers');
+            allMarkers.forEach(function(el) {
+                el.style.display = 'none';
+            });
+        });
+    }
+
+    // 4. Click handler for Pin on Lapuyan GIF -> goes to san jose.png
+    if (lapGifPin && mainImage) {
+        lapGifPin.addEventListener('click', function(e) {
+            e.stopPropagation();
+            currentImageIndex = mapImagesSequence.indexOf('assets/images/Map/san jose.png');
+            if (currentImageIndex === -1) currentImageIndex = 4;
+            mainImage.src = mapImagesSequence[currentImageIndex];
+            updatePinVisibility();
+            
+            var allMarkers = document.querySelectorAll('.purok-markers');
+            allMarkers.forEach(function(el) {
+                el.style.display = 'none';
+            });
+        });
+    }
+
+    // 5. Click handler for Pin on San Jose Map -> goes to Legend.png
+    if (sjPin && mainImage) {
+        sjPin.addEventListener('click', function(e) {
+            e.stopPropagation();
             currentImageIndex = mapImagesSequence.indexOf('assets/images/Map/Legend.png');
             if (currentImageIndex === -1) currentImageIndex = 5;
             mainImage.src = mapImagesSequence[currentImageIndex];
-            mainImage.style.cursor = 'pointer';
             updatePinVisibility();
             
-            // Hide all markers when viewing legend
             var allMarkers = document.querySelectorAll('.purok-markers');
             allMarkers.forEach(function(el) {
                 el.style.display = 'none';
             });
         });
     }
-    
+
+    // Click on main map image:
+    // Only advances if NOT on images that require clicking pins/controls
+    if (mainImage) {
+        mainImage.addEventListener('click', function() {
+            var src = mainImage.getAttribute('src') || '';
+            if (src.includes('Philippines.png') || src.includes('mindanao.jpg') || src.includes('Zamboanga del sur.jpg') || src.includes('Lapuyan.gif') || src.includes('san jose.png') || src.includes('Legend.png')) {
+                return; // User must click the Pin!
+            }
+
+            currentImageIndex = (currentImageIndex + 1) % mapImagesSequence.length;
+            mainImage.src = mapImagesSequence[currentImageIndex];
+            updatePinVisibility();
+            
+            var allMarkers = document.querySelectorAll('.purok-markers');
+            allMarkers.forEach(function(el) {
+                el.style.display = 'none';
+            });
+        });
+    }
+
     // Handle House Marker Clicks using event delegation
     document.addEventListener('click', function(e) {
         if (e.target && e.target.classList.contains('house-marker')) {
             var modal = document.getElementById('householdModal');
             if (modal) {
-                // Get data from clicked marker
                 var houseNum = e.target.getAttribute('data-house');
                 var husband = e.target.getAttribute('data-husband');
                 var spouse = e.target.getAttribute('data-spouse');
                 var imageSrc = e.target.getAttribute('data-image');
                 
-                // Set data to modal elements
                 document.getElementById('modalHouseNumber').textContent = houseNum ? houseNum : 'N/A';
                 document.getElementById('modalHusbandName').textContent = husband ? husband : 'N/A';
                 document.getElementById('modalSpouseName').textContent = spouse ? spouse : 'N/A';
@@ -131,7 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     modalImg.src = 'https://placehold.co/400x400/e2e8f0/64748b?text=No+Photo';
                 }
                 
-                // Show modal
                 modal.style.display = 'flex';
             }
         }

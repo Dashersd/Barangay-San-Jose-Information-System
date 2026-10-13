@@ -253,8 +253,38 @@ ALTER TABLE `purok3_locations`
 --
 -- Constraints for table `purok4_locations`
 --
-ALTER TABLE `purok4_locations`
-  ADD CONSTRAINT `purok4_locations_ibfk_1` FOREIGN KEY (`legend_id`) REFERENCES `legends` (`id`) ON DELETE SET NULL;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gallery_folders`
+--
+
+CREATE TABLE `gallery_folders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `folder_name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gallery_media`
+--
+
+CREATE TABLE `gallery_media` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `folder_id` int(11) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `caption` varchar(255) DEFAULT NULL,
+  `uploaded_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `folder_id` (`folder_id`),
+  CONSTRAINT `fk_gallery_folder` FOREIGN KEY (`folder_id`) REFERENCES `gallery_folders` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -6,6 +6,22 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
     unset($_SESSION['chat_token']);
     unset($_SESSION['chat_start_time']);
 }
+
+require_once __DIR__ . '/db_connect.php';
+
+// Fetch latest gallery items for homepage showcase
+$home_gallery_query = "SELECT m.*, f.folder_name 
+                       FROM gallery_media m 
+                       JOIN gallery_folders f ON m.folder_id = f.id 
+                       ORDER BY m.uploaded_at DESC 
+                       LIMIT 4";
+$home_gallery_res = $conn->query($home_gallery_query);
+$home_media_items = [];
+if ($home_gallery_res) {
+    while ($row = $home_gallery_res->fetch_assoc()) {
+        $home_media_items[] = $row;
+    }
+}
 // Barangay San Jose Web-Based Information System
 ?>
 <!DOCTYPE html>
@@ -27,7 +43,7 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
-    <link rel="stylesheet" href="assets/css/gallery.css">
+    <link rel="stylesheet" href="assets/css/gallery.css?v=<?= time() ?>">
 
     <!-- AOS Animation CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -86,28 +102,7 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
         </div>
     </section>
 
-    <!-- 2. About Section (Full Width) -->
-    <section class="about-section">
-        <div class="container about-section-container">
-            <!-- Image Side -->
-            <div class="about-section-image" data-aos="fade-right">
-                <img src="assets/images/Barangay Hall.png" alt="About Barangay San Jose">
-            </div>
-            <!-- Text Side -->
-            <div class="about-section-text" data-aos="fade-left">
-                <p class="about-eyebrow">WHO WE ARE</p>
-                <h2 class="about-section-heading">About <span class="highlight-text">Barangay San Jose</span></h2>
-                <div class="about-section-underline"></div>
-                <p class="about-section-desc">Barangay San Jose is a vibrant and united community committed to providing quality public service, promoting peace and order, and creating a sustainable and progressive future for all its residents.</p>
-                <p class="about-section-desc">Our barangay is home to thousands of families who work hand-in-hand with local leaders to build a safer, healthier, and more prosperous community. Through bayanihan, transparency, and genuine service, we strive to uplift the lives of every San Jose resident.</p>
-                <a href="about.php" class="btn btn-blue">
-                    Read More About Us &rarr;
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- 3. Officials Section -->
+    <!-- 2. Officials Section -->
     <section class="officials-section">
         <div class="container officials-container">
             <div class="section-header text-center" data-aos="fade-up">
@@ -147,6 +142,27 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. About Section (Full Width) -->
+    <section class="about-section">
+        <div class="container about-section-container">
+            <!-- Image Side -->
+            <div class="about-section-image" data-aos="fade-right">
+                <img src="assets/images/Barangay Hall.png" alt="About Barangay San Jose">
+            </div>
+            <!-- Text Side -->
+            <div class="about-section-text" data-aos="fade-left">
+                <p class="about-eyebrow">WHO WE ARE</p>
+                <h2 class="about-section-heading">About <span class="highlight-text">Barangay San Jose</span></h2>
+                <div class="about-section-underline"></div>
+                <p class="about-section-desc">Barangay San Jose is a vibrant and united community committed to providing quality public service, promoting peace and order, and creating a sustainable and progressive future for all its residents.</p>
+                <p class="about-section-desc">Our barangay is home to thousands of families who work hand-in-hand with local leaders to build a safer, healthier, and more prosperous community. Through bayanihan, transparency, and genuine service, we strive to uplift the lives of every San Jose resident.</p>
+                <a href="about.php" class="btn btn-blue">
+                    Read More About Us &rarr;
+                </a>
             </div>
         </div>
     </section>
@@ -267,7 +283,7 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
     </section>
 
     <!-- 6. Gallery Section -->
-    <section id="gallery" class="gallery-section">
+    <section id="gallery" class="gallery-section home-gallery-section">
         <div class="container gallery-container">
             <div class="section-header text-center" data-aos="fade-up">
                 <p class="section-eyebrow">COMMUNITY IN ACTION</p>
@@ -276,42 +292,50 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
                 <p class="section-desc">Take a look at the latest events, activities, and programs organized for the residents of Barangay San Jose.</p>
             </div>
             
-            <div class="gallery-grid">
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
-                    <img src="assets/images/gallery_community_event_1789988183333.jpg" alt="Community Event">
-                    <div class="gallery-overlay">
-                        <h4>Community Fiesta</h4>
-                        <p>Celebrating together</p>
-                    </div>
+            <?php if (!empty($home_media_items)): ?>
+                <div class="gallery-grid">
+                    <?php foreach ($home_media_items as $index => $item): ?>
+                        <div class="gallery-item-card" 
+                             data-aos="zoom-in" 
+                             data-aos-delay="<?= ($index % 4) * 100 ?>"
+                             onclick="openHomeLightbox('<?= htmlspecialchars($item['file_path']) ?>', '<?= htmlspecialchars(addslashes($item['caption'])) ?>', '<?= htmlspecialchars(addslashes($item['folder_name'])) ?>', '<?= date('F d, Y', strtotime($item['uploaded_at'])) ?>')">
+                            <div class="gallery-img-box">
+                                <img src="<?= htmlspecialchars($item['file_path']) ?>" alt="<?= htmlspecialchars($item['caption']) ?>" loading="lazy" class="gallery-img">
+                                <div class="gallery-item-overlay">
+                                    <span class="gallery-category-pill"><?= htmlspecialchars($item['folder_name']) ?></span>
+                                    <h4 class="gallery-item-title"><?= htmlspecialchars($item['caption']) ?></h4>
+                                    <div class="gallery-item-bottom">
+                                        <p class="gallery-item-meta">
+                                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                            <?= date('M d, Y', strtotime($item['uploaded_at'])) ?>
+                                        </p>
+                                        <span class="gallery-zoom-badge">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                            Preview
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="assets/images/gallery_clean_up_1789988204683.jpg" alt="Clean Up Drive">
-                    <div class="gallery-overlay">
-                        <h4>Clean Up Drive</h4>
-                        <p>Keeping our barangay green</p>
+            <?php else: ?>
+                <div class="gallery-empty-state" data-aos="fade-up">
+                    <div class="empty-icon-circle">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                     </div>
+                    <h3>No Photos Uploaded Yet</h3>
+                    <p>Community events and activities will be uploaded soon. Please check back later!</p>
                 </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
-                    <img src="assets/images/gallery_sports_league_1789988228547.jpg" alt="Sports League">
-                    <div class="gallery-overlay">
-                        <h4>SK Basketball League</h4>
-                        <p>Youth sports program</p>
-                    </div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="400">
-                    <img src="assets/images/San Jose.png" alt="Barangay Hall">
-                    <div class="gallery-overlay">
-                        <h4>Barangay Hall</h4>
-                        <p>Heart of our community</p>
-                    </div>
-                </div>
-            </div>
+            <?php endif; ?>
             
-            <div class="text-center" style="margin-top: 3rem;">
-                <a href="gallery.php" class="btn btn-outline">View Full Gallery</a>
+            <div class="text-center" style="margin-top: 3.5rem;" data-aos="fade-up">
+                <a href="gallery.php" class="btn btn-outline" style="border-radius: 999px; padding: 0.8rem 2.2rem; font-weight: 700;">View Full Gallery & Albums &rarr;</a>
             </div>
         </div>
-    </section>    <!-- 7. Spot Map Section -->
+    </section>
+
+    <!-- 7. Spot Map Section -->
     <section id="spot-map" class="spot-map-section">
         <div class="container">
             <div class="section-header text-center" style="margin-bottom: 3rem;" data-aos="fade-up">
@@ -331,7 +355,7 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
                         </span>
                         <h2>Barangay Spot Map</h2>
                         <p>Navigate our community with ease. View important landmarks, territorial boundaries, purok zones, and key public facilities throughout Barangay San Jose.</p>
-                        <a href="#" class="btn-yellow">
+                        <a href="spotmap.php" class="btn-yellow">
                             View Full Map
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                         </a>
@@ -340,7 +364,7 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
 
                 <!-- Right Side: Map -->
                 <div class="spot-map-frame" data-aos="fade-left">
-                    <img src="assets/images/Map/ChatGPT Image Oct 6, 2026, 08_49_30 AM.png" alt="Barangay San Jose Map" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="assets/images/Map/Legend.png" alt="Barangay San Jose Map" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
             </div>
         </div>
@@ -564,6 +588,56 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
                 $('#user-chat-send').click();
             }
         });
+    });
+    </script>
+
+    <!-- Home Gallery Lightbox Modal -->
+    <div id="homeLightbox" class="public-lightbox-modal" style="display: none;" onclick="if(event.target === this) closeHomeLightbox();">
+        <div class="public-lightbox-dialog">
+            <button type="button" class="lightbox-close-btn" onclick="closeHomeLightbox()">&times;</button>
+            <div class="lightbox-img-wrapper">
+                <img id="homeLightboxImg" src="" alt="Enlarged gallery photo">
+            </div>
+            <div class="public-lightbox-footer">
+                <div class="public-lightbox-details">
+                    <span id="homeLightboxCategory" class="lightbox-tag"></span>
+                    <h3 id="homeLightboxTitle"></h3>
+                    <span id="homeLightboxDate" class="lightbox-date"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function openHomeLightbox(imgSrc, caption, category, uploadDate) {
+        const modal = document.getElementById('homeLightbox');
+        const img = document.getElementById('homeLightboxImg');
+        const cat = document.getElementById('homeLightboxCategory');
+        const title = document.getElementById('homeLightboxTitle');
+        const date = document.getElementById('homeLightboxDate');
+
+        if (modal && img) {
+            img.src = imgSrc;
+            cat.textContent = category || 'Barangay San Jose';
+            title.textContent = caption || '';
+            date.textContent = uploadDate || '';
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeHomeLightbox() {
+        const modal = document.getElementById('homeLightbox');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeHomeLightbox();
+        }
     });
     </script>
 </body>
