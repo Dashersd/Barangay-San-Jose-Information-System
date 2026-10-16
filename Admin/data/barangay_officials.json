@@ -1,0 +1,82 @@
+[
+    {
+        "id": "captain",
+        "level": 1,
+        "role": "BARANGAY CAPTAIN",
+        "name": "Hon. Diego Logronio",
+        "image": "assets/images/Barangay Official/captain.Diego Logronio.jpg",
+        "message": "hello"
+    },
+    {
+        "id": "secretary",
+        "level": 2,
+        "role": "BARANGAY SECRETARY",
+        "name": "Hon. Michelle Deluna",
+        "image": "assets/images/Barangay Official/secretary michelle deluna.jpg",
+        "message": ""
+    },
+    {
+        "id": "treasurer",
+        "level": 2,
+        "role": "BARANGAY TREASURER",
+        "name": "Hon. Alfredo Alasaas",
+        "image": "assets/images/Barangay Official/treasurer alfredo alasaas.jpg",
+        "message": ""
+    },
+    {
+        "id": "kagawad_1",
+        "level": 3,
+        "role": "BARANGAY KAGAWAD 1",
+        "name": "Hon. Fedelina Thundas",
+        "image": "assets/images/Barangay Official/1.Fedelina Thundas.jpg",
+        "message": ""
+    },
+    {
+        "id": "kagawad_2",
+        "level": 3,
+        "role": "BARANGAY KAGAWAD 2",
+        "name": "Hon. Mario Godines",
+        "image": "assets/images/Barangay Official/2 Mario godines.jpg",
+        "message": ""
+    },
+    {
+        "id": "kagawad_3",
+        "level": 3,
+        "role": "BARANGAY KAGAWAD 3",
+        "name": "Hon. Jennifer Dolen",
+        "image": "assets/images/Barangay Official/3 jennifer dolen.jpg",
+        "message": ""
+    },
+    {
+        "id": "kagawad_4",
+        "level": 3,
+        "role": "BARANGAY KAGAWAD 4",
+        "name": "Hon. Calixto Mamac",
+        "image": "assets/images/Barangay Official/4 calixto mamac.jpg",
+        "message": ""
+    },
+    {
+        "id": "kagawad_5",
+        "level": 3,
+        "role": "BARANGAY KAGAWAD 5",
+        "name": "Hon. Rodrigo Godinez",
+        "image": "assets/images/Barangay Official/5 rodrigo godinez.jpg",
+        "message": ""
+    },
+    {
+        "id": "kagawad_6",
+        "level": 3,
+        "role": "BARANGAY KAGAWAD 6",
+        "name": "Hon. Rodelio Basirel",
+        "image": "assets/images/Barangay Official/6 rodelio besirel.jpg",
+        "message": ""
+    },
+    {
+        "id": "kagawad_7",
+        "level": 3,
+        "role": "BARANGAY KAGAWAD 7",
+        "name": "Hon. Jimmy Daligdig",
+        "image": "assets/images/Barangay Official/7 jimmy daligdig.jpg",
+        "message": ""
+    }
+]

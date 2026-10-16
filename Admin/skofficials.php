@@ -1,5 +1,59 @@
 <?php
 // Manage SK Officials
+require_once __DIR__ . '/../officials_db.php';
+
+// Handle edit SK official form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit_official') {
+    $officialId = $_POST['official_id'] ?? '';
+    $officialName = trim($_POST['official_name'] ?? '');
+    $officialRole = trim($_POST['official_role'] ?? '');
+    $officialMessage = trim($_POST['official_message'] ?? '');
+    $newImagePath = null;
+
+    // Handle photo upload
+    if (isset($_FILES['official_photo']) && $_FILES['official_photo']['error'] === UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($_FILES['official_photo']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        if (in_array($ext, $allowed)) {
+            $newFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', basename($_FILES['official_photo']['name']));
+            $targetDir = dirname(__DIR__) . '/assets/images/SK Official/';
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+            if (move_uploaded_file($_FILES['official_photo']['tmp_name'], $targetDir . $newFileName)) {
+                $newImagePath = 'assets/images/SK Official/' . $newFileName;
+            }
+        }
+    }
+
+    if ($officialId !== '') {
+        update_sk_official_in_db($conn, $officialId, $officialName, $officialRole, $officialMessage, $newImagePath);
+        header("Location: skofficials.php?success=1");
+        exit;
+    }
+}
+
+// Load current SK officials data from MySQL database (with JSON fallback)
+$officials = get_sk_officials_from_db($conn);
+
+// Organize by levels
+$chairperson = null;
+$level2 = [];
+$kagawads = [];
+
+foreach ($officials as $off) {
+    if ($off['id'] === 'sk_chairperson' || $off['level'] == 1) {
+        $chairperson = $off;
+    } elseif ($off['id'] === 'sk_secretary' || $off['id'] === 'sk_treasurer' || $off['level'] == 2) {
+        $level2[] = $off;
+    } else {
+        $kagawads[] = $off;
+    }
+}
+
+// Split 7 SK Kagawads: 3 on Row 1 and 4 on Row 2 (matches layout)
+$kagawadsRow1 = array_slice($kagawads, 0, 3);
+$kagawadsRow2 = array_slice($kagawads, 3, 4);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,9 +74,22 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/skofficials.css">
+    <link rel="stylesheet" href="css/skofficials.css?v=<?= time() ?>">
 </head>
 <body>
+
+    <?php if (isset($_GET['success'])): ?>
+    <div class="alert-toast" id="successToast">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>SK Official updated successfully!</span>
+    </div>
+    <script>
+        setTimeout(function() {
+            var toast = document.getElementById('successToast');
+            if (toast) toast.style.display = 'none';
+        }, 3500);
+    </script>
+    <?php endif; ?>
 
     <div class="admin-layout">
         <!-- Sidebar -->
@@ -163,238 +230,326 @@
                 <div class="content-header d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem;">
                     <div>
                         <h2 style="margin: 0; font-size: 1.25rem;">SK Officials Roster</h2>
-                        <p style="margin: 0; color: #6B7280; font-size: 0.85rem;">Add, edit, or remove Sangguniang Kabataan officials from the public roster.</p>
+                        <p style="margin: 0; color: #6B7280; font-size: 0.85rem;">Edit or update Sangguniang Kabataan officials from the public roster.</p>
                     </div>
-                    <button class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        Add SK Official
-                    </button>
                 </div>
 
-                <style>
-.org-chart-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    padding: 20px 0;
-    background: #f8fafc;
-    border-radius: 8px;
-}
-
-.org-level {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    width: 100%;
-    flex-wrap: wrap;
-}
-
-.official-card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    width: 170px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.official-image-container {
-    position: relative;
-    width: 100%;
-    height: 160px;
-    background: #e2e8f0;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: flex-start;
-    padding: 10px;
-    box-sizing: border-box;
-    color: #475569;
-    font-size: 14px;
-}
-
-.official-name-pill {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1e3a8a;
-    color: white;
-    padding: 4px 16px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.official-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: #475569;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 15px;
-    letter-spacing: 0.5px;
-}
-
-.btn-edit-official {
-    width: 100%;
-    background: #f1f5f9;
-    color: #0f172a;
-    border: none;
-    padding: 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    transition: background 0.2s;
-}
-
-.btn-edit-official:hover {
-    background: #e2e8f0;
-}
-</style>
-
                 <div class="org-chart-container">
-                    <!-- Level 1: Chairperson -->
+                    <!-- Level 1: SK Chairperson -->
+                    <?php if ($chairperson): ?>
                     <div class="org-level">
                         <div class="official-card">
                             <div class="official-image-container">
-                                SK Chairperson
-                                <div class="official-name-pill">Name</div>
+                                <?php if (!empty($chairperson['image']) && file_exists('../' . $chairperson['image'])): ?>
+                                    <img src="../<?= htmlspecialchars($chairperson['image']) ?>" alt="<?= htmlspecialchars($chairperson['name']) ?>" class="official-card-img">
+                                <?php else: ?>
+                                    <span class="official-placeholder-text">Photo</span>
+                                <?php endif; ?>
+                                <div class="official-name-pill"><?= htmlspecialchars($chairperson['name'] ?: 'Name') ?></div>
                             </div>
-                            <div class="official-title">SK CHAIRPERSON</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
+                            <div class="official-title"><?= htmlspecialchars($chairperson['role']) ?></div>
+                            <button type="button" class="btn-edit-official" onclick="openEditOfficialModal(this)"
+                                data-id="<?= htmlspecialchars($chairperson['id']) ?>"
+                                data-name="<?= htmlspecialchars($chairperson['name']) ?>"
+                                data-role="<?= htmlspecialchars($chairperson['role']) ?>"
+                                data-message="<?= htmlspecialchars($chairperson['message'] ?? '') ?>"
+                                data-image="<?= htmlspecialchars($chairperson['image'] ?? '') ?>">
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                </svg>
+                                <span>Edit</span>
                             </button>
                         </div>
                     </div>
+                    <?php endif; ?>
 
-                    <!-- Level 2: Secretary & Treasurer -->
+                    <!-- Level 2: SK Secretary & Treasurer -->
+                    <?php if (!empty($level2)): ?>
                     <div class="org-level">
+                        <?php foreach ($level2 as $off): ?>
                         <div class="official-card">
                             <div class="official-image-container">
-                                SK Secretary
-                                <div class="official-name-pill">Name</div>
+                                <?php if (!empty($off['image']) && file_exists('../' . $off['image'])): ?>
+                                    <img src="../<?= htmlspecialchars($off['image']) ?>" alt="<?= htmlspecialchars($off['name']) ?>" class="official-card-img">
+                                <?php else: ?>
+                                    <span class="official-placeholder-text">Photo</span>
+                                <?php endif; ?>
+                                <div class="official-name-pill"><?= htmlspecialchars($off['name'] ?: 'Name') ?></div>
                             </div>
-                            <div class="official-title">SK SECRETARY</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
+                            <div class="official-title"><?= htmlspecialchars($off['role']) ?></div>
+                            <button type="button" class="btn-edit-official" onclick="openEditOfficialModal(this)"
+                                data-id="<?= htmlspecialchars($off['id']) ?>"
+                                data-name="<?= htmlspecialchars($off['name']) ?>"
+                                data-role="<?= htmlspecialchars($off['role']) ?>"
+                                data-message="<?= htmlspecialchars($off['message'] ?? '') ?>"
+                                data-image="<?= htmlspecialchars($off['image'] ?? '') ?>">
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                </svg>
+                                <span>Edit</span>
                             </button>
                         </div>
-                        <div class="official-card">
-                            <div class="official-image-container">
-                                SK Treasurer
-                                <div class="official-name-pill">Name</div>
-                            </div>
-                            <div class="official-title">SK TREASURER</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
-                            </button>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
+                    <?php endif; ?>
 
-                    <!-- Level 3: 3 SK Kagawads -->
+                    <!-- Level 3: SK Kagawads Row 1 (3 items - SK Kagawad 1, 2, 3) -->
+                    <?php if (!empty($kagawadsRow1)): ?>
                     <div class="org-level">
+                        <?php foreach ($kagawadsRow1 as $off): ?>
                         <div class="official-card">
                             <div class="official-image-container">
-                                SK Kagawad
-                                <div class="official-name-pill">Name</div>
+                                <?php if (!empty($off['image']) && file_exists('../' . $off['image'])): ?>
+                                    <img src="../<?= htmlspecialchars($off['image']) ?>" alt="<?= htmlspecialchars($off['name']) ?>" class="official-card-img">
+                                <?php else: ?>
+                                    <span class="official-placeholder-text">Photo</span>
+                                <?php endif; ?>
+                                <div class="official-name-pill"><?= htmlspecialchars($off['name'] ?: 'Name') ?></div>
                             </div>
-                            <div class="official-title">SK KAGAWAD</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
+                            <div class="official-title"><?= htmlspecialchars($off['role']) ?></div>
+                            <button type="button" class="btn-edit-official" onclick="openEditOfficialModal(this)"
+                                data-id="<?= htmlspecialchars($off['id']) ?>"
+                                data-name="<?= htmlspecialchars($off['name']) ?>"
+                                data-role="<?= htmlspecialchars($off['role']) ?>"
+                                data-message="<?= htmlspecialchars($off['message'] ?? '') ?>"
+                                data-image="<?= htmlspecialchars($off['image'] ?? '') ?>">
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                </svg>
+                                <span>Edit</span>
                             </button>
                         </div>
-                        <div class="official-card">
-                            <div class="official-image-container">
-                                SK Kagawad
-                                <div class="official-name-pill">Name</div>
-                            </div>
-                            <div class="official-title">SK KAGAWAD</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
-                            </button>
-                        </div>
-                        <div class="official-card">
-                            <div class="official-image-container">
-                                SK Kagawad
-                                <div class="official-name-pill">Name</div>
-                            </div>
-                            <div class="official-title">SK KAGAWAD</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
-                            </button>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
-                    
-                    <!-- Level 4: 4 SK Kagawads -->
+                    <?php endif; ?>
+
+                    <!-- Level 4: SK Kagawads Row 2 (4 items - SK Kagawad 4, 5, 6, 7) -->
+                    <?php if (!empty($kagawadsRow2)): ?>
                     <div class="org-level">
+                        <?php foreach ($kagawadsRow2 as $off): ?>
                         <div class="official-card">
                             <div class="official-image-container">
-                                SK Kagawad
-                                <div class="official-name-pill">Name</div>
+                                <?php if (!empty($off['image']) && file_exists('../' . $off['image'])): ?>
+                                    <img src="../<?= htmlspecialchars($off['image']) ?>" alt="<?= htmlspecialchars($off['name']) ?>" class="official-card-img">
+                                <?php else: ?>
+                                    <span class="official-placeholder-text">Photo</span>
+                                <?php endif; ?>
+                                <div class="official-name-pill"><?= htmlspecialchars($off['name'] ?: 'Name') ?></div>
                             </div>
-                            <div class="official-title">SK KAGAWAD</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
+                            <div class="official-title"><?= htmlspecialchars($off['role']) ?></div>
+                            <button type="button" class="btn-edit-official" onclick="openEditOfficialModal(this)"
+                                data-id="<?= htmlspecialchars($off['id']) ?>"
+                                data-name="<?= htmlspecialchars($off['name']) ?>"
+                                data-role="<?= htmlspecialchars($off['role']) ?>"
+                                data-message="<?= htmlspecialchars($off['message'] ?? '') ?>"
+                                data-image="<?= htmlspecialchars($off['image'] ?? '') ?>">
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                </svg>
+                                <span>Edit</span>
                             </button>
                         </div>
-                        <div class="official-card">
-                            <div class="official-image-container">
-                                SK Kagawad
-                                <div class="official-name-pill">Name</div>
-                            </div>
-                            <div class="official-title">SK KAGAWAD</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
-                            </button>
-                        </div>
-                        <div class="official-card">
-                            <div class="official-image-container">
-                                SK Kagawad
-                                <div class="official-name-pill">Name</div>
-                            </div>
-                            <div class="official-title">SK KAGAWAD</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
-                            </button>
-                        </div>
-                        <div class="official-card">
-                            <div class="official-image-container">
-                                SK Kagawad
-                                <div class="official-name-pill">Name</div>
-                            </div>
-                            <div class="official-title">SK KAGAWAD</div>
-                            <button class="btn-edit-official">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                Edit
-                            </button>
-                        </div>
-                    </div></div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
             </div>
         </main>
     </div>
 
+    <!-- Edit SK Official Modal (Matches Reference Design) -->
+    <div id="editOfficialModal" class="official-modal-overlay">
+        <div class="official-modal-dialog">
+            <div class="official-modal-header">
+                <h3 class="official-modal-title">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    <span>Edit SK Official</span>
+                </h3>
+                <button type="button" class="official-modal-close" id="modalCloseBtn" onclick="closeEditOfficialModal()" aria-label="Close">&times;</button>
+            </div>
+            
+            <form action="skofficials.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="edit_official">
+                <input type="hidden" name="official_id" id="modalOfficialId" value="">
+
+                <div class="official-modal-body">
+                    <!-- Dashed container with Photo Preview and Change Photo button -->
+                    <div class="photo-upload-container">
+                        <div class="photo-preview-wrapper">
+                            <img id="modalPhotoPreview" src="../assets/images/San Jose Logo 2.png" alt="Official Photo">
+                        </div>
+                        <button type="button" class="btn-change-photo" id="btnChangePhoto">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            <span>Change Photo</span>
+                        </button>
+                        <input type="file" id="modalPhotoInput" name="official_photo" accept="image/*" style="display: none;">
+                    </div>
+
+                    <!-- Official Full Name -->
+                    <div class="modal-form-group">
+                        <label class="modal-label" for="modalOfficialName">Official Full Name</label>
+                        <input type="text" id="modalOfficialName" name="official_name" class="modal-input" placeholder="e.g. Hon. Artem Macmac" required>
+                    </div>
+
+                    <!-- Role / Position -->
+                    <div class="modal-form-group">
+                        <label class="modal-label" for="modalOfficialRole">Role / Position</label>
+                        <input type="text" id="modalOfficialRole" name="official_role" class="modal-input" placeholder="e.g. SK CHAIRPERSON" required>
+                    </div>
+
+                    <!-- Official Message (Only for SK Chairperson; hidden for other SK officials) -->
+                    <div class="modal-form-group" id="modalMessageGroup" style="display: none;">
+                        <label class="modal-label" for="modalOfficialMessage" id="modalMessageLabel">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span id="modalMessageLabelText">SK CHAIRPERSON'S MESSAGE</span>
+                        </label>
+                        <textarea id="modalOfficialMessage" name="official_message" rows="4" class="modal-textarea" placeholder="Enter message..."></textarea>
+                        <div class="modal-helper-text" id="modalMessageHelp">
+                            <span>&#9432;</span>
+                            <span id="modalMessageHelpText">This message is displayed for the SK Chairperson on the public website.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="official-modal-footer">
+                    <button type="button" class="btn-modal-cancel" id="btnModalCancel" onclick="closeEditOfficialModal()">Cancel</button>
+                    <button type="submit" class="btn-modal-save" id="btnModalSave">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span>SAVE CHANGES</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="js/dashboard.js"></script>
+    <script>
+    // Global function to open modal with SK official data
+    window.openEditOfficialModal = function (btn) {
+        const modal = document.getElementById('editOfficialModal');
+        if (!modal) return;
+
+        const id = btn.getAttribute('data-id') || '';
+        const name = btn.getAttribute('data-name') || '';
+        const role = btn.getAttribute('data-role') || '';
+        const message = btn.getAttribute('data-message') || '';
+        const image = btn.getAttribute('data-image') || '';
+
+        const officialIdInput = document.getElementById('modalOfficialId');
+        const officialNameInput = document.getElementById('modalOfficialName');
+        const officialRoleInput = document.getElementById('modalOfficialRole');
+        const officialMessageInput = document.getElementById('modalOfficialMessage');
+        const photoPreview = document.getElementById('modalPhotoPreview');
+        const modalMessageGroup = document.getElementById('modalMessageGroup');
+        const modalMessageLabelText = document.getElementById('modalMessageLabelText');
+        const modalMessageHelpText = document.getElementById('modalMessageHelpText');
+
+        if (officialIdInput) officialIdInput.value = id;
+        if (officialNameInput) officialNameInput.value = name;
+        if (officialRoleInput) officialRoleInput.value = role;
+        if (officialMessageInput) officialMessageInput.value = message;
+
+        // Set photo preview
+        if (photoPreview) {
+            if (image) {
+                photoPreview.src = image.startsWith('../') ? image : ('../' + image);
+            } else {
+                photoPreview.src = '../assets/images/San Jose Logo 2.png';
+            }
+        }
+
+        // Only the SK Chairperson / Chairman has the message textbox; completely hide for all other SK officials
+        const isChairperson = (id === 'sk_chairperson' || role.toLowerCase().includes('chairperson') || role.toLowerCase().includes('chairman'));
+        if (modalMessageGroup) {
+            if (isChairperson) {
+                modalMessageGroup.style.display = 'block';
+                if (modalMessageLabelText) modalMessageLabelText.textContent = "SK CHAIRPERSON'S MESSAGE";
+                if (modalMessageHelpText) modalMessageHelpText.textContent = "This message is displayed for the SK Chairperson on the public website.";
+            } else {
+                modalMessageGroup.style.display = 'none';
+            }
+        }
+
+        // Show modal
+        modal.style.display = 'flex';
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    };
+
+    // Global function to close modal
+    window.closeEditOfficialModal = function () {
+        const modal = document.getElementById('editOfficialModal');
+        if (modal) {
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+        const photoInput = document.getElementById('modalPhotoInput');
+        if (photoInput) photoInput.value = '';
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('editOfficialModal');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const btnModalCancel = document.getElementById('btnModalCancel');
+        const editBtns = document.querySelectorAll('.btn-edit-official');
+        
+        const photoInput = document.getElementById('modalPhotoInput');
+        const btnChangePhoto = document.getElementById('btnChangePhoto');
+        const photoPreview = document.getElementById('modalPhotoPreview');
+
+        editBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                window.openEditOfficialModal(this);
+            });
+        });
+
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', window.closeEditOfficialModal);
+        if (btnModalCancel) btnModalCancel.addEventListener('click', window.closeEditOfficialModal);
+
+        // Click outside modal content to close
+        if (modal) {
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    window.closeEditOfficialModal();
+                }
+            });
+        }
+
+        // ESC key to close
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                window.closeEditOfficialModal();
+            }
+        });
+
+        // Change Photo button click
+        if (btnChangePhoto && photoInput) {
+            btnChangePhoto.addEventListener('click', function () {
+                photoInput.click();
+            });
+
+            // Instant image preview
+            photoInput.addEventListener('change', function () {
+                if (this.files && this.files[0] && photoPreview) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        photoPreview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>
-

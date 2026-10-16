@@ -1,5 +1,26 @@
 <?php
 // Barangay San Jose Web-Based Information System - Officials
+require_once __DIR__ . '/officials_db.php';
+
+$officialsList = get_barangay_officials_from_db($conn);
+$officials = [];
+if (is_array($officialsList)) {
+    foreach ($officialsList as $item) {
+        if (!empty($item['id'])) {
+            $officials[$item['id']] = $item;
+        }
+    }
+}
+$captain = $officials['captain'] ?? null;
+$secretary = $officials['secretary'] ?? null;
+$treasurer = $officials['treasurer'] ?? null;
+$kagawad1 = $officials['kagawad_1'] ?? null;
+$kagawad2 = $officials['kagawad_2'] ?? null;
+$kagawad3 = $officials['kagawad_3'] ?? null;
+$kagawad4 = $officials['kagawad_4'] ?? null;
+$kagawad5 = $officials['kagawad_5'] ?? null;
+$kagawad6 = $officials['kagawad_6'] ?? null;
+$kagawad7 = $officials['kagawad_7'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,12 +113,12 @@
         <div class="org-level">
             <div class="org-card-wide" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar-wide">
-                    <img src="assets/images/Barangay Official/captain.Diego Logronio.jpg" alt="Hon. Diego Logronio" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($captain['image'] ?? 'assets/images/Barangay Official/captain.Diego Logronio.jpg') ?>" alt="<?= htmlspecialchars($captain['name'] ?? 'Hon. Diego Logronio') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
                 <div class="org-info-wide">
-                    <h3 class="org-name-wide">Hon. Diego Logronio</h3>
-                    <p class="org-role-wide">Punong Barangay</p>
-                    <p class="org-desc-wide">Presiding officer of the Sangguniang Barangay, leading executive policies, community welfare programs, and peace and order in Barangay San Jose.</p>
+                    <h3 class="org-name-wide"><?= htmlspecialchars($captain['name'] ?? 'Hon. Diego Logronio') ?></h3>
+                    <p class="org-role-wide"><?= htmlspecialchars($captain['role'] ?? 'Punong Barangay') ?></p>
+                    <p class="org-desc-wide"><?= htmlspecialchars($captain['message'] ?? 'Presiding officer of the Sangguniang Barangay, leading executive policies, community welfare programs, and peace and order in Barangay San Jose.') ?></p>
                 </div>
             </div>
         </div>
@@ -112,87 +133,78 @@
         <div class="org-level">
             <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
-                    <img src="assets/images/Barangay Official/secretary michelle deluna.jpg" alt="Hon. Michelle Deluna" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($secretary['image'] ?? 'assets/images/Barangay Official/secretary michelle deluna.jpg') ?>" alt="<?= htmlspecialchars($secretary['name'] ?? 'Hon. Michelle Deluna') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Michelle Deluna</h3>
-                <p class="org-role">Barangay Secretary</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($secretary['name'] ?? 'Hon. Michelle Deluna') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($secretary['role'] ?? 'Barangay Secretary') ?></p>
             </div>
             
             <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
-                    <img src="assets/images/Barangay Official/treasurer alfredo alasaas.jpg" alt="Hon. Alfredo Alasaas" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($treasurer['image'] ?? 'assets/images/Barangay Official/treasurer alfredo alasaas.jpg') ?>" alt="<?= htmlspecialchars($treasurer['name'] ?? 'Hon. Alfredo Alasaas') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Alfredo Alasaas</h3>
-                <p class="org-role">Barangay Treasurer</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($treasurer['name'] ?? 'Hon. Alfredo Alasaas') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($treasurer['role'] ?? 'Barangay Treasurer') ?></p>
             </div>
         </div>
 
         <div class="org-level">
             <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
-                    <img src="assets/images/Barangay Official/1.Fedelina Thundas.jpg" alt="Hon. Fedelina Thundas" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($kagawad1['image'] ?? 'assets/images/Barangay Official/1.Fedelina Thundas.jpg') ?>" alt="<?= htmlspecialchars($kagawad1['name'] ?? 'Hon. Fedelina Thundas') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Fedelina Thundas</h3>
-                <p class="org-role">Barangay Kagawad 1</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad1['name'] ?? 'Hon. Fedelina Thundas') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad1['role'] ?? 'Barangay Kagawad 1') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
-                    <img src="assets/images/Barangay Official/2 Mario godines.jpg" alt="Hon. Mario Godines" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($kagawad2['image'] ?? 'assets/images/Barangay Official/2 Mario godines.jpg') ?>" alt="<?= htmlspecialchars($kagawad2['name'] ?? 'Hon. Mario Godines') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Mario Godines</h3>
-                <p class="org-role">Barangay Kagawad 2</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad2['name'] ?? 'Hon. Mario Godines') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad2['role'] ?? 'Barangay Kagawad 2') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="org-avatar">
-                    <img src="assets/images/Barangay Official/3 jennifer dolen.jpg" alt="Hon. Jennifer Dolen" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($kagawad3['image'] ?? 'assets/images/Barangay Official/3 jennifer dolen.jpg') ?>" alt="<?= htmlspecialchars($kagawad3['name'] ?? 'Hon. Jennifer Dolen') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Jennifer Dolen</h3>
-                <p class="org-role">Barangay Kagawad 3</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad3['name'] ?? 'Hon. Jennifer Dolen') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad3['role'] ?? 'Barangay Kagawad 3') ?></p>
             </div>
         </div>
 
         <div class="org-level">
             <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
-                    <img src="assets/images/Barangay Official/4 calixto mamac.jpg" alt="Hon. Calixto Mamac" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($kagawad4['image'] ?? 'assets/images/Barangay Official/4 calixto mamac.jpg') ?>" alt="<?= htmlspecialchars($kagawad4['name'] ?? 'Hon. Calixto Mamac') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Calixto Mamac</h3>
-                <p class="org-role">Barangay Kagawad 4</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad4['name'] ?? 'Hon. Calixto Mamac') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad4['role'] ?? 'Barangay Kagawad 4') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
-                    <img src="assets/images/Barangay Official/captain.Diego Logronio.jpg" alt="Hon. Rodrigo Godinez" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($kagawad5['image'] ?? 'assets/images/Barangay Official/5 rodrigo godinez.jpg') ?>" alt="<?= htmlspecialchars($kagawad5['name'] ?? 'Hon. Rodrigo Godinez') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Rodrigo Godinez</h3>
-                <p class="org-role">Barangay Kagawad 5</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad5['name'] ?? 'Hon. Rodrigo Godinez') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad5['role'] ?? 'Barangay Kagawad 5') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="org-avatar">
-                    <img src="assets/images/Barangay Official/6 rodelio besirel.jpg" alt="Hon. Rodelio Basirel" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($kagawad6['image'] ?? 'assets/images/Barangay Official/6 rodelio besirel.jpg') ?>" alt="<?= htmlspecialchars($kagawad6['name'] ?? 'Hon. Rodelio Basirel') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Rodelio Basirel</h3>
-                <p class="org-role">Barangay Kagawad 6</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad6['name'] ?? 'Hon. Rodelio Basirel') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad6['role'] ?? 'Barangay Kagawad 6') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="400">
                 <div class="org-avatar">
-                    <img src="assets/images/Barangay Official/7 jimmy daligdig.jpg" alt="Hon. Jimmy Daligdig" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="<?= htmlspecialchars($kagawad7['image'] ?? 'assets/images/Barangay Official/7 jimmy daligdig.jpg') ?>" alt="<?= htmlspecialchars($kagawad7['name'] ?? 'Hon. Jimmy Daligdig') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="org-name">Hon. Jimmy Daligdig</h3>
-                <p class="org-role">Barangay Kagawad 7</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad7['name'] ?? 'Hon. Jimmy Daligdig') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad7['role'] ?? 'Barangay Kagawad 7') ?></p>
             </div>
         </div>
 

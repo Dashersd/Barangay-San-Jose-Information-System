@@ -1,5 +1,26 @@
 <?php
-// Barangay San Jose Web-Based Information System - Officials
+// Barangay San Jose Web-Based Information System - SK Officials
+require_once __DIR__ . '/officials_db.php';
+
+$skOfficialsList = get_sk_officials_from_db($conn);
+$skOfficials = [];
+if (is_array($skOfficialsList)) {
+    foreach ($skOfficialsList as $item) {
+        if (!empty($item['id'])) {
+            $skOfficials[$item['id']] = $item;
+        }
+    }
+}
+$chairperson = $skOfficials['sk_chairperson'] ?? null;
+$secretary = $skOfficials['sk_secretary'] ?? null;
+$treasurer = $skOfficials['sk_treasurer'] ?? null;
+$kagawad1 = $skOfficials['sk_kagawad_1'] ?? null;
+$kagawad2 = $skOfficials['sk_kagawad_2'] ?? null;
+$kagawad3 = $skOfficials['sk_kagawad_3'] ?? null;
+$kagawad4 = $skOfficials['sk_kagawad_4'] ?? null;
+$kagawad5 = $skOfficials['sk_kagawad_5'] ?? null;
+$kagawad6 = $skOfficials['sk_kagawad_6'] ?? null;
+$kagawad7 = $skOfficials['sk_kagawad_7'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -91,13 +112,17 @@
 
         <div class="org-level">
             <div class="org-card-wide" data-aos="fade-up" data-aos-delay="100">
-                <div class="org-avatar-wide" style="padding: 0; background: none; overflow: hidden;">
-                    <img src="assets/images/SK Official/sk chairperson artem mamac.jpg" alt="Hon. Artem Macmac" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                <div class="org-avatar-wide">
+                    <?php if (!empty($chairperson['image']) && file_exists($chairperson['image'])): ?>
+                        <img src="<?= htmlspecialchars($chairperson['image']) ?>" alt="<?= htmlspecialchars($chairperson['name'] ?? 'Hon. Artem Macmac') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
                 <div class="org-info-wide">
-                    <h3 class="org-name-wide">Hon. Artem Macmac</h3>
-                    <p class="org-role-wide">SK Chairperson</p>
-                    <p class="org-desc-wide">Presiding officer of the Sangguniang Kabataan, leading youth empowerment and community development programs in Barangay San Jose.</p>
+                    <h3 class="org-name-wide"><?= htmlspecialchars($chairperson['name'] ?? 'Hon. Artem Macmac') ?></h3>
+                    <p class="org-role-wide"><?= htmlspecialchars($chairperson['role'] ?? 'SK Chairperson') ?></p>
+                    <p class="org-desc-wide"><?= htmlspecialchars($chairperson['message'] ?? 'Presiding officer of the Sangguniang Kabataan, leading youth empowerment and community development programs in Barangay San Jose.') ?></p>
                 </div>
             </div>
         </div>
@@ -112,20 +137,26 @@
         <div class="org-level">
             <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php if (!empty($secretary['image']) && file_exists($secretary['image'])): ?>
+                        <img src="<?= htmlspecialchars($secretary['image']) ?>" alt="<?= htmlspecialchars($secretary['name'] ?? 'Ms. Liza Santos') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
-                <h3 class="org-name">Ms. Liza Santos</h3>
-                <p class="org-role">SK Secretary</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($secretary['name'] ?? 'Ms. Liza Santos') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($secretary['role'] ?? 'SK Secretary') ?></p>
             </div>
             
             <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php if (!empty($treasurer['image']) && file_exists($treasurer['image'])): ?>
+                        <img src="<?= htmlspecialchars($treasurer['image']) ?>" alt="<?= htmlspecialchars($treasurer['name'] ?? 'Mr. Antonio Luna') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
-                <h3 class="org-name">Mr. Antonio Luna</h3>
-                <p class="org-role">SK Treasurer</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($treasurer['name'] ?? 'Mr. Antonio Luna') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($treasurer['role'] ?? 'SK Treasurer') ?></p>
             </div>
         </div>
 
@@ -139,67 +170,88 @@
         <div class="org-level">
             <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php if (!empty($kagawad1['image']) && file_exists($kagawad1['image'])): ?>
+                        <img src="<?= htmlspecialchars($kagawad1['image']) ?>" alt="<?= htmlspecialchars($kagawad1['name'] ?? 'Hon. Ana Villanueva') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
-                <h3 class="org-name">Hon. Ana Villanueva</h3>
-                <p class="org-role">SK Kagawad 1</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad1['name'] ?? 'Hon. Ana Villanueva') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad1['role'] ?? 'SK Kagawad 1') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php if (!empty($kagawad2['image']) && file_exists($kagawad2['image'])): ?>
+                        <img src="<?= htmlspecialchars($kagawad2['image']) ?>" alt="<?= htmlspecialchars($kagawad2['name'] ?? 'Hon. Luis Garcia') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
-                <h3 class="org-name">Hon. Luis Garcia</h3>
-                <p class="org-role">SK Kagawad 2</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad2['name'] ?? 'Hon. Luis Garcia') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad2['role'] ?? 'SK Kagawad 2') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php if (!empty($kagawad3['image']) && file_exists($kagawad3['image'])): ?>
+                        <img src="<?= htmlspecialchars($kagawad3['image']) ?>" alt="<?= htmlspecialchars($kagawad3['name'] ?? 'Hon. Maria Santos') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
-                <h3 class="org-name">Hon. Maria Santos</h3>
-                <p class="org-role">SK Kagawad 3</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad3['name'] ?? 'Hon. Maria Santos') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad3['role'] ?? 'SK Kagawad 3') ?></p>
             </div>
         </div>
 
         <div class="org-level">
             <div class="org-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php if (!empty($kagawad4['image']) && file_exists($kagawad4['image'])): ?>
+                        <img src="<?= htmlspecialchars($kagawad4['image']) ?>" alt="<?= htmlspecialchars($kagawad4['name'] ?? 'Hon. Juanito Perez') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
-                <h3 class="org-name">Hon. Juanito Perez</h3>
-                <p class="org-role">SK Kagawad 4</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad4['name'] ?? 'Hon. Juanito Perez') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad4['role'] ?? 'SK Kagawad 4') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php if (!empty($kagawad5['image']) && file_exists($kagawad5['image'])): ?>
+                        <img src="<?= htmlspecialchars($kagawad5['image']) ?>" alt="<?= htmlspecialchars($kagawad5['name'] ?? 'Hon. Elena Cruz') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
-                <h3 class="org-name">Hon. Elena Cruz</h3>
-                <p class="org-role">SK Kagawad 5</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad5['name'] ?? 'Hon. Elena Cruz') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad5['role'] ?? 'SK Kagawad 5') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php if (!empty($kagawad6['image']) && file_exists($kagawad6['image'])): ?>
+                        <img src="<?= htmlspecialchars($kagawad6['image']) ?>" alt="<?= htmlspecialchars($kagawad6['name'] ?? 'Hon. Ricardo Gomez') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
-                <h3 class="org-name">Hon. Ricardo Gomez</h3>
-                <p class="org-role">SK Kagawad 6</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad6['name'] ?? 'Hon. Ricardo Gomez') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad6['role'] ?? 'SK Kagawad 6') ?></p>
             </div>
 
             <div class="org-card" data-aos="fade-up" data-aos-delay="400">
                 <div class="org-avatar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php if (!empty($kagawad7['image']) && file_exists($kagawad7['image'])): ?>
+                        <img src="<?= htmlspecialchars($kagawad7['image']) ?>" alt="<?= htmlspecialchars($kagawad7['name'] ?? 'Hon. Pedro Reyes') ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <?php endif; ?>
                 </div>
-                <h3 class="org-name">Hon. Pedro Reyes</h3>
-                <p class="org-role">SK Kagawad 7</p>
-
+                <h3 class="org-name"><?= htmlspecialchars($kagawad7['name'] ?? 'Hon. Pedro Reyes') ?></h3>
+                <p class="org-role"><?= htmlspecialchars($kagawad7['role'] ?? 'SK Kagawad 7') ?></p>
             </div>
         </div>
 

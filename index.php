@@ -22,6 +22,31 @@ if ($home_gallery_res) {
         $home_media_items[] = $row;
     }
 }
+
+// Fetch Barangay Captain data for Meet Our Leaders showcase from MySQL
+require_once __DIR__ . '/officials_db.php';
+$barangayList = get_barangay_officials_from_db($conn);
+$captainOfficial = null;
+if (is_array($barangayList)) {
+    foreach ($barangayList as $item) {
+        if (!empty($item['id']) && $item['id'] === 'captain') {
+            $captainOfficial = $item;
+            break;
+        }
+    }
+}
+
+// Fetch SK Chairman data for Meet Our Leaders showcase from MySQL
+$skList = get_sk_officials_from_db($conn);
+$skChairpersonOfficial = null;
+if (is_array($skList)) {
+    foreach ($skList as $item) {
+        if (!empty($item['id']) && ($item['id'] === 'sk_chairperson' || $item['level'] == 1)) {
+            $skChairpersonOfficial = $item;
+            break;
+        }
+    }
+}
 // Barangay San Jose Web-Based Information System
 ?>
 <!DOCTYPE html>
@@ -113,30 +138,42 @@ if ($home_gallery_res) {
             </div>
             
             <div class="officials-top-wrapper">
+                <?php
+                $captainName = $captainOfficial['name'] ?? 'Hon. Diego Logronio';
+                $captainRole = $captainOfficial['role'] ?? 'Punong Barangay';
+                $captainImage = !empty($captainOfficial['image']) ? $captainOfficial['image'] : 'assets/images/Barangay Official/captain.Diego Logronio.jpg';
+                $captainQuote = !empty($captainOfficial['message']) ? $captainOfficial['message'] : 'Committed to providing transparent and dedicated public service for the betterment of every resident in Barangay San Jose.';
+                ?>
                 <div class="official-card captain-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="official-image-wrapper">
-                        <img src="assets/images/Barangay Official/captain.Diego Logronio.jpg" alt="Hon. Diego Logronio" onerror="this.src='https://ui-avatars.com/api/?name=Diego+Logronio&background=random&size=250'">
-                        <div class="role-badge">Punong Barangay</div>
+                        <img src="<?= htmlspecialchars($captainImage) ?>" alt="<?= htmlspecialchars($captainName) ?>" onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($captainName) ?>&background=random&size=250'">
+                        <div class="role-badge"><?= htmlspecialchars($captainRole) ?></div>
                     </div>
                     <div class="official-details">
-                        <h3 class="official-name">Hon. Diego Logronio</h3>
-                        <p class="official-title">Barangay Captain</p>
-                        <p class="official-quote">"Committed to providing transparent and dedicated public service for the betterment of every resident in Barangay San Jose."</p>
+                        <h3 class="official-name"><?= htmlspecialchars($captainName) ?></h3>
+                        <p class="official-title"><?= htmlspecialchars($captainRole) ?></p>
+                        <p class="official-quote">"<?= htmlspecialchars($captainQuote) ?>"</p>
                         <div class="official-action" style="margin-top: 20px; text-align: center;">
                             <a href="officials.php" class="btn btn-primary">View Barangay Officials</a>
                         </div>
                     </div>
                 </div>
 
+                <?php
+                $skName = $skChairpersonOfficial['name'] ?? 'Hon. Artem Macmac';
+                $skRole = $skChairpersonOfficial['role'] ?? 'SK Chairman';
+                $skImage = !empty($skChairpersonOfficial['image']) ? $skChairpersonOfficial['image'] : 'assets/images/SK Official/sk chairperson artem mamac.jpg';
+                $skQuote = !empty($skChairpersonOfficial['message']) ? $skChairpersonOfficial['message'] : 'Empowering the youth of Barangay San Jose through active participation in sports, education, and community development.';
+                ?>
                 <div class="official-card captain-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="official-image-wrapper">
-                        <img src="assets/images/SK Official/sk chairperson artem mamac.jpg" alt="Hon. Artem Macmac" onerror="this.src='https://ui-avatars.com/api/?name=Artem+Macmac&background=random&size=250'">
-                        <div class="role-badge">SK Chairman</div>
+                        <img src="<?= htmlspecialchars($skImage) ?>" alt="<?= htmlspecialchars($skName) ?>" onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($skName) ?>&background=random&size=250'">
+                        <div class="role-badge"><?= htmlspecialchars($skRole) ?></div>
                     </div>
                     <div class="official-details">
-                        <h3 class="official-name">Hon. Artem Macmac</h3>
-                        <p class="official-title">Sangguniang Kabataan Chairman</p>
-                        <p class="official-quote">"Empowering the youth of Barangay San Jose through active participation in sports, education, and community development."</p>
+                        <h3 class="official-name"><?= htmlspecialchars($skName) ?></h3>
+                        <p class="official-title"><?= htmlspecialchars($skRole) ?></p>
+                        <p class="official-quote">"<?= htmlspecialchars($skQuote) ?>"</p>
                         <div class="official-action" style="margin-top: 20px; text-align: center;">
                             <a href="skofficials.php" class="btn btn-primary">View SK Officials</a>
                         </div>

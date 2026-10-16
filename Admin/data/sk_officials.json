@@ -1,0 +1,82 @@
+[
+  {
+    "id": "sk_chairperson",
+    "level": 1,
+    "role": "SK CHAIRPERSON",
+    "name": "Hon. Artem Macmac",
+    "image": "assets/images/SK Official/sk chairperson artem mamac.jpg",
+    "message": "Empowering the youth of Barangay San Jose through active participation in sports, education, and community development."
+  },
+  {
+    "id": "sk_secretary",
+    "level": 2,
+    "role": "SK SECRETARY",
+    "name": "Ms. Liza Santos",
+    "image": "",
+    "message": ""
+  },
+  {
+    "id": "sk_treasurer",
+    "level": 2,
+    "role": "SK TREASURER",
+    "name": "Mr. Antonio Luna",
+    "image": "",
+    "message": ""
+  },
+  {
+    "id": "sk_kagawad_1",
+    "level": 3,
+    "role": "SK KAGAWAD 1",
+    "name": "Hon. Ana Villanueva",
+    "image": "",
+    "message": ""
+  },
+  {
+    "id": "sk_kagawad_2",
+    "level": 3,
+    "role": "SK KAGAWAD 2",
+    "name": "Hon. Luis Garcia",
+    "image": "",
+    "message": ""
+  },
+  {
+    "id": "sk_kagawad_3",
+    "level": 3,
+    "role": "SK KAGAWAD 3",
+    "name": "Hon. Maria Santos",
+    "image": "",
+    "message": ""
+  },
+  {
+    "id": "sk_kagawad_4",
+    "level": 3,
+    "role": "SK KAGAWAD 4",
+    "name": "Hon. Juanito Perez",
+    "image": "",
+    "message": ""
+  },
+  {
+    "id": "sk_kagawad_5",
+    "level": 3,
+    "role": "SK KAGAWAD 5",
+    "name": "Hon. Elena Cruz",
+    "image": "",
+    "message": ""
+  },
+  {
+    "id": "sk_kagawad_6",
+    "level": 3,
+    "role": "SK KAGAWAD 6",
+    "name": "Hon. Ricardo Gomez",
+    "image": "",
+    "message": ""
+  },
+  {
+    "id": "sk_kagawad_7",
+    "level": 3,
+    "role": "SK KAGAWAD 7",
+    "name": "Hon. Pedro Reyes",
+    "image": "",
+    "message": ""
+  }
+]

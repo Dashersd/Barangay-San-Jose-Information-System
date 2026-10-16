@@ -285,6 +285,76 @@ CREATE TABLE `gallery_media` (
   CONSTRAINT `fk_gallery_folder` FOREIGN KEY (`folder_id`) REFERENCES `gallery_folders` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barangay_officials`
+--
+
+CREATE TABLE IF NOT EXISTS `barangay_officials` (
+  `id` varchar(50) NOT NULL,
+  `level` int(11) NOT NULL DEFAULT 3,
+  `role` varchar(100) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `image` varchar(255) DEFAULT '',
+  `message` text DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `barangay_officials`
+--
+
+INSERT INTO `barangay_officials` (`id`, `level`, `role`, `name`, `image`, `message`, `display_order`) VALUES
+('captain', 1, 'BARANGAY CAPTAIN', 'Hon. Diego Logronio', 'assets/images/Barangay Official/captain.Diego Logronio.jpg', 'To our residents, partners, and every member of our community, thank you for your trust, cooperation, and unwavering support. At Barangay San Jose, we remain committed to delivering honest and transparent public service.', 1),
+('secretary', 2, 'BARANGAY SECRETARY', 'Hon. Michelle Deluna', 'assets/images/Barangay Official/secretary michelle deluna.jpg', '', 2),
+('treasurer', 2, 'BARANGAY TREASURER', 'Hon. Alfredo Alasaas', 'assets/images/Barangay Official/treasurer alfredo alasaas.jpg', '', 3),
+('kagawad_1', 3, 'BARANGAY KAGAWAD 1', 'Hon. Fedelina Thundas', 'assets/images/Barangay Official/1.Fedelina Thundas.jpg', '', 4),
+('kagawad_2', 3, 'BARANGAY KAGAWAD 2', 'Hon. Mario Godines', 'assets/images/Barangay Official/2 Mario godines.jpg', '', 5),
+('kagawad_3', 3, 'BARANGAY KAGAWAD 3', 'Hon. Jennifer Dolen', 'assets/images/Barangay Official/3 jennifer dolen.jpg', '', 6),
+('kagawad_4', 3, 'BARANGAY KAGAWAD 4', 'Hon. Calixto Mamac', 'assets/images/Barangay Official/4 calixto mamac.jpg', '', 7),
+('kagawad_5', 3, 'BARANGAY KAGAWAD 5', 'Hon. Rodrigo Godinez', 'assets/images/Barangay Official/5 rodrigo godinez.jpg', '', 8),
+('kagawad_6', 3, 'BARANGAY KAGAWAD 6', 'Hon. Rodelio Basirel', 'assets/images/Barangay Official/6 rodelio besirel.jpg', '', 9),
+('kagawad_7', 3, 'BARANGAY KAGAWAD 7', 'Hon. Jimmy Daligdig', 'assets/images/Barangay Official/7 jimmy daligdig.jpg', '', 10)
+ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `role`=VALUES(`role`), `image`=VALUES(`image`), `message`=VALUES(`message`), `display_order`=VALUES(`display_order`);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sk_officials`
+--
+
+CREATE TABLE IF NOT EXISTS `sk_officials` (
+  `id` varchar(50) NOT NULL,
+  `level` int(11) NOT NULL DEFAULT 3,
+  `role` varchar(100) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `image` varchar(255) DEFAULT '',
+  `message` text DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sk_officials`
+--
+
+INSERT INTO `sk_officials` (`id`, `level`, `role`, `name`, `image`, `message`, `display_order`) VALUES
+('sk_chairperson', 1, 'SK CHAIRPERSON', 'Hon. Artem Macmac', 'assets/images/SK Official/sk chairperson artem mamac.jpg', 'Empowering the youth of Barangay San Jose through active participation in sports, education, and community development.', 1),
+('sk_secretary', 2, 'SK SECRETARY', 'Ms. Liza Santos', '', '', 2),
+('sk_treasurer', 2, 'SK TREASURER', 'Mr. Antonio Luna', '', '', 3),
+('sk_kagawad_1', 3, 'SK KAGAWAD 1', 'Hon. Ana Villanueva', '', '', 4),
+('sk_kagawad_2', 3, 'SK KAGAWAD 2', 'Hon. Luis Garcia', '', '', 5),
+('sk_kagawad_3', 3, 'SK KAGAWAD 3', 'Hon. Maria Santos', '', '', 6),
+('sk_kagawad_4', 3, 'SK KAGAWAD 4', 'Hon. Juanito Perez', '', '', 7),
+('sk_kagawad_5', 3, 'SK KAGAWAD 5', 'Hon. Elena Cruz', '', '', 8),
+('sk_kagawad_6', 3, 'SK KAGAWAD 6', 'Hon. Ricardo Gomez', '', '', 9),
+('sk_kagawad_7', 3, 'SK KAGAWAD 7', 'Hon. Pedro Reyes', '', '', 10)
+ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `role`=VALUES(`role`), `image`=VALUES(`image`), `message`=VALUES(`message`), `display_order`=VALUES(`display_order`);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
