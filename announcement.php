@@ -1,5 +1,14 @@
 <?php
 // Barangay San Jose Web-Based Information System - Announcements Page
+require_once 'db_connect.php';
+
+$announcements = [];
+$res = $conn->query("SELECT * FROM announcements WHERE status = 'Published' ORDER BY event_date DESC, id DESC");
+if ($res) {
+    while ($row = $res->fetch_assoc()) {
+        $announcements[] = $row;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -80,67 +89,59 @@
     <section class="announcement-page-content">
         <div class="container">
             <div class="announcement-list">
-                
-                <!-- Announcement 1 -->
-                <article class="announcement-detail-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="ad-date">
-                        <span class="month">OCT</span>
-                        <span class="day">15</span>
+                <?php if (empty($announcements)): ?>
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: white; border-radius: var(--radius-md); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#94a3b8" stroke-width="1.5" style="margin-bottom: 15px; display: inline-block;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                        <h3 style="color: #334155; margin-bottom: 8px;">No Announcements Yet</h3>
+                        <p style="color: #64748b; margin: 0;">Please check back soon for community news, schedules, and official notices.</p>
                     </div>
-                    <div class="ad-content">
-                        <h2>General Assembly Meeting</h2>
-                        <ul class="ad-4w">
-                            <li><strong>What:</strong> Bi-annual General Assembly Meeting</li>
-                            <li><strong>When:</strong> October 15, 2025 at 9:00 AM</li>
-                            <li><strong>Why:</strong> To discuss upcoming infrastructure projects and budget allocations.</li>
-                            <li><strong>Who:</strong> All residents of Barangay San Jose</li>
-                        </ul>
-                        <div class="ad-extra-desc">
-                            <p>We highly encourage at least one representative per household to attend this important assembly. Your voice and feedback are essential as we plan for the community's future developments.</p>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Announcement 2 -->
-                <article class="announcement-detail-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="ad-date">
-                        <span class="month">OCT</span>
-                        <span class="day">22</span>
-                    </div>
-                    <div class="ad-content">
-                        <h2>Free Medical & Dental Mission</h2>
-                        <ul class="ad-4w">
-                            <li><strong>What:</strong> Free Medical and Dental Checkups</li>
-                            <li><strong>When:</strong> October 22, 2025 starting at 8:00 AM</li>
-                            <li><strong>Why:</strong> To provide accessible healthcare services to those in need.</li>
-                            <li><strong>Who:</strong> Priority for Senior Citizens and Children</li>
-                        </ul>
-                        <div class="ad-extra-desc">
-                            <p>In partnership with the City Health Office and volunteer doctors, we will be providing free checkups, basic tooth extractions, and essential medicines. Please bring your valid ID and PhilHealth card if available.</p>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Announcement 3 -->
-                <article class="announcement-detail-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="ad-date">
-                        <span class="month">NOV</span>
-                        <span class="day">01</span>
-                    </div>
-                    <div class="ad-content">
-                        <h2>Undas 2025 Traffic Advisory</h2>
-                        <ul class="ad-4w">
-                            <li><strong>What:</strong> Temporary Road Closures and Rerouting</li>
-                            <li><strong>When:</strong> November 01, 2025 (All Day)</li>
-                            <li><strong>Why:</strong> To manage the expected high volume of traffic heading to the public cemetery.</li>
-                            <li><strong>Who:</strong> All Motorists and Residents</li>
-                        </ul>
-                        <div class="ad-extra-desc">
-                            <p>Please be advised that Main Avenue will be strictly one-way leading towards the cemetery. Expect heavy traffic. Barangay Tanods and City Traffic Enforcers will be deployed to guide motorists.</p>
-                        </div>
-                    </div>
-                </article>
-
+                <?php else: ?>
+                    <?php 
+                    $delay = 100;
+                    foreach ($announcements as $ann): 
+                        $month = date('M', strtotime($ann['event_date']));
+                        $day = date('d', strtotime($ann['event_date']));
+                    ?>
+                        <article class="announcement-detail-card" data-aos="fade-up" data-aos-delay="<?= $delay ?>">
+                            <?php if (!empty($ann['cover_image'])): ?>
+                                <div class="ad-cover-img" style="margin: -2.5rem -2.5rem 1.5rem -2.5rem; overflow: hidden; border-radius: var(--radius-md) var(--radius-md) 0 0; max-height: 220px;">
+                                    <img src="<?= htmlspecialchars($ann['cover_image']) ?>" alt="<?= htmlspecialchars($ann['title']) ?>" style="width: 100%; height: 220px; object-fit: cover; display: block;">
+                                </div>
+                            <?php endif; ?>
+                            <div class="ad-date">
+                                <span class="month"><?= htmlspecialchars($month) ?></span>
+                                <span class="day"><?= htmlspecialchars($day) ?></span>
+                            </div>
+                            <div class="ad-content">
+                                <h2><?= htmlspecialchars($ann['title']) ?></h2>
+                                <ul class="ad-4w">
+                                    <?php if (!empty($ann['what_desc'])): ?>
+                                        <li><strong>What:</strong> <?= htmlspecialchars($ann['what_desc']) ?></li>
+                                    <?php endif; ?>
+                                    <?php if (!empty($ann['when_time'])): ?>
+                                        <li><strong>When:</strong> <?= htmlspecialchars($ann['when_time']) ?></li>
+                                    <?php else: ?>
+                                        <li><strong>When:</strong> <?= date('F d, Y', strtotime($ann['event_date'])) ?></li>
+                                    <?php endif; ?>
+                                    <?php if (!empty($ann['why_desc'])): ?>
+                                        <li><strong>Why:</strong> <?= htmlspecialchars($ann['why_desc']) ?></li>
+                                    <?php endif; ?>
+                                    <?php if (!empty($ann['who_target'])): ?>
+                                        <li><strong>Who:</strong> <?= htmlspecialchars($ann['who_target']) ?></li>
+                                    <?php endif; ?>
+                                </ul>
+                                <?php if (!empty($ann['extra_desc'])): ?>
+                                    <div class="ad-extra-desc">
+                                        <p><?= nl2br(htmlspecialchars($ann['extra_desc'])) ?></p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </article>
+                    <?php 
+                        $delay += 100;
+                    endforeach; 
+                    ?>
+                <?php endif; ?>
             </div>
         </div>
     </section>
