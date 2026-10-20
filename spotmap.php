@@ -201,7 +201,7 @@
                                 if($res1){
                                     while($row = $res1->fetch_assoc()){
                                         if(!empty($row['marker_image'])){
-                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
                                         }
                                     }
                                 }
@@ -216,7 +216,7 @@
                                 if($res2){
                                     while($row = $res2->fetch_assoc()){
                                         if(!empty($row['marker_image'])){
-                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
                                         }
                                     }
                                 }
@@ -231,7 +231,7 @@
                                 if($res3){
                                     while($row = $res3->fetch_assoc()){
                                         if(!empty($row['marker_image'])){
-                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
                                         }
                                     }
                                 }
@@ -246,7 +246,7 @@
                                 if($res4){
                                     while($row = $res4->fetch_assoc()){
                                         if(!empty($row['marker_image'])){
-                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
                                         }
                                     }
                                 }
@@ -281,6 +281,10 @@
                     <div class="hm-row">
                         <span class="hm-label">Spouse Name</span>
                         <span class="hm-value" id="modalSpouseName"></span>
+                    </div>
+                    <div class="hm-row" id="modalChildrenRow" style="align-items: flex-start;">
+                        <span class="hm-label">Children</span>
+                        <div class="hm-value" id="modalChildrenList" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end;"></div>
                     </div>
                 </div>
             </div>

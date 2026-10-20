@@ -21,9 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $husbandName = $_POST['edit_husbandName'] ?? '';
     $spouseName = $_POST['edit_spouseName'] ?? '';
     
-    $updateQuery = "UPDATE purok3_locations SET house_number=?, husband_name=?, spouse_name=?";
-    $params = [$houseNumber, $husbandName, $spouseName];
-    $types = "sss";
+    // Process edit children
+    $editChildrenList = [];
+    if (isset($_POST['edit_children']) && is_array($_POST['edit_children'])) {
+        foreach ($_POST['edit_children'] as $child) {
+            $child = trim($child);
+            if (!empty($child)) {
+                $editChildrenList[] = $child;
+            }
+        }
+    }
+    $editChildrenJson = !empty($editChildrenList) ? json_encode($editChildrenList, JSON_UNESCAPED_UNICODE) : null;
+    
+    $updateQuery = "UPDATE purok3_locations SET house_number=?, husband_name=?, spouse_name=?, children=?";
+    $params = [$houseNumber, $husbandName, $spouseName, $editChildrenJson];
+    $types = "ssss";
     
     if (isset($_FILES['edit_houseImage']) && $_FILES['edit_houseImage']['error'] === UPLOAD_ERR_OK) {
         $houseImageName = time() . '_' . basename($_FILES['edit_houseImage']['name']);
@@ -60,6 +72,7 @@ if ($result) {
             'houseNumber' => $row['house_number'],
             'husbandName' => $row['husband_name'],
             'spouseName' => $row['spouse_name'],
+            'children' => $row['children'],
             'houseImage' => $row['house_image'],
             'markerImage' => $row['marker_image'],
             'dateAdded' => $row['date_added']
@@ -244,14 +257,15 @@ if ($result) {
                                 <th>House Number</th>
                                 <th>Husband Name</th>
                                 <th>Spouse Name</th>
+                                <th>Children</th>
                                 <th>Date Added</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                                                <tbody>
+                        <tbody>
                             <?php if (empty($records)): ?>
                             <tr>
-                                <td colspan="6" class="no-records">No records found.</td>
+                                <td colspan="7" class="no-records">No records found.</td>
                             </tr>
                             <?php else: ?>
                                 <?php foreach ($records as $record): ?>
@@ -266,13 +280,29 @@ if ($result) {
                                     <td><?= htmlspecialchars($record['houseNumber'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($record['husbandName'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($record['spouseName'] ?? '') ?></td>
+                                    <td>
+                                        <?php 
+                                        $children = json_decode($record['children'] ?? '[]', true);
+                                        if (!empty($children) && is_array($children)): 
+                                        ?>
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 99px; background: #e0f2fe; color: #0369a1; font-weight: 600; font-size: 0.75rem;">
+                                                <?= count($children) ?> <?= count($children) === 1 ? 'Child' : 'Children' ?>
+                                            </span>
+                                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 3px;">
+                                                <?= htmlspecialchars(implode(', ', $children)) ?>
+                                            </div>
+                                        <?php else: ?>
+                                            <span style="color: #94a3b8; font-style: italic; font-size: 0.85rem;">None</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?= date('M d, Y', strtotime($record['dateAdded'])) ?></td>
                                     <td>
                                         <button type="button" class="btn-action edit-btn" style="padding: 5px 10px; background: #0f766e; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;" 
                                             data-id="<?= htmlspecialchars($record['id']) ?>"
                                             data-house="<?= htmlspecialchars($record['houseNumber'] ?? '') ?>"
                                             data-husband="<?= htmlspecialchars($record['husbandName'] ?? '') ?>"
-                                            data-spouse="<?= htmlspecialchars($record['spouseName'] ?? '') ?>">
+                                            data-spouse="<?= htmlspecialchars($record['spouseName'] ?? '') ?>"
+                                            data-children="<?= htmlspecialchars($record['children'] ?? '[]', ENT_QUOTES) ?>">
                                             Edit
                                         </button>
                                         <form method="POST" action="" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this record?');">
@@ -292,9 +322,9 @@ if ($result) {
     </div>
 
     <script src="js/dashboard.js"></script>
-<!-- Edit Modal -->
+    <!-- Edit Modal -->
     <div id="editModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-        <div class="modal-content" style="background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 500px;">
+        <div class="modal-content" style="background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
             <h2 style="margin-top: 0; margin-bottom: 20px; color: #1e293b;">Edit Record Details</h2>
             <form action="" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="edit">
@@ -311,6 +341,17 @@ if ($result) {
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; color: #475569;">Spouse Name (Maiden)</label>
                     <input type="text" name="edit_spouseName" id="edit_spouseName" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <label style="margin-bottom: 0; color: #475569;">Children / Dependents</label>
+                        <button type="button" id="btnEditAddChild" style="background: #0f766e; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                            + Add Child
+                        </button>
+                    </div>
+                    <div id="editChildrenContainer" style="display: flex; flex-direction: column; gap: 8px;">
+                        <!-- Dynamic inputs populated via JS -->
+                    </div>
                 </div>
                 <div class="form-group" style="margin-bottom: 25px;">
                     <label style="display: block; margin-bottom: 5px; color: #475569;">Update House Image (Optional)</label>
@@ -329,6 +370,38 @@ if ($result) {
     document.addEventListener('DOMContentLoaded', function() {
         const editBtns = document.querySelectorAll('.edit-btn');
         const editModal = document.getElementById('editModal');
+        const editContainer = document.getElementById('editChildrenContainer');
+        const btnEditAddChild = document.getElementById('btnEditAddChild');
+        
+        function createEditChildRow(name = '') {
+            const row = document.createElement('div');
+            row.className = 'edit-child-row';
+            row.style = 'display: flex; gap: 8px; align-items: center;';
+            row.innerHTML = `
+                <input type="text" name="edit_children[]" value="${name.replace(/"/g, '&quot;')}" placeholder="Child's Full Name" class="form-control" style="flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                <button type="button" class="btn-remove-edit-child" title="Remove" style="background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            `;
+            return row;
+        }
+
+        if (btnEditAddChild && editContainer) {
+            btnEditAddChild.addEventListener('click', function() {
+                const row = createEditChildRow('');
+                editContainer.appendChild(row);
+                const input = row.querySelector('input');
+                if (input) input.focus();
+            });
+            
+            editContainer.addEventListener('click', function(e) {
+                const removeBtn = e.target.closest('.btn-remove-edit-child');
+                if (removeBtn) {
+                    const row = removeBtn.closest('.edit-child-row');
+                    if (row) row.remove();
+                }
+            });
+        }
         
         editBtns.forEach(btn => {
             btn.addEventListener('click', function() {
@@ -336,6 +409,21 @@ if ($result) {
                 document.getElementById('edit_houseNumber').value = this.getAttribute('data-house');
                 document.getElementById('edit_husbandName').value = this.getAttribute('data-husband');
                 document.getElementById('edit_spouseName').value = this.getAttribute('data-spouse');
+                
+                // Populate children
+                if (editContainer) {
+                    editContainer.innerHTML = '';
+                    let childrenData = [];
+                    try {
+                        childrenData = JSON.parse(this.getAttribute('data-children') || '[]');
+                    } catch(e) { childrenData = []; }
+                    if (Array.isArray(childrenData) && childrenData.length > 0) {
+                        childrenData.forEach(name => {
+                            editContainer.appendChild(createEditChildRow(name));
+                        });
+                    }
+                }
+
                 editModal.style.display = 'flex';
             });
         });

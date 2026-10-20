@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var husband = e.target.getAttribute('data-husband');
                 var spouse = e.target.getAttribute('data-spouse');
                 var imageSrc = e.target.getAttribute('data-image');
+                var rawChildren = e.target.getAttribute('data-children');
                 
                 document.getElementById('modalHouseNumber').textContent = houseNum ? houseNum : 'N/A';
                 document.getElementById('modalHusbandName').textContent = husband ? husband : 'N/A';
@@ -233,9 +234,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     modalImg.src = 'https://placehold.co/400x400/e2e8f0/64748b?text=No+Photo';
                 }
+
+                // Render children
+                var childrenContainer = document.getElementById('modalChildrenList');
+                if (childrenContainer) {
+                    childrenContainer.innerHTML = '';
+                    var childrenList = [];
+                    try {
+                        childrenList = JSON.parse(rawChildren || '[]');
+                    } catch(err) {
+                        childrenList = [];
+                    }
+                    if (Array.isArray(childrenList) && childrenList.length > 0) {
+                        childrenList.forEach(function(child) {
+                            var chip = document.createElement('span');
+                            chip.textContent = child;
+                            chip.style.display = 'inline-block';
+                            chip.style.padding = '3px 8px';
+                            chip.style.backgroundColor = '#f1f5f9';
+                            chip.style.border = '1px solid #cbd5e1';
+                            chip.style.borderRadius = '12px';
+                            chip.style.fontSize = '0.85rem';
+                            chip.style.color = '#334155';
+                            childrenContainer.appendChild(chip);
+                        });
+                    } else {
+                        var noneSpan = document.createElement('span');
+                        noneSpan.textContent = 'None listed';
+                        noneSpan.style.color = '#94a3b8';
+                        noneSpan.style.fontStyle = 'italic';
+                        noneSpan.style.fontSize = '0.85rem';
+                        childrenContainer.appendChild(noneSpan);
+                    }
+                }
                 
                 modal.style.display = 'flex';
             }
         }
     });
+
+    // Close household modal when clicking on the backdrop
+    var householdModal = document.getElementById('householdModal');
+    if (householdModal) {
+        householdModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+    }
 });

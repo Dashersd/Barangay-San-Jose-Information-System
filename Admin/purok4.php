@@ -29,11 +29,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $markerImagePath = 'assets/images/markers/' . $markerImageName;
     }
 
+    // Process children array
+    $childrenList = [];
+    if (isset($_POST['children']) && is_array($_POST['children'])) {
+        foreach ($_POST['children'] as $child) {
+            $child = trim($child);
+            if (!empty($child)) {
+                $childrenList[] = $child;
+            }
+        }
+    }
+    $childrenJson = !empty($childrenList) ? json_encode($childrenList, JSON_UNESCAPED_UNICODE) : null;
+
     require_once '../db_connect.php';
 
-    $stmt = $conn->prepare("INSERT INTO purok4_locations (legend_id, house_number, husband_name, spouse_name, house_image, marker_image, marker_width, marker_height, top_position, left_position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO purok4_locations (legend_id, house_number, husband_name, spouse_name, children, house_image, marker_image, marker_width, marker_height, top_position, left_position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $legend_id = 1; // Assuming default to Household
-    $stmt->bind_param("isssssiidd", $legend_id, $houseNumber, $husbandName, $spouseName, $houseImagePath, $markerImagePath, $markerWidth, $markerHeight, $topPosition, $leftPosition);
+    $stmt->bind_param("issssssiidd", $legend_id, $houseNumber, $husbandName, $spouseName, $childrenJson, $houseImagePath, $markerImagePath, $markerWidth, $markerHeight, $topPosition, $leftPosition);
     $stmt->execute();
     $stmt->close();
     
@@ -252,6 +264,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label style="margin-bottom: 0;">Children / Dependents (Optional)</label>
+                            <button type="button" id="btnAddChild" style="background: #0f766e; color: #ffffff; border: none; padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s;">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Add Child
+                            </button>
+                        </div>
+                        <div id="childrenContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                            <!-- Dynamic textboxes added here -->
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="houseImage">House Image (Actual Photo)</label>
                         <input type="file" id="houseImage" name="houseImage" class="form-control" accept="image/*">
@@ -296,6 +321,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script src="js/dashboard.js"></script>
     <script src="js/map-marker-preview.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnAddChild = document.getElementById('btnAddChild');
+        const container = document.getElementById('childrenContainer');
+        
+        if (btnAddChild && container) {
+            btnAddChild.addEventListener('click', function() {
+                const row = document.createElement('div');
+                row.className = 'child-row';
+                row.style = 'display: flex; gap: 10px; align-items: center;';
+                row.innerHTML = `
+                    <input type="text" name="children[]" placeholder="Child's Full Name (e.g. Juan Dela Cruz Jr.)" class="form-control" style="flex: 1;">
+                    <button type="button" class="btn-remove-child" title="Remove child" style="background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; padding: 8px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                `;
+                container.appendChild(row);
+                const input = row.querySelector('input');
+                if (input) input.focus();
+            });
+            
+            container.addEventListener('click', function(e) {
+                const removeBtn = e.target.closest('.btn-remove-child');
+                if (removeBtn) {
+                    const row = removeBtn.closest('.child-row');
+                    if (row) row.remove();
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>
 
