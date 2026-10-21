@@ -82,9 +82,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 3. Upload Media into Folder
     if ($action === 'upload_media') {
         $folder_id = intval($_POST['folder_id'] ?? 0);
+        $folder_select_val = $_POST['folder_id'] ?? '';
+        $new_folder_name = trim($_POST['new_folder_name'] ?? '');
+        $new_folder_desc = trim($_POST['new_folder_desc'] ?? '');
         $caption = trim($_POST['caption'] ?? '');
 
-        if ($folder_id > 0 && isset($_FILES['media_files'])) {
+        // If creating a new folder on the fly
+        if ($folder_select_val === 'new' || (!empty($new_folder_name) && $folder_id <= 0)) {
+            if (!empty($new_folder_name)) {
+                $nf_stmt = $conn->prepare("INSERT INTO gallery_folders (folder_name, description) VALUES (?, ?)");
+                $nf_stmt->bind_param("ss", $new_folder_name, $new_folder_desc);
+                if ($nf_stmt->execute()) {
+                    $folder_id = $conn->insert_id;
+                }
+                $nf_stmt->close();
+            } else {
+                header("Location: mediagallery.php?msg=empty_name");
+                exit;
+            }
+        }
+
+        if ($folder_id <= 0) {
+            header("Location: mediagallery.php?msg=no_folder");
+            exit;
+        }
+
+        // Verify folder actually exists
+        $chk_stmt = $conn->prepare("SELECT id FROM gallery_folders WHERE id = ?");
+        $chk_stmt->bind_param("i", $folder_id);
+        $chk_stmt->execute();
+        $chk_res = $chk_stmt->get_result();
+        if ($chk_res->num_rows === 0) {
+            $chk_stmt->close();
+            header("Location: mediagallery.php?msg=folder_not_found");
+            exit;
+        }
+        $chk_stmt->close();
+
+        if (isset($_FILES['media_files'])) {
             $files = $_FILES['media_files'];
             $file_count = is_array($files['name']) ? count($files['name']) : 0;
             $uploaded_count = 0;
@@ -121,6 +156,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header("Location: mediagallery.php?folder_id=" . $folder_id . "&msg=upload_failed");
                 exit;
             }
+        } else {
+            header("Location: mediagallery.php?folder_id=" . $folder_id . "&msg=upload_failed");
+            exit;
         }
     }
 
@@ -158,6 +196,20 @@ $active_folder_id = isset($_GET['folder_id']) ? intval($_GET['folder_id']) : 0;
 $current_folder = null;
 $folder_media = [];
 
+// Always load all folders for dropdown selector in upload modal and root view
+$folders_query = "SELECT f.*, COUNT(m.id) AS media_count 
+                  FROM gallery_folders f 
+                  LEFT JOIN gallery_media m ON f.id = m.folder_id 
+                  GROUP BY f.id 
+                  ORDER BY f.created_at DESC";
+$folders_result = $conn->query($folders_query);
+$all_folders = [];
+if ($folders_result) {
+    while ($row = $folders_result->fetch_assoc()) {
+        $all_folders[] = $row;
+    }
+}
+
 if ($active_folder_id > 0) {
     // Inner Folder View
     $f_stmt = $conn->prepare("SELECT * FROM gallery_folders WHERE id = ?");
@@ -180,20 +232,6 @@ if ($active_folder_id > 0) {
         header("Location: mediagallery.php?msg=folder_not_found");
         exit;
     }
-} else {
-    // Root Overview: List all folders with media count
-    $folders_query = "SELECT f.*, COUNT(m.id) AS media_count 
-                      FROM gallery_folders f 
-                      LEFT JOIN gallery_media m ON f.id = m.folder_id 
-                      GROUP BY f.id 
-                      ORDER BY f.created_at DESC";
-    $folders_result = $conn->query($folders_query);
-    $all_folders = [];
-    if ($folders_result) {
-        while ($row = $folders_result->fetch_assoc()) {
-            $all_folders[] = $row;
-        }
-    }
 }
 
 // Success & error message banner
@@ -201,9 +239,10 @@ $msg = $_GET['msg'] ?? '';
 $alert_text = '';
 $alert_type = 'success';
 
-if ($msg === 'folder_created') $alert_text = 'Folder created successfully! Click on it to start uploading photos.';
+if ($msg === 'folder_created') $alert_text = 'Folder created successfully! You can now upload photos to it.';
 if ($msg === 'folder_deleted') $alert_text = 'Folder and all contained photos have been deleted.';
 if ($msg === 'empty_name') { $alert_text = 'Folder name cannot be blank.'; $alert_type = 'error'; }
+if ($msg === 'no_folder') { $alert_text = 'Please select or create a destination folder for your images.'; $alert_type = 'error'; }
 if ($msg === 'media_uploaded') {
     $count = intval($_GET['count'] ?? 1);
     $alert_text = $count . ($count > 1 ? ' photos uploaded successfully!' : ' photo uploaded successfully!');
@@ -387,6 +426,57 @@ if ($msg === 'folder_not_found') { $alert_text = 'The requested folder could not
             flex-direction: column !important;
             overflow: hidden !important;
             border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+        .btn-upload-quick {
+            background: #fffbeb !important;
+            border: 1px solid #fde68a !important;
+            color: #d97706 !important;
+            padding: 0.38rem 0.75rem !important;
+            border-radius: 8px !important;
+            font-size: 0.8rem !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.35rem !important;
+            transition: all 0.2s ease !important;
+        }
+        .btn-upload-quick:hover {
+            background: #fef3c7 !important;
+            border-color: #f59e0b !important;
+            color: #b45309 !important;
+            transform: translateY(-1px) !important;
+        }
+        .image-preview-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)) !important;
+            gap: 0.5rem !important;
+            margin-top: 0.75rem !important;
+            max-height: 150px !important;
+            overflow-y: auto !important;
+            padding: 0.5rem !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+        }
+        .image-preview-item {
+            aspect-ratio: 1 / 1 !important;
+            border-radius: 6px !important;
+            overflow: hidden !important;
+            border: 1px solid #cbd5e1 !important;
+            background: #ffffff !important;
+            position: relative !important;
+        }
+        .image-preview-item img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            display: block !important;
+        }
+        .file-dropzone.drag-active {
+            border-color: #d97706 !important;
+            background: #fffbeb !important;
+            transform: scale(1.01) !important;
         }
     </style>
 </head>
@@ -582,7 +672,7 @@ if ($msg === 'folder_not_found') { $alert_text = 'The requested folder could not
                             </div>
                         </div>
 
-                        <button id="openUploadModalBtn" class="btn btn-action-create">
+                        <button id="openUploadModalBtn" class="btn btn-action-create" onclick="openUploadModal(<?= $current_folder['id'] ?>);">
                             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             + Upload Images
                         </button>
@@ -597,7 +687,7 @@ if ($msg === 'folder_not_found') { $alert_text = 'The requested folder could not
                                 </div>
                                 <h3>No images in this folder yet</h3>
                                 <p>Start uploading photos to categorize and display them in the <?= htmlspecialchars($current_folder['folder_name']) ?> gallery.</p>
-                                <button class="btn btn-action-create" onclick="openModal('uploadMediaModal');">
+                                <button class="btn btn-action-create" onclick="openUploadModal(<?= $current_folder['id'] ?>);">
                                     + Upload First Photo
                                 </button>
                             </div>
@@ -636,59 +726,25 @@ if ($msg === 'folder_not_found') { $alert_text = 'The requested folder could not
                         <?php endif; ?>
                     </div>
 
-                    <!-- Upload Media Modal (Guaranteed hidden by default) -->
-                    <div id="uploadMediaModal" class="modal-overlay" style="display: none;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h2>
-                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0d2847" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                                    Upload Images to "<?= htmlspecialchars($current_folder['folder_name']) ?>"
-                                </h2>
-                                <button type="button" class="modal-close" onclick="closeModal('uploadMediaModal')">&times;</button>
-                            </div>
-                            <form action="mediagallery.php" method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="action" value="upload_media">
-                                <input type="hidden" name="folder_id" value="<?= $current_folder['id'] ?>">
-                                
-                                <div class="modal-body custom-scrollbar">
-                                    <div class="form-group">
-                                        <label for="media_files">Select Image(s) <span class="required-star">*</span></label>
-                                        <div class="file-dropzone" onclick="document.getElementById('media_files').click();">
-                                            <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#d97706" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                                            <p class="dropzone-text">Click to choose images from device</p>
-                                            <span class="dropzone-sub">Supported formats: JPG, PNG, WEBP, GIF</span>
-                                            <div id="selectedFilesCount" class="selected-files-indicator"></div>
-                                        </div>
-                                        <input type="file" id="media_files" name="media_files[]" accept="image/*" multiple required style="display: none;" onchange="handleFileSelect(this)">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="caption">Caption / Title (Optional)</label>
-                                        <input type="text" id="caption" name="caption" placeholder="e.g., General Assembly meeting with council members" class="form-control">
-                                        <small class="form-help">Leave empty to use original filename.</small>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary modal-cancel" onclick="closeModal('uploadMediaModal')">Cancel</button>
-                                    <button type="submit" class="btn btn-action-create">Upload Images</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
                 <?php else: ?>
                     <!-- ============================================== -->
                     <!-- VIEW 1: ROOT FOLDERS OVERVIEW                  -->
                     <!-- ============================================== -->
-                    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem; background: #ffffff; padding: 1.25rem 1.75rem; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem; background: #ffffff; padding: 1.25rem 1.75rem; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); flex-wrap: wrap; gap: 1rem;">
                         <div class="content-header-title-box">
                             <h2>Media Categories & Folders</h2>
                             <p>Organize photos into folders (e.g., Meeting, Sports, Community Events).</p>
                         </div>
-                        <button id="openFolderModalBtn" class="btn-action-create" onclick="openModal('createFolderModal');">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg>
-                            + Create Folder
-                        </button>
+                        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                            <button type="button" class="btn-action-create" onclick="openUploadModal();">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                + Upload Images
+                            </button>
+                            <button id="openFolderModalBtn" class="btn-action-create" onclick="openModal('createFolderModal');" style="background: #ffffff !important; color: #0d2847 !important; border: 1.5px solid #cbd5e1 !important; box-shadow: none !important;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg>
+                                + Create Folder
+                            </button>
+                        </div>
                     </div>
 
                     <div class="gallery-container">
@@ -731,13 +787,19 @@ if ($msg === 'folder_not_found') { $alert_text = 'The requested folder could not
                                                 Open Album
                                                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                             </a>
-                                            <form action="mediagallery.php" method="POST" onsubmit="return confirm('Are you sure you want to delete folder &quot;<?= htmlspecialchars(addslashes($folder['folder_name'])) ?>&quot;? All photos inside this folder will also be deleted.');" style="margin: 0;">
-                                                <input type="hidden" name="action" value="delete_folder">
-                                                <input type="hidden" name="folder_id" value="<?= $folder['id'] ?>">
-                                                <button type="submit" class="btn-icon-danger" title="Delete Folder">
-                                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                                <button type="button" class="btn-upload-quick" onclick="openUploadModal(<?= $folder['id'] ?>);" title="Add photos directly to <?= htmlspecialchars($folder['folder_name']) ?>">
+                                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                                    <span>+ Add Photos</span>
                                                 </button>
-                                            </form>
+                                                <form action="mediagallery.php" method="POST" onsubmit="return confirm('Are you sure you want to delete folder &quot;<?= htmlspecialchars(addslashes($folder['folder_name'])) ?>&quot;? All photos inside this folder will also be deleted.');" style="margin: 0;">
+                                                    <input type="hidden" name="action" value="delete_folder">
+                                                    <input type="hidden" name="folder_id" value="<?= $folder['id'] ?>">
+                                                    <button type="submit" class="btn-icon-danger" title="Delete Folder">
+                                                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
@@ -745,7 +807,7 @@ if ($msg === 'folder_not_found') { $alert_text = 'The requested folder could not
                         <?php endif; ?>
                     </div>
 
-                    <!-- Create Folder Modal (Guaranteed hidden by default) -->
+                    <!-- Create Folder Modal -->
                     <div id="createFolderModal" class="modal-overlay" style="display: none;">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -780,6 +842,84 @@ if ($msg === 'folder_not_found') { $alert_text = 'The requested folder could not
         </main>
     </div>
 
+    <!-- Upload Media Modal (Universally available on both root and inner views) -->
+    <div id="uploadMediaModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 560px !important;">
+            <div class="modal-header">
+                <h2>
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0d2847" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <span id="uploadModalTitle">Upload Images</span>
+                </h2>
+                <button type="button" class="modal-close" onclick="closeModal('uploadMediaModal')">&times;</button>
+            </div>
+            <form action="mediagallery.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="upload_media">
+                
+                <div class="modal-body custom-scrollbar">
+                    <!-- Target Folder Selection -->
+                    <div class="form-group">
+                        <label for="upload_folder_id">Destination Folder <span class="required-star">*</span></label>
+                        <select id="upload_folder_id" name="folder_id" class="form-control" required onchange="handleFolderSelectChange(this)">
+                            <option value="">-- Select Target Folder --</option>
+                            <?php foreach ($all_folders as $f_item): ?>
+                                <option value="<?= $f_item['id'] ?>" <?= ($active_folder_id == $f_item['id']) ? 'selected' : '' ?>>
+                                    📁 <?= htmlspecialchars($f_item['folder_name']) ?> (<?= $f_item['media_count'] ?> <?= $f_item['media_count'] == 1 ? 'photo' : 'photos' ?>)
+                                </option>
+                            <?php endforeach; ?>
+                            <option value="new" <?= empty($all_folders) ? 'selected' : '' ?>>➕ Create New Folder...</option>
+                        </select>
+                        <small class="form-help">Choose which folder to add your pictures into, or create a new one.</small>
+                    </div>
+
+                    <!-- Conditional New Folder Input Block -->
+                    <div id="newFolderFields" style="display: <?= empty($all_folders) ? 'block' : 'none' ?>; background: #fffbeb; border: 1.5px dashed #f59e0b; padding: 1.15rem; border-radius: 12px; margin-bottom: 0.5rem;">
+                        <div style="font-weight: 700; color: #b45309; margin-bottom: 0.75rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem;">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                            New Folder Information
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0.75rem;">
+                            <label for="modal_new_folder_name">Folder Name <span class="required-star">*</span></label>
+                            <input type="text" id="modal_new_folder_name" name="new_folder_name" placeholder="e.g., Medical Mission 2026, Basketball League" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="modal_new_folder_desc">Folder Description (Optional)</label>
+                            <input type="text" id="modal_new_folder_desc" name="new_folder_desc" placeholder="Brief details about photos in this folder..." class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Multiple File Upload Dropzone -->
+                    <div class="form-group">
+                        <label for="media_files">Select Images <span class="required-star">*</span></label>
+                        <div class="file-dropzone" id="fileDropzone" onclick="document.getElementById('media_files').click();">
+                            <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#d97706" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <p class="dropzone-text">Click to choose images or drag &amp; drop here</p>
+                            <span class="dropzone-sub">You can select and upload multiple images at once (JPG, PNG, WEBP, GIF)</span>
+                            <div id="selectedFilesCount" class="selected-files-indicator"></div>
+                        </div>
+                        <input type="file" id="media_files" name="media_files[]" accept="image/jpeg,image/png,image/gif,image/webp" multiple required style="display: none;" onchange="handleFileSelect(this)">
+                        
+                        <!-- Visual Preview Grid of Selected Images -->
+                        <div id="imagePreviewContainer" class="image-preview-grid" style="display: none;"></div>
+                    </div>
+
+                    <!-- Caption Input -->
+                    <div class="form-group">
+                        <label for="caption">Caption / Title (Optional)</label>
+                        <input type="text" id="caption" name="caption" placeholder="e.g., Highlights from community event" class="form-control">
+                        <small class="form-help">Leave empty to use original image file names automatically.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-cancel" onclick="closeModal('uploadMediaModal')">Cancel</button>
+                    <button type="submit" class="btn btn-action-create">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        Upload Photos
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Image Lightbox Modal (Guaranteed hidden by default) -->
     <div id="imageLightboxModal" class="modal-overlay image-lightbox-overlay" style="display: none;" onclick="if(event.target === this) closeLightbox();">
         <div class="lightbox-container">
@@ -797,8 +937,7 @@ if ($msg === 'folder_not_found') { $alert_text = 'The requested folder could not
             const el = document.getElementById(id);
             if (el) {
                 el.style.display = 'flex';
-                // Focus first input if any
-                const input = el.querySelector('input[type="text"], input[type="file"]');
+                const input = el.querySelector('input[type="text"]:not([style*="display: none"]):not([disabled]), select');
                 if (input) setTimeout(() => input.focus(), 50);
             }
         }
@@ -808,25 +947,149 @@ if ($msg === 'folder_not_found') { $alert_text = 'The requested folder could not
             if (el) el.style.display = 'none';
         }
 
+        // Open Upload Modal with optional target folder
+        function openUploadModal(folderId) {
+            const folderSelect = document.getElementById('upload_folder_id');
+            const titleEl = document.getElementById('uploadModalTitle');
+
+            if (folderSelect) {
+                if (folderId) {
+                    folderSelect.value = folderId;
+                    const selectedOption = folderSelect.options[folderSelect.selectedIndex];
+                    if (titleEl && selectedOption) {
+                        titleEl.textContent = 'Upload Images to "' + selectedOption.text.replace(/📁|\(\d+\s*photos?\)/g, '').trim() + '"';
+                    }
+                } else {
+                    if (titleEl) titleEl.textContent = 'Upload Images';
+                    if (!folderSelect.value && folderSelect.options.length > 1) {
+                        folderSelect.selectedIndex = 1;
+                    }
+                }
+                handleFolderSelectChange(folderSelect);
+            }
+
+            openModal('uploadMediaModal');
+        }
+
+        // Toggle New Folder input fields in upload modal
+        function handleFolderSelectChange(select) {
+            const newFields = document.getElementById('newFolderFields');
+            const newNameInput = document.getElementById('modal_new_folder_name');
+            const titleEl = document.getElementById('uploadModalTitle');
+
+            if (!newFields) return;
+
+            if (select.value === 'new') {
+                newFields.style.display = 'block';
+                if (newNameInput) {
+                    newNameInput.required = true;
+                    setTimeout(() => newNameInput.focus(), 50);
+                }
+                if (titleEl) titleEl.textContent = 'Create Folder & Upload Images';
+            } else {
+                newFields.style.display = 'none';
+                if (newNameInput) {
+                    newNameInput.required = false;
+                }
+                if (titleEl && select.selectedIndex > 0) {
+                    const optText = select.options[select.selectedIndex].text.replace(/📁|\(\d+\s*photos?\)/g, '').trim();
+                    titleEl.textContent = 'Upload Images to "' + optText + '"';
+                }
+            }
+        }
+
+        // Dropzone file selection & preview handling
+        function handleFileSelect(input) {
+            const countEl = document.getElementById('selectedFilesCount');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+
+            if (!input.files || input.files.length === 0) {
+                if (countEl) { countEl.textContent = ''; countEl.style.display = 'none'; }
+                if (previewContainer) { previewContainer.innerHTML = ''; previewContainer.style.display = 'none'; }
+                return;
+            }
+
+            const count = input.files.length;
+            if (countEl) {
+                countEl.textContent = count === 1 ? `✓ Selected: 1 photo (${input.files[0].name})` : `✓ Selected: ${count} photos ready to upload`;
+                countEl.style.display = 'block';
+            }
+
+            if (previewContainer) {
+                previewContainer.innerHTML = '';
+                previewContainer.style.display = 'grid';
+
+                const maxPreviews = 16;
+                const total = Math.min(count, maxPreviews);
+
+                for (let i = 0; i < total; i++) {
+                    const file = input.files[i];
+                    if (file.type && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const item = document.createElement('div');
+                            item.className = 'image-preview-item';
+                            item.title = file.name;
+                            item.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                            previewContainer.appendChild(item);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+
+                if (count > maxPreviews) {
+                    const more = document.createElement('div');
+                    more.className = 'image-preview-item';
+                    more.style.display = 'flex';
+                    more.style.alignItems = 'center';
+                    more.style.justifyContent = 'center';
+                    more.style.background = '#e2e8f0';
+                    more.style.fontSize = '0.78rem';
+                    more.style.fontWeight = '700';
+                    more.style.color = '#475569';
+                    more.textContent = `+${count - maxPreviews} more`;
+                    previewContainer.appendChild(more);
+                }
+            }
+        }
+
+        // Drag and drop support on dropzone
+        const dropzone = document.getElementById('fileDropzone');
+        if (dropzone) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.add('drag-active');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.remove('drag-active');
+                }, false);
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                if (dt && dt.files && dt.files.length > 0) {
+                    const fileInput = document.getElementById('media_files');
+                    if (fileInput) {
+                        fileInput.files = dt.files;
+                        handleFileSelect(fileInput);
+                    }
+                }
+            }, false);
+        }
+
         // Close modal on clicking backdrop
         window.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal-overlay') && !e.target.classList.contains('image-lightbox-overlay')) {
                 e.target.style.display = 'none';
             }
         });
-
-        // Dropzone file selection label update
-        function handleFileSelect(input) {
-            const countEl = document.getElementById('selectedFilesCount');
-            if (input.files && input.files.length > 0) {
-                const count = input.files.length;
-                countEl.textContent = count === 1 ? `Selected: ${input.files[0].name}` : `Selected: ${count} photos ready for upload`;
-                countEl.style.display = 'block';
-            } else {
-                countEl.textContent = '';
-                countEl.style.display = 'none';
-            }
-        }
 
         // Image Lightbox
         function previewImage(src, caption) {
