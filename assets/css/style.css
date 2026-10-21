@@ -1214,10 +1214,8 @@ img {
 
 .footer-links-wrapper {
     display: grid;
-    grid-template-columns: repeat(3, auto);
-    grid-template-rows: repeat(3, auto);
-    grid-auto-flow: column;
-    gap: 1.2rem 5rem;
+    grid-template-columns: repeat(4, auto);
+    gap: 1.25rem 3.5rem;
     flex: 2;
     justify-content: flex-end;
     min-width: 300px;
@@ -1230,11 +1228,46 @@ img {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    transition: color var(--transition-fast);
+    white-space: nowrap;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+    display: inline-block;
 }
 
 .footer-links-wrapper a:hover {
     color: var(--primary);
+    transform: translateX(2px);
+}
+
+@media (max-width: 1100px) {
+    .footer-links-wrapper {
+        grid-template-columns: repeat(3, auto);
+        gap: 1.2rem 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2.5rem;
+    }
+    .footer-links-wrapper {
+        width: 100%;
+        justify-content: flex-start;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.2rem 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-links-wrapper {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 1rem;
+    }
+    .footer-links-wrapper a {
+        font-size: 0.82rem;
+        white-space: normal;
+    }
 }
 
 .footer-bottom {

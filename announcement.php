@@ -28,7 +28,7 @@ if ($res) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css?v=2">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/announcement.css">
     
     <!-- AOS Animation CSS -->
@@ -163,10 +163,14 @@ if ($res) {
                 <div class="footer-links-wrapper">
                     <a href="index.php">HOME</a>
                     <a href="about.php">ABOUT US</a>
+                    <a href="about.php#history">HISTORY</a>
+                    <a href="vision.php">VISION</a>
+                    <a href="mission.php">MISSION</a>
                     <a href="officials.php">OFFICIALS</a>
+                    <a href="skofficials.php">SK OFFICIALS</a>
                     <a href="announcement.php">ANNOUNCEMENTS</a>
                     <a href="gallery.php">GALLERY</a>
-                    <a href="index.php#spot-map">SPOT MAP</a>
+                    <a href="spotmap.php">SPOT MAP</a>
                     <a href="services.php">SERVICES</a>
                     <a href="contact.php">CONTACT US</a>
                 </div>

@@ -6,6 +6,10 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
     unset($_SESSION['chat_token']);
     unset($_SESSION['chat_start_time']);
 }
+
+require_once __DIR__ . '/services_db.php';
+$activeServices = get_all_services($conn, true);
+$selectedService = isset($_GET['service']) ? trim($_GET['service']) : '';
 // Barangay San Jose Web-Based Information System - Contact Us
 ?>
 <!DOCTYPE html>
@@ -27,7 +31,7 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/style.css?v=2">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/contact.css">
     
     <!-- AOS Animation CSS -->
@@ -138,13 +142,24 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
                         </div>
                         <div class="form-group">
                             <label>Service Type</label>
-                            <select required>
-                                <option value="" disabled selected>Select service</option>
-                                <option value="clearance">Barangay Clearance</option>
-                                <option value="indigency">Certificate of Indigency</option>
-                                <option value="business">Business Clearance</option>
-                                <option value="residency">Certificate of Residency</option>
-                                <option value="other">Other Inquiry</option>
+                            <select name="service" required>
+                                <option value="" disabled <?= empty($selectedService) ? 'selected' : '' ?>>Select service</option>
+                                <?php if (!empty($activeServices)): ?>
+                                    <?php foreach ($activeServices as $srvItem): ?>
+                                        <?php 
+                                        $isSel = (strcasecmp($selectedService, $srvItem['title']) === 0 || strcasecmp($selectedService, (string)$srvItem['id']) === 0);
+                                        ?>
+                                        <option value="<?= htmlspecialchars($srvItem['title']) ?>" <?= $isSel ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($srvItem['title']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <option value="Barangay Clearance">Barangay Clearance</option>
+                                    <option value="Certificate of Indigency">Certificate of Indigency</option>
+                                    <option value="Business Clearance">Business Clearance</option>
+                                    <option value="Certificate of Residency">Certificate of Residency</option>
+                                <?php endif; ?>
+                                <option value="Other Inquiry" <?= (strcasecmp($selectedService, 'Other Inquiry') === 0) ? 'selected' : '' ?>>Other Inquiry</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -186,10 +201,14 @@ if (isset($_SESSION['chat_start_time']) && (time() - $_SESSION['chat_start_time'
                 <div class="footer-links-wrapper">
                     <a href="index.php">HOME</a>
                     <a href="about.php">ABOUT US</a>
+                    <a href="about.php#history">HISTORY</a>
+                    <a href="vision.php">VISION</a>
+                    <a href="mission.php">MISSION</a>
                     <a href="officials.php">OFFICIALS</a>
+                    <a href="skofficials.php">SK OFFICIALS</a>
                     <a href="announcement.php">ANNOUNCEMENTS</a>
                     <a href="gallery.php">GALLERY</a>
-                    <a href="index.php#spot-map">SPOT MAP</a>
+                    <a href="spotmap.php">SPOT MAP</a>
                     <a href="services.php">SERVICES</a>
                     <a href="contact.php">CONTACT US</a>
                 </div>

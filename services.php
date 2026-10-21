@@ -23,7 +23,7 @@ $services = get_all_services($conn, true);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/style.css?v=2">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/services.css?v=<?= time() ?>">
     
     <!-- AOS Animation CSS -->
@@ -124,7 +124,13 @@ $services = get_all_services($conn, true);
                                 </div>
                             <?php endif; ?>
 
-                            <a href="<?= !empty($srv['btn_link']) ? htmlspecialchars($srv['btn_link']) : 'contact.php' ?>" class="srv-btn">
+                            <?php 
+                            $btnLink = !empty($srv['btn_link']) ? $srv['btn_link'] : 'contact.php';
+                            if ($btnLink === 'contact.php') {
+                                $btnLink .= '?service=' . urlencode($srv['title']);
+                            }
+                            ?>
+                            <a href="<?= htmlspecialchars($btnLink) ?>" class="srv-btn">
                                 <?= !empty($srv['btn_text']) ? htmlspecialchars($srv['btn_text']) : 'Request Document' ?> &rarr;
                             </a>
                         </div>
@@ -153,10 +159,14 @@ $services = get_all_services($conn, true);
                 <div class="footer-links-wrapper">
                     <a href="index.php">HOME</a>
                     <a href="about.php">ABOUT US</a>
+                    <a href="about.php#history">HISTORY</a>
+                    <a href="vision.php">VISION</a>
+                    <a href="mission.php">MISSION</a>
                     <a href="officials.php">OFFICIALS</a>
+                    <a href="skofficials.php">SK OFFICIALS</a>
                     <a href="announcement.php">ANNOUNCEMENTS</a>
                     <a href="gallery.php">GALLERY</a>
-                    <a href="index.php#spot-map">SPOT MAP</a>
+                    <a href="spotmap.php">SPOT MAP</a>
                     <a href="services.php">SERVICES</a>
                     <a href="contact.php">CONTACT US</a>
                 </div>

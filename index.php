@@ -48,14 +48,10 @@ if (is_array($skList)) {
     }
 }
 
-// Fetch active services for homepage showcase
+// Fetch active services for homepage showcase and contact chat
 require_once __DIR__ . '/services_db.php';
-$home_services = get_all_services($conn, true);
-if (is_array($home_services)) {
-    $home_services = array_slice($home_services, 0, 4);
-} else {
-    $home_services = [];
-}
+$all_active_services = get_all_services($conn, true);
+$home_services = is_array($all_active_services) ? array_slice($all_active_services, 0, 4) : [];
 
 // Fetch latest published announcements for homepage showcase
 $home_announcements_query = "SELECT * FROM `announcements` WHERE `status` = 'Published' ORDER BY `event_date` DESC, `id` DESC LIMIT 3";
@@ -493,13 +489,21 @@ if ($home_announcements_res) {
                         </div>
                         <div class="form-group">
                             <label>Service Type</label>
-                            <select required>
+                            <select name="service" required>
                                 <option value="" disabled selected>Select service</option>
-                                <option value="clearance">Barangay Clearance</option>
-                                <option value="indigency">Certificate of Indigency</option>
-                                <option value="business">Business Clearance</option>
-                                <option value="residency">Certificate of Residency</option>
-                                <option value="other">Other Inquiry</option>
+                                <?php if (!empty($all_active_services)): ?>
+                                    <?php foreach ($all_active_services as $srvItem): ?>
+                                        <option value="<?= htmlspecialchars($srvItem['title']) ?>">
+                                            <?= htmlspecialchars($srvItem['title']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <option value="Barangay Clearance">Barangay Clearance</option>
+                                    <option value="Certificate of Indigency">Certificate of Indigency</option>
+                                    <option value="Business Clearance">Business Clearance</option>
+                                    <option value="Certificate of Residency">Certificate of Residency</option>
+                                <?php endif; ?>
+                                <option value="Other Inquiry">Other Inquiry</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -543,10 +547,14 @@ if ($home_announcements_res) {
                 <div class="footer-links-wrapper">
                     <a href="index.php">HOME</a>
                     <a href="about.php">ABOUT US</a>
+                    <a href="about.php#history">HISTORY</a>
+                    <a href="vision.php">VISION</a>
+                    <a href="mission.php">MISSION</a>
                     <a href="officials.php">OFFICIALS</a>
+                    <a href="skofficials.php">SK OFFICIALS</a>
                     <a href="announcement.php">ANNOUNCEMENTS</a>
                     <a href="gallery.php">GALLERY</a>
-                    <a href="index.php#spot-map">SPOT MAP</a>
+                    <a href="spotmap.php">SPOT MAP</a>
                     <a href="services.php">SERVICES</a>
                     <a href="contact.php">CONTACT US</a>
                 </div>
