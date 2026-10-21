@@ -102,7 +102,7 @@ if ($res) {
                         $month = date('M', strtotime($ann['event_date']));
                         $day = date('d', strtotime($ann['event_date']));
                     ?>
-                        <article class="announcement-detail-card" data-aos="fade-up" data-aos-delay="<?= $delay ?>">
+                        <article class="announcement-detail-card" id="announcement-<?= $ann['id'] ?>" data-aos="fade-up" data-aos-delay="<?= $delay ?>">
                             <?php if (!empty($ann['cover_image'])): ?>
                                 <div class="ad-cover-img" style="margin: -2.5rem -2.5rem 1.5rem -2.5rem; overflow: hidden; border-radius: var(--radius-md) var(--radius-md) 0 0; max-height: 220px;">
                                     <img src="<?= htmlspecialchars($ann['cover_image']) ?>" alt="<?= htmlspecialchars($ann['title']) ?>" style="width: 100%; height: 220px; object-fit: cover; display: block;">

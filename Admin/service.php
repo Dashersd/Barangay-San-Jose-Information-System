@@ -1,5 +1,105 @@
 <?php
-// Manage Services
+// Manage Services - Barangay San Jose Web Based Information System
+require_once __DIR__ . '/../services_db.php';
+
+// Handle Form Actions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+
+    // 1. Add Service
+    if ($action === 'add_service') {
+        $data = [
+            'title' => trim($_POST['title'] ?? ''),
+            'description' => trim($_POST['description'] ?? ''),
+            'requirements' => trim($_POST['requirements'] ?? ''),
+            'fee' => trim($_POST['fee'] ?? 'Free'),
+            'processing_time' => trim($_POST['processing_time'] ?? 'Same Day'),
+            'icon' => trim($_POST['icon'] ?? 'document'),
+            'status' => $_POST['status'] ?? 'active',
+            'btn_text' => trim($_POST['btn_text'] ?? 'Request Document'),
+            'btn_link' => trim($_POST['btn_link'] ?? 'contact.php'),
+            'display_order' => intval($_POST['display_order'] ?? 0)
+        ];
+
+        if (!empty($data['title'])) {
+            add_service($conn, $data);
+            header("Location: service.php?msg=created");
+            exit;
+        } else {
+            header("Location: service.php?msg=empty_title");
+            exit;
+        }
+    }
+
+    // 2. Edit Service
+    if ($action === 'edit_service') {
+        $id = intval($_POST['service_id'] ?? 0);
+        $data = [
+            'title' => trim($_POST['title'] ?? ''),
+            'description' => trim($_POST['description'] ?? ''),
+            'requirements' => trim($_POST['requirements'] ?? ''),
+            'fee' => trim($_POST['fee'] ?? 'Free'),
+            'processing_time' => trim($_POST['processing_time'] ?? 'Same Day'),
+            'icon' => trim($_POST['icon'] ?? 'document'),
+            'status' => $_POST['status'] ?? 'active',
+            'btn_text' => trim($_POST['btn_text'] ?? 'Request Document'),
+            'btn_link' => trim($_POST['btn_link'] ?? 'contact.php'),
+            'display_order' => intval($_POST['display_order'] ?? 0)
+        ];
+
+        if ($id > 0 && !empty($data['title'])) {
+            update_service($conn, $id, $data);
+            header("Location: service.php?msg=updated");
+            exit;
+        } else {
+            header("Location: service.php?msg=error");
+            exit;
+        }
+    }
+
+    // 3. Delete Service
+    if ($action === 'delete_service') {
+        $id = intval($_POST['service_id'] ?? 0);
+        if ($id > 0) {
+            delete_service($conn, $id);
+            header("Location: service.php?msg=deleted");
+            exit;
+        }
+    }
+
+    // 4. Toggle Status
+    if ($action === 'toggle_status') {
+        $id = intval($_POST['service_id'] ?? 0);
+        if ($id > 0) {
+            toggle_service_status($conn, $id);
+            header("Location: service.php?msg=status_changed");
+            exit;
+        }
+    }
+}
+
+// Fetch all services from DB
+$services = get_all_services($conn);
+$totalServices = count($services);
+$activeCount = 0;
+foreach ($services as $s) {
+    if ($s['status'] === 'active') {
+        $activeCount++;
+    }
+}
+$inactiveCount = $totalServices - $activeCount;
+
+// Flash messages
+$msg = $_GET['msg'] ?? '';
+$alert_text = '';
+$alert_type = 'success';
+
+if ($msg === 'created') $alert_text = 'Service added successfully and is now live!';
+if ($msg === 'updated') $alert_text = 'Service details updated successfully!';
+if ($msg === 'deleted') $alert_text = 'Service deleted successfully!';
+if ($msg === 'status_changed') $alert_text = 'Service status toggled successfully!';
+if ($msg === 'empty_title') { $alert_text = 'Service title is required.'; $alert_type = 'error'; }
+if ($msg === 'error') { $alert_text = 'An error occurred while saving the service.'; $alert_type = 'error'; }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +110,6 @@
 
     <!-- Favicon / Tab Logo -->
     <link rel="icon" type="image/png" href="../assets/images/San Jose Logo 2.png">
-    <link rel="icon" type="image/png" href="../assets/images/San Jose Logo 2.png">
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +119,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/service.css">
+    <link rel="stylesheet" href="css/service.css?v=<?= time() ?>">
 </head>
 <body>
 
@@ -160,40 +259,161 @@
 
             <!-- Content Area -->
             <div class="admin-content">
-                <div class="content-header d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem;">
-                    <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--text, #1C1917);">Barangay Services</h2>
-                    <button id="addServiceBtn" class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600;">
-                        + Add New Service
-                    </button>
+
+                <!-- Alert Message -->
+                <?php if (!empty($alert_text)): ?>
+                    <div class="alert-banner <?= $alert_type === 'error' ? 'alert-error' : 'alert-success' ?>">
+                        <div class="alert-icon">
+                            <?php if ($alert_type === 'error'): ?>
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            <?php else: ?>
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <?php endif; ?>
+                        </div>
+                        <span class="alert-text"><?= htmlspecialchars($alert_text) ?></span>
+                        <button class="alert-dismiss" onclick="this.parentElement.remove();">&times;</button>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Top Header & Action Buttons -->
+                <div class="content-header d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem; background: #ffffff; padding: 1.25rem 1.75rem; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a; letter-spacing: -0.01em;">Barangay Services Directory</h2>
+                        <p style="margin: 0.35rem 0 0; color: #64748b; font-size: 0.92rem;">Control the documents and assistance programs displayed to residents on the public Services page.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                        <a href="../services.php" target="_blank" class="btn-view-public" title="Preview public services page">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            View Public Page
+                        </a>
+                        <button id="addServiceBtn" class="btn-primary" onclick="openAddServiceModal();">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            + Add New Service
+                        </button>
+                    </div>
                 </div>
 
+                <!-- KPI / Stats Summary Row -->
+                <div class="services-stats-row">
+                    <div class="service-stat-card">
+                        <div class="stat-icon-wrapper stat-icon-total">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-number"><?= $totalServices ?></span>
+                            <span class="stat-label">Total Services</span>
+                        </div>
+                    </div>
+                    <div class="service-stat-card">
+                        <div class="stat-icon-wrapper stat-icon-active">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-number"><?= $activeCount ?></span>
+                            <span class="stat-label">Active / Live Online</span>
+                        </div>
+                    </div>
+                    <div class="service-stat-card">
+                        <div class="stat-icon-wrapper stat-icon-inactive">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-number"><?= $inactiveCount ?></span>
+                            <span class="stat-label">Inactive / Hidden</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Table Section -->
                 <div class="section-panel">
                     <div class="panel-table-wrapper">
                         <table class="panel-table">
                             <thead>
                                 <tr>
-                                    <th style="width: 60px;">Icon</th>
-                                    <th>Service Name</th>
+                                    <th style="width: 60px; text-align: center;">Icon</th>
+                                    <th>Service Name &amp; Details</th>
                                     <th>Description</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>Requirements</th>
+                                    <th style="text-align: center;">Order</th>
+                                    <th style="text-align: center;">Status</th>
+                                    <th style="text-align: center;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="service-icon">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                                        </div>
-                                    </td>
-                                    <td><strong>Barangay Clearance</strong></td>
-                                    <td class="description-cell">Essential document for employment, business...</td>
-                                    <td><span class="badge badge-active">Active</span></td>
-                                    <td>
-                                        <button class="btn-action edit-btn">Edit</button>
-                                        <button class="btn-action delete-btn">Delete</button>
-                                    </td>
-                                </tr>
+                                <?php if (empty($services)): ?>
+                                    <tr>
+                                        <td colspan="7" class="empty-table-state">
+                                            <div class="empty-state-icon-box">
+                                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                                            </div>
+                                            <h3 style="margin: 0 0 0.5rem; font-size: 1.15rem; color: #0f172a; font-weight: 700;">No services found</h3>
+                                            <p style="margin: 0 0 1.25rem; color: #64748b; font-size: 0.9rem;">Click "+ Add New Service" to create your first barangay service.</p>
+                                            <button type="button" class="btn-primary" onclick="openAddServiceModal();">+ Add New Service</button>
+                                        </td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($services as $srv): ?>
+                                        <tr>
+                                            <td class="service-icon-col">
+                                                <div class="service-icon" title="Icon: <?= htmlspecialchars($srv['icon']) ?>">
+                                                    <?= get_service_icon_svg($srv['icon'], 22, 22) ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="service-main-cell">
+                                                    <span class="service-title-text"><?= htmlspecialchars($srv['title']) ?></span>
+                                                    <div class="service-chips">
+                                                        <?php if (!empty($srv['fee'])): ?>
+                                                            <span class="service-chip chip-fee" title="Service Fee">₱ <?= htmlspecialchars($srv['fee']) ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if (!empty($srv['processing_time'])): ?>
+                                                            <span class="service-chip chip-time" title="Processing Time">⏱ <?= htmlspecialchars($srv['processing_time']) ?></span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="description-cell" title="<?= htmlspecialchars($srv['description']) ?>">
+                                                <?= htmlspecialchars($srv['description']) ?>
+                                            </td>
+                                            <td class="reqs-cell">
+                                                <?php if (!empty($srv['requirements'])): ?>
+                                                    <span title="<?= htmlspecialchars($srv['requirements']) ?>"><?= htmlspecialchars($srv['requirements']) ?></span>
+                                                <?php else: ?>
+                                                    <span style="color: #cbd5e1; font-style: italic;">None specified</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <span class="service-chip chip-order"><?= $srv['display_order'] ?></span>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <form action="service.php" method="POST" style="margin: 0; display: inline;">
+                                                    <input type="hidden" name="action" value="toggle_status">
+                                                    <input type="hidden" name="service_id" value="<?= $srv['id'] ?>">
+                                                    <button type="submit" class="badge <?= $srv['status'] === 'active' ? 'badge-active' : 'badge-inactive' ?>" title="Click to toggle status">
+                                                        <span class="badge-dot"></span>
+                                                        <?= ucfirst($srv['status']) ?>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <div class="action-buttons-wrap" style="justify-content: center;">
+                                                    <button type="button" class="btn-action edit-btn" onclick='openEditServiceModal(<?= json_encode($srv, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>);'>
+                                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                        Edit
+                                                    </button>
+                                                    <form action="service.php" method="POST" onsubmit="return confirm('Are you sure you want to delete service &quot;<?= htmlspecialchars(addslashes($srv['title'])) ?>&quot;?');" style="margin: 0; display: inline;">
+                                                        <input type="hidden" name="action" value="delete_service">
+                                                        <input type="hidden" name="service_id" value="<?= $srv['id'] ?>">
+                                                        <button type="submit" class="btn-action delete-btn">
+                                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                                            Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -203,49 +423,171 @@
         </main>
     </div>
 
-    <!-- Add Service Modal -->
-    <div id="serviceModal" class="modal-overlay">
+    <!-- Unified Add / Edit Service Modal -->
+    <div id="serviceModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Add New Service</h2>
-                <button type="button" class="modal-close">&times;</button>
+                <h2>
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0d2847" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    <span id="modalHeaderTitle">Add New Service</span>
+                </h2>
+                <button type="button" class="modal-close" onclick="closeServiceModal();">&times;</button>
             </div>
-            <form action="#" method="POST">
-                <div class="modal-body">
+            <form id="serviceForm" action="service.php" method="POST">
+                <input type="hidden" name="action" id="formAction" value="add_service">
+                <input type="hidden" name="service_id" id="serviceId" value="">
+
+                <div class="modal-body custom-scrollbar">
+                    <!-- Service Title -->
                     <div class="form-group">
-                        <label>Service Name</label>
-                        <input type="text" placeholder="e.g., Barangay Clearance" class="form-control">
+                        <label for="serviceTitle">Service Name <span class="required-star">*</span></label>
+                        <input type="text" id="serviceTitle" name="title" placeholder="e.g., Barangay Clearance, Certificate of Indigency" required class="form-control" autofocus>
                     </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea placeholder="Brief description of the service..." rows="4" class="form-control"></textarea>
+
+                    <!-- Row: Icon & Status -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="serviceIcon">Service Icon <span class="required-star">*</span></label>
+                            <select id="serviceIcon" name="icon" class="form-control" required>
+                                <option value="document">📄 Document / Clearance</option>
+                                <option value="home">🏠 Home / Indigency</option>
+                                <option value="briefcase">💼 Business / Permit</option>
+                                <option value="id-card">🪪 ID Card / Residency</option>
+                                <option value="heart-pulse">❤️ Medical / Health</option>
+                                <option value="shield">🛡️ Peace &amp; Order / Blotter</option>
+                                <option value="users">👥 Community / Assistance</option>
+                                <option value="award">🏆 Certificate / Award</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceStatus">Status <span class="required-star">*</span></label>
+                            <select id="serviceStatus" name="status" class="form-control" required>
+                                <option value="active">Active (Visible to public)</option>
+                                <option value="inactive">Inactive (Hidden)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Icon</label>
-                        <select class="form-control">
-                            <option value="">Select an icon...</option>
-                            <option value="document">Document</option>
-                            <option value="certificate">Certificate</option>
-                            <option value="id-card">ID Card</option>
-                        </select>
+
+                    <!-- Row: Fee & Processing Time -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="serviceFee">Fee / Cost</label>
+                            <input type="text" id="serviceFee" name="fee" placeholder="e.g., Free, ₱50.00, ₱100.00" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceProcessingTime">Processing Time</label>
+                            <input type="text" id="serviceProcessingTime" name="processing_time" placeholder="e.g., 15-30 Minutes, Same Day" class="form-control">
+                        </div>
                     </div>
+
+                    <!-- Description -->
                     <div class="form-group">
-                        <label>Status</label>
-                        <select class="form-control">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
+                        <label for="serviceDescription">Description <span class="required-star">*</span></label>
+                        <textarea id="serviceDescription" name="description" placeholder="Brief description of the service and its purpose..." rows="3" required class="form-control"></textarea>
+                    </div>
+
+                    <!-- Requirements -->
+                    <div class="form-group">
+                        <label for="serviceRequirements">Requirements (Optional)</label>
+                        <textarea id="serviceRequirements" name="requirements" placeholder="e.g., Valid Government ID, Cedula, Purok Certification" rows="2" class="form-control"></textarea>
+                        <small class="form-help">List the required documents or qualifications needed by the resident.</small>
+                    </div>
+
+                    <!-- Row: Button Text & Link -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="serviceBtnText">Action Button Text</label>
+                            <input type="text" id="serviceBtnText" name="btn_text" placeholder="e.g., Request Document" value="Request Document" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceBtnLink">Button Destination URL</label>
+                            <input type="text" id="serviceBtnLink" name="btn_link" placeholder="e.g., contact.php" value="contact.php" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Display Order -->
+                    <div class="form-group">
+                        <label for="serviceDisplayOrder">Display Order</label>
+                        <input type="number" id="serviceDisplayOrder" name="display_order" placeholder="e.g., 1, 2, 3..." value="0" min="0" class="form-control">
+                        <small class="form-help">Lower numbers appear first on the public services list.</small>
                     </div>
                 </div>
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Service</button>
+                    <button type="button" class="btn-secondary" onclick="closeServiceModal();">Cancel</button>
+                    <button type="submit" id="saveServiceSubmitBtn" class="btn-primary">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        Save Service
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="js/dashboard.js"></script>
+    <script>
+        const modal = document.getElementById('serviceModal');
+        const form = document.getElementById('serviceForm');
+
+        function openAddServiceModal() {
+            form.reset();
+            document.getElementById('formAction').value = 'add_service';
+            document.getElementById('serviceId').value = '';
+            document.getElementById('modalHeaderTitle').textContent = 'Add New Service';
+            document.getElementById('saveServiceSubmitBtn').innerHTML = `
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Service
+            `;
+            document.getElementById('serviceBtnText').value = 'Request Document';
+            document.getElementById('serviceBtnLink').value = 'contact.php';
+            document.getElementById('serviceDisplayOrder').value = '<?= $totalServices + 1 ?>';
+            modal.style.display = 'flex';
+            setTimeout(() => document.getElementById('serviceTitle').focus(), 50);
+        }
+
+        function openEditServiceModal(service) {
+            form.reset();
+            document.getElementById('formAction').value = 'edit_service';
+            document.getElementById('serviceId').value = service.id || '';
+            document.getElementById('modalHeaderTitle').textContent = 'Edit Service';
+            document.getElementById('saveServiceSubmitBtn').innerHTML = `
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Save Changes
+            `;
+
+            document.getElementById('serviceTitle').value = service.title || '';
+            document.getElementById('serviceIcon').value = service.icon || 'document';
+            document.getElementById('serviceStatus').value = service.status || 'active';
+            document.getElementById('serviceFee').value = service.fee || '';
+            document.getElementById('serviceProcessingTime').value = service.processing_time || '';
+            document.getElementById('serviceDescription').value = service.description || '';
+            document.getElementById('serviceRequirements').value = service.requirements || '';
+            document.getElementById('serviceBtnText').value = service.btn_text || 'Request Document';
+            document.getElementById('serviceBtnLink').value = service.btn_link || 'contact.php';
+            document.getElementById('serviceDisplayOrder').value = service.display_order || '0';
+
+            modal.style.display = 'flex';
+            setTimeout(() => document.getElementById('serviceTitle').focus(), 50);
+        }
+
+        function closeServiceModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close on clicking backdrop
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeServiceModal();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                closeServiceModal();
+            }
+        });
+    </script>
 </body>
 </html>
-

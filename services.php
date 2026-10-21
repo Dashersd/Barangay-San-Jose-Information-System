@@ -1,5 +1,9 @@
 <?php
 // Barangay San Jose Web-Based Information System - Services
+require_once __DIR__ . '/services_db.php';
+
+// Fetch active services from the database
+$services = get_all_services($conn, true);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +24,7 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/style.css?v=2">
-    <link rel="stylesheet" href="assets/css/services.css?v=1">
+    <link rel="stylesheet" href="assets/css/services.css?v=<?= time() ?>">
     
     <!-- AOS Animation CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -82,47 +86,51 @@
         <div class="container services-page-container">
             
             <div class="services-cards-grid">
-                
-                <!-- Card 1 -->
-                <div class="srv-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="srv-icon-wrapper">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <?php if (empty($services)): ?>
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3.5rem 1.5rem; background: #ffffff; border-radius: 16px; border: 2px dashed #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <div style="width: 60px; height: 60px; margin: 0 auto 1rem; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: #94a3b8;">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </div>
+                        <h3 style="color: #0f172a; margin-bottom: 0.5rem; font-size: 1.25rem; font-weight: 700;">No Services Listed Currently</h3>
+                        <p style="color: #64748b; max-width: 450px; margin: 0 auto;">Please check back soon or visit our Barangay Hall during regular office hours for inquiries.</p>
                     </div>
-                    <h3 class="srv-title">Barangay Clearance</h3>
-                    <p class="srv-desc">Request a Barangay Clearance for employment, banking, or other legal purposes. Essential for verifying your residency and good standing.</p>
-                    <a href="#" class="srv-btn">Request Document &rarr;</a>
-                </div>
+                <?php else: ?>
+                    <?php $delay = 100; ?>
+                    <?php foreach ($services as $srv): ?>
+                        <div class="srv-card" id="service-<?= $srv['id'] ?>" data-aos="fade-up" data-aos-delay="<?= $delay ?>">
+                            <div class="srv-icon-wrapper">
+                                <?= get_service_icon_svg($srv['icon'], 28, 28) ?>
+                            </div>
+                            <h3 class="srv-title"><?= htmlspecialchars($srv['title']) ?></h3>
+                            <p class="srv-desc"><?= htmlspecialchars($srv['description']) ?></p>
+                            
+                            <?php if (!empty($srv['fee']) || !empty($srv['processing_time']) || !empty($srv['requirements'])): ?>
+                                <div class="srv-details-box">
+                                    <?php if (!empty($srv['fee']) || !empty($srv['processing_time'])): ?>
+                                        <div class="srv-badges-row">
+                                            <?php if (!empty($srv['fee'])): ?>
+                                                <span class="srv-badge srv-badge-fee">Fee: <?= htmlspecialchars($srv['fee']) ?></span>
+                                            <?php endif; ?>
+                                            <?php if (!empty($srv['processing_time'])): ?>
+                                                <span class="srv-badge srv-badge-time">Time: <?= htmlspecialchars($srv['processing_time']) ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (!empty($srv['requirements'])): ?>
+                                        <div class="srv-reqs-preview" title="<?= htmlspecialchars($srv['requirements']) ?>">
+                                            <strong>Requirements:</strong> <?= htmlspecialchars($srv['requirements']) ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
 
-                <!-- Card 2 -->
-                <div class="srv-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="srv-icon-wrapper">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline><path d="M12 15a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path></svg>
-                    </div>
-                    <h3 class="srv-title">Certificate of Indigency</h3>
-                    <p class="srv-desc">Obtain a Certificate of Indigency to avail of government assistance, scholarships, and medical support programs.</p>
-                    <a href="#" class="srv-btn">Request Document &rarr;</a>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="srv-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="srv-icon-wrapper">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                    </div>
-                    <h3 class="srv-title">Business Clearance</h3>
-                    <p class="srv-desc">Required for all new and renewing businesses operating within the barangay jurisdiction prior to Mayor's permit application.</p>
-                    <a href="#" class="srv-btn">Request Document &rarr;</a>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="srv-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="srv-icon-wrapper">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><circle cx="12" cy="15" r="2"></circle></svg>
-                    </div>
-                    <h3 class="srv-title">Certificate of Residency</h3>
-                    <p class="srv-desc">Proof of your residency within the barangay. Often required for school enrollments, ID applications, and other local transactions.</p>
-                    <a href="#" class="srv-btn">Request Document &rarr;</a>
-                </div>
-
+                            <a href="<?= !empty($srv['btn_link']) ? htmlspecialchars($srv['btn_link']) : 'contact.php' ?>" class="srv-btn">
+                                <?= !empty($srv['btn_text']) ? htmlspecialchars($srv['btn_text']) : 'Request Document' ?> &rarr;
+                            </a>
+                        </div>
+                        <?php $delay += 100; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
 
         </div>

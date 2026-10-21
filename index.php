@@ -47,6 +47,25 @@ if (is_array($skList)) {
         }
     }
 }
+
+// Fetch active services for homepage showcase
+require_once __DIR__ . '/services_db.php';
+$home_services = get_all_services($conn, true);
+if (is_array($home_services)) {
+    $home_services = array_slice($home_services, 0, 4);
+} else {
+    $home_services = [];
+}
+
+// Fetch latest published announcements for homepage showcase
+$home_announcements_query = "SELECT * FROM `announcements` WHERE `status` = 'Published' ORDER BY `event_date` DESC, `id` DESC LIMIT 3";
+$home_announcements_res = $conn->query($home_announcements_query);
+$home_announcements = [];
+if ($home_announcements_res) {
+    while ($row = $home_announcements_res->fetch_assoc()) {
+        $home_announcements[] = $row;
+    }
+}
 // Barangay San Jose Web-Based Information System
 ?>
 <!DOCTYPE html>
@@ -67,7 +86,7 @@ if (is_array($skList)) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css?v=2">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/gallery.css?v=<?= time() ?>">
 
     <!-- AOS Animation CSS -->
@@ -215,41 +234,45 @@ if (is_array($skList)) {
             </div>
             
             <div class="services-grid">
-                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <?php if (!empty($home_services)): ?>
+                    <?php 
+                    $srv_delay = 100;
+                    foreach ($home_services as $srv): 
+                    ?>
+                        <div class="service-card" data-aos="fade-up" data-aos-delay="<?= $srv_delay ?>">
+                            <div class="service-icon">
+                                <?= get_service_icon_svg($srv['icon'] ?? 'document', 32, 32) ?>
+                            </div>
+                            <h3><?= htmlspecialchars($srv['title']) ?></h3>
+                            <p><?= htmlspecialchars($srv['description']) ?></p>
+                            <?php if (!empty($srv['fee'])): ?>
+                                <div style="margin-top: 1rem;">
+                                    <span style="display: inline-block; font-size: 0.8rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 0.25rem 0.75rem; border-radius: 99px;">
+                                        Fee: <?= htmlspecialchars($srv['fee']) ?>
+                                    </span>
+                                </div>
+                            <?php endif; ?>
+                            <a href="services.php#service-<?= $srv['id'] ?>" class="service-card-btn">
+                                View Service Details &rarr;
+                            </a>
+                        </div>
+                    <?php 
+                        $srv_delay += 100;
+                    endforeach; 
+                    ?>
+                <?php else: ?>
+                    <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="service-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </div>
+                        <h3>Document Issuance</h3>
+                        <p>Get your Barangay Clearance, Certificate of Indigency, and other important documents with ease.</p>
                     </div>
-                    <h3>Document Issuance</h3>
-                    <p>Get your Barangay Clearance, Certificate of Indigency, and other important documents with ease.</p>
-                </div>
-                
-                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-                    </div>
-                    <h3>Health Center</h3>
-                    <p>Free consultations, vaccinations, and maternal care services for every San Jose resident.</p>
-                </div>
-                
-                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    </div>
-                    <h3>Peace & Order</h3>
-                    <p>File a blotter or request assistance from our active Barangay Tanods who patrol 24/7.</p>
-                </div>
-                
-                <div class="service-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                    </div>
-                    <h3>Community Programs</h3>
-                    <p>Participate in livelihood seminars, youth sports leagues, and regular clean-up drives.</p>
-                </div>
-                </div>
-              <div class="text-center" style="margin-top: 3rem;">
-                  <a href="Admin/service.php" class="btn btn-primary" style="border-radius: 99px; padding: 0.8rem 2rem; font-weight: 600; font-size: 1.05rem;">View all Service</a>
-              </div>
+                <?php endif; ?>
+            </div>
+            <div class="text-center" style="margin-top: 3rem;">
+                <a href="services.php" class="btn btn-primary" style="border-radius: 99px; padding: 0.8rem 2rem; font-weight: 600; font-size: 1.05rem;">View all Services</a>
+            </div>
           </div>
       </section>
 
@@ -264,53 +287,59 @@ if (is_array($skList)) {
             </div>
             
             <div class="announcements-grid">
-                <div class="announcement-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="announcement-date">
-                        <span class="month">OCT</span>
-                        <span class="day">15</span>
+                <?php if (empty($home_announcements)): ?>
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3.5rem 1.5rem; background: #ffffff; border-radius: var(--radius-md); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px dashed #cbd5e1;">
+                        <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#94a3b8" stroke-width="1.75" style="margin-bottom: 12px; display: inline-block;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                        <h4 style="color: #334155; margin-bottom: 6px; font-weight: 700; font-size: 1.15rem;">No Published Announcements</h4>
+                        <p style="color: #64748b; margin: 0; font-size: 0.95rem;">Check back soon for community news, schedules, and official notices.</p>
                     </div>
-                    <div class="announcement-content">
-                        <h3>General Assembly Meeting</h3>
-                        <ul class="announcement-4w">
-                            <li><strong>What:</strong> General Assembly Meeting</li>
-                            <li><strong>When:</strong> 9:00 AM, October 15</li>
-                            <li><strong>Why:</strong> Discuss infrastructure projects & budgets.</li>
-                            <li><strong>Who:</strong> All Barangay Residents</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="announcement-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="announcement-date">
-                        <span class="month">OCT</span>
-                        <span class="day">22</span>
-                    </div>
-                    <div class="announcement-content">
-                        <h3>Free Medical & Dental Mission</h3>
-                        <ul class="announcement-4w">
-                            <li><strong>What:</strong> Free Medical & Dental Mission</li>
-                            <li><strong>When:</strong> 8:00 AM, October 22</li>
-                            <li><strong>Why:</strong> Offer free checkups and medicines.</li>
-                            <li><strong>Who:</strong> Senior Citizens and Children</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="announcement-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="announcement-date">
-                        <span class="month">NOV</span>
-                        <span class="day">01</span>
-                    </div>
-                    <div class="announcement-content">
-                        <h3>Undas 2025 Traffic Advisory</h3>
-                        <ul class="announcement-4w">
-                            <li><strong>What:</strong> Undas 2025 Traffic Advisory</li>
-                            <li><strong>When:</strong> All Day, November 01</li>
-                            <li><strong>Why:</strong> Road closures and rerouting for Undas.</li>
-                            <li><strong>Who:</strong> All Motorists and Residents</li>
-                        </ul>
-                    </div>
-                </div>
+                <?php else: ?>
+                    <?php 
+                    $h_delay = 100;
+                    foreach ($home_announcements as $ann): 
+                        $month = date('M', strtotime($ann['event_date']));
+                        $day = date('d', strtotime($ann['event_date']));
+                    ?>
+                        <div class="announcement-card" data-aos="fade-up" data-aos-delay="<?= $h_delay ?>">
+                            <?php if (!empty($ann['cover_image'])): ?>
+                                <a href="announcement.php#announcement-<?= $ann['id'] ?>" class="announcement-cover" title="<?= htmlspecialchars($ann['title']) ?>">
+                                    <img src="<?= htmlspecialchars($ann['cover_image']) ?>" alt="<?= htmlspecialchars($ann['title']) ?>" loading="lazy">
+                                </a>
+                            <?php endif; ?>
+                            <div class="announcement-body">
+                                <div class="announcement-date">
+                                    <span class="month"><?= htmlspecialchars($month) ?></span>
+                                    <span class="day"><?= htmlspecialchars($day) ?></span>
+                                </div>
+                                <div class="announcement-content">
+                                    <h3><?= htmlspecialchars($ann['title']) ?></h3>
+                                    <ul class="announcement-4w">
+                                        <?php if (!empty($ann['what_desc'])): ?>
+                                            <li><strong>What:</strong> <?= htmlspecialchars($ann['what_desc']) ?></li>
+                                        <?php endif; ?>
+                                        <?php if (!empty($ann['when_time'])): ?>
+                                            <li><strong>When:</strong> <?= htmlspecialchars($ann['when_time']) ?></li>
+                                        <?php else: ?>
+                                            <li><strong>When:</strong> <?= date('F d, Y', strtotime($ann['event_date'])) ?></li>
+                                        <?php endif; ?>
+                                        <?php if (!empty($ann['why_desc'])): ?>
+                                            <li><strong>Why:</strong> <?= htmlspecialchars($ann['why_desc']) ?></li>
+                                        <?php endif; ?>
+                                        <?php if (!empty($ann['who_target'])): ?>
+                                            <li><strong>Who:</strong> <?= htmlspecialchars($ann['who_target']) ?></li>
+                                        <?php endif; ?>
+                                    </ul>
+                                    <div style="margin-top: auto; padding-top: 1rem;">
+                                        <a href="announcement.php#announcement-<?= $ann['id'] ?>" class="read-more-link">Read Full Announcement &rarr;</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php 
+                        $h_delay += 100;
+                    endforeach; 
+                    ?>
+                <?php endif; ?>
             </div>
             
             <div class="text-center" style="margin-top: 3rem;">
