@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/about_db.php';
+$about = get_about_info($conn);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,7 +91,7 @@
                     <div class="vm-underline"></div>
                     <div class="vm-text-wrapper">
                         <p class="vm-text">
-                            Usa ka malinawon, mauswagon, ug empowered nga barangay diin ang mga residente nagkinabuhi nga nagkahiusa adunay aksesa sa batakang serbisyo, ug aktibong miapil sa malungtarong kalambuan.
+                            <?= nl2br(htmlspecialchars($about['vision'])) ?>
                         </p>
                     </div>
                 </div>

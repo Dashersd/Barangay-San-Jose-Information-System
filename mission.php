@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/about_db.php';
+$about = get_about_info($conn);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,7 +91,7 @@
                     <div class="vm-underline"></div>
                     <div class="vm-text-wrapper">
                         <p class="vm-text">
-                            Sa paghatag ug epiktibo, transparent ug maka-katawhang pagdumala nga nagpalambo sa kalinaw ug kahusay, naghatod ug kalidad nga mga serbisyong publiko, nagapalipod sa kinaiyahan, ug nagpalambo sa kaayohan sa matag residente pinaagi sa aktibong partisipasyon sa kumonidad ug matinud-anong liderato.
+                            <?= nl2br(htmlspecialchars($about['mission'])) ?>
                         </p>
                     </div>
                 </div>

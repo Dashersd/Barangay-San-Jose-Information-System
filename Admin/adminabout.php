@@ -1,5 +1,54 @@
 <?php
 // Manage About Us
+require_once __DIR__ . '/../about_db.php';
+
+$successMsg = '';
+$errorMsg = '';
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_about') {
+    $history = trim($_POST['history'] ?? '');
+    $vision = trim($_POST['vision'] ?? '');
+    $mission = trim($_POST['mission'] ?? '');
+    $newImagePath = null;
+
+    // Handle image upload if a file was provided
+    if (isset($_FILES['about_image']) && $_FILES['about_image']['error'] === UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($_FILES['about_image']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        if (in_array($ext, $allowed)) {
+            $newFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', basename($_FILES['about_image']['name']));
+            $targetDir = dirname(__DIR__) . '/assets/images/about/';
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+            if (move_uploaded_file($_FILES['about_image']['tmp_name'], $targetDir . $newFileName)) {
+                $newImagePath = 'assets/images/about/' . $newFileName;
+            } else {
+                $errorMsg = "Failed to upload image. Please check server directory permissions.";
+            }
+        } else {
+            $errorMsg = "Invalid image file format. Allowed types: JPG, PNG, WEBP, GIF.";
+        }
+    } elseif (isset($_FILES['about_image']) && $_FILES['about_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $errorMsg = "Error uploading image file (code " . $_FILES['about_image']['error'] . ").";
+    }
+
+    if (empty($errorMsg)) {
+        if (update_about_info($conn, $history, $vision, $mission, $newImagePath)) {
+            header("Location: adminabout.php?success=1");
+            exit;
+        } else {
+            $errorMsg = "Failed to update About Us information in the database.";
+        }
+    }
+}
+
+if (isset($_GET['success']) && $_GET['success'] == 1) {
+    $successMsg = "About Us content has been updated successfully!";
+}
+
+$about = get_about_info($conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,9 +67,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/adminabout.css">
+    <link rel="stylesheet" href="../assets/css/style.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="css/dashboard.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="css/adminabout.css?v=<?= time() ?>">
 </head>
 <body>
 
@@ -162,18 +211,65 @@
             <div class="admin-content">
                 <div class="content-header">
                     <h2>About Us Content</h2>
-                    <p>Update the information displayed on the public About Us page.</p>
+                    <p>Update the information displayed on the public About Us, Vision, and Mission pages.</p>
                 </div>
 
-                <form action="#" method="POST" enctype="multipart/form-data" class="about-form">
+                <?php if (!empty($successMsg)): ?>
+                    <div class="alert-box success">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span><?= htmlspecialchars($successMsg) ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($errorMsg)): ?>
+                    <div class="alert-box error">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <span><?= htmlspecialchars($errorMsg) ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <form action="adminabout.php" method="POST" enctype="multipart/form-data" class="about-form">
+                    <input type="hidden" name="action" value="update_about">
                     <div class="form-columns">
                         <!-- Left Column: Image -->
                         <div class="form-left">
-                            <div class="form-card">
-                                <label class="card-label">ADD IMAGE</label>
-                                <div class="image-upload-area">
-                                    <input type="file" id="aboutImage" hidden accept="image/*">
-                                    <label for="aboutImage" class="btn-upload">Choose File</label>
+                            <div class="form-card image-card">
+                                <div class="card-header-clean">
+                                    <label class="card-label">Barangay Hall Photo</label>
+                                    <span class="card-subtitle">Displayed on the public About Us page</span>
+                                </div>
+
+                                <div class="image-card-body">
+                                    <!-- Full-width Preview -->
+                                    <div class="preview-wrapper">
+                                        <div class="preview-badge" id="previewBadge">Current Photo</div>
+                                        <img id="imagePreview" src="../<?= htmlspecialchars($about['image_path']) ?>" alt="Barangay Hall Photo" onerror="this.src='../assets/images/Barangay Hall.png'">
+                                    </div>
+
+                                    <!-- Dedicated Spacious Upload Area -->
+                                    <div class="upload-dropzone">
+                                        <div class="upload-icon-circle">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="17 8 12 3 7 8"></polyline>
+                                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="upload-prompt">Upload new picture</p>
+                                            <p class="upload-hint">JPG, PNG, or WEBP (Max 5MB)</p>
+                                        </div>
+                                        <input type="file" id="aboutImage" name="about_image" hidden accept="image/*">
+                                        <label for="aboutImage" class="btn-upload-new">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                <polyline points="21 15 16 10 5 21"></polyline>
+                                            </svg>
+                                            Choose New Image
+                                        </label>
+                                        <span class="file-status-text" id="fileNameHint">No new file selected</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -181,16 +277,27 @@
                         <!-- Right Column: Textareas -->
                         <div class="form-right">
                             <div class="form-card">
-                                <label class="card-label">HISTORY</label>
-                                <textarea placeholder="Enter barangay history here..." rows="5"></textarea>
+                                <div class="card-header-clean">
+                                    <label class="card-label">Barangay History</label>
+                                    <span class="card-subtitle">Separate paragraphs by pressing Enter twice</span>
+                                </div>
+                                <textarea name="history" placeholder="Enter barangay history here..." rows="8" required><?= htmlspecialchars($about['history']) ?></textarea>
                             </div>
+
                             <div class="form-card">
-                                <label class="card-label">VISION</label>
-                                <textarea placeholder="Enter barangay vision here..." rows="4"></textarea>
+                                <div class="card-header-clean">
+                                    <label class="card-label">Vision Statement</label>
+                                    <span class="card-subtitle">Displayed on the public Vision page</span>
+                                </div>
+                                <textarea name="vision" placeholder="Enter barangay vision here..." rows="4" required><?= htmlspecialchars($about['vision']) ?></textarea>
                             </div>
+
                             <div class="form-card">
-                                <label class="card-label">MISSION</label>
-                                <textarea placeholder="Enter barangay mission here..." rows="4"></textarea>
+                                <div class="card-header-clean">
+                                    <label class="card-label">Mission Statement</label>
+                                    <span class="card-subtitle">Displayed on the public Mission page</span>
+                                </div>
+                                <textarea name="mission" placeholder="Enter barangay mission here..." rows="4" required><?= htmlspecialchars($about['mission']) ?></textarea>
                             </div>
                         </div>
                     </div>
@@ -208,6 +315,33 @@
     </div>
 
     <script src="js/dashboard.js"></script>
+    <script>
+        // Live client-side preview for chosen image
+        const fileInput = document.getElementById('aboutImage');
+        const imgPreview = document.getElementById('imagePreview');
+        const fileNameHint = document.getElementById('fileNameHint');
+        const previewBadge = document.getElementById('previewBadge');
+
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    fileNameHint.textContent = "Selected: " + file.name;
+                    fileNameHint.style.color = "#166534";
+                    fileNameHint.style.fontWeight = "600";
+                    if (previewBadge) {
+                        previewBadge.textContent = "New Selected Preview";
+                        previewBadge.style.background = "#1a73e8";
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imgPreview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
 
