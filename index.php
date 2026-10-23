@@ -157,40 +157,18 @@ if ($home_announcements_res) {
                 $captainName = $captainOfficial['name'] ?? 'Hon. Diego Logronio';
                 $captainRole = $captainOfficial['role'] ?? 'Punong Barangay';
                 $captainImage = !empty($captainOfficial['image']) ? $captainOfficial['image'] : 'assets/images/Barangay Official/captain.Diego Logronio.jpg';
-                $captainQuote = !empty($captainOfficial['message']) ? $captainOfficial['message'] : 'Committed to providing transparent and dedicated public service for the betterment of every resident in Barangay San Jose.';
+                $captainQuote = !empty($captainOfficial['message']) ? $captainOfficial['message'] : 'Presiding officer of the Sangguniang Barangay, leading executive policies, community welfare programs, and peace and order in Barangay San Jose.';
                 ?>
-                <div class="official-card captain-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="official-image-wrapper">
-                        <img src="<?= htmlspecialchars($captainImage) ?>" alt="<?= htmlspecialchars($captainName) ?>" onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($captainName) ?>&background=random&size=250'">
-                        <div class="role-badge"><?= htmlspecialchars($captainRole) ?></div>
+                <div class="captain-spotlight-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="captain-spotlight-img-col">
+                        <img src="<?= htmlspecialchars($captainImage) ?>" alt="<?= htmlspecialchars($captainName) ?>" onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($captainName) ?>&background=random&size=350'">
                     </div>
-                    <div class="official-details">
-                        <h3 class="official-name"><?= htmlspecialchars($captainName) ?></h3>
-                        <p class="official-title"><?= htmlspecialchars($captainRole) ?></p>
-                        <p class="official-quote">"<?= htmlspecialchars($captainQuote) ?>"</p>
-                        <div class="official-action" style="margin-top: 20px; text-align: center;">
-                            <a href="officials.php" class="btn btn-primary">View Barangay Officials</a>
-                        </div>
-                    </div>
-                </div>
-
-                <?php
-                $skName = $skChairpersonOfficial['name'] ?? 'Hon. Artem Macmac';
-                $skRole = $skChairpersonOfficial['role'] ?? 'SK Chairman';
-                $skImage = !empty($skChairpersonOfficial['image']) ? $skChairpersonOfficial['image'] : 'assets/images/SK Official/sk chairperson artem mamac.jpg';
-                $skQuote = !empty($skChairpersonOfficial['message']) ? $skChairpersonOfficial['message'] : 'Empowering the youth of Barangay San Jose through active participation in sports, education, and community development.';
-                ?>
-                <div class="official-card captain-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="official-image-wrapper">
-                        <img src="<?= htmlspecialchars($skImage) ?>" alt="<?= htmlspecialchars($skName) ?>" onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($skName) ?>&background=random&size=250'">
-                        <div class="role-badge"><?= htmlspecialchars($skRole) ?></div>
-                    </div>
-                    <div class="official-details">
-                        <h3 class="official-name"><?= htmlspecialchars($skName) ?></h3>
-                        <p class="official-title"><?= htmlspecialchars($skRole) ?></p>
-                        <p class="official-quote">"<?= htmlspecialchars($skQuote) ?>"</p>
-                        <div class="official-action" style="margin-top: 20px; text-align: center;">
-                            <a href="skofficials.php" class="btn btn-primary">View SK Officials</a>
+                    <div class="captain-spotlight-info-col">
+                        <span class="captain-spotlight-eyebrow">BARANGAY CAPTAIN</span>
+                        <h3 class="captain-spotlight-title">Barangay Captain</h3>
+                        <p class="captain-spotlight-quote">"<?= htmlspecialchars($captainQuote) ?>"</p>
+                        <div class="captain-spotlight-action">
+                            <a href="officials.php" class="btn btn-captain-action">View Barangay Officials &rarr;</a>
                         </div>
                     </div>
                 </div>

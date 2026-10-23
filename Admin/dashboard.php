@@ -598,6 +598,6 @@ $p4Pct = $totalHouseholds > 0 ? round(($p4Count / $totalHouseholds) * 100) : 0;
         </main>
     </div>
 
-    <script src="js/dashboard.js"></script>
+    <script src="js/dashboard.js?v=<?= time() ?>"></script>
 </body>
 </html>

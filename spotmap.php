@@ -14,6 +14,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/spotmap.css?v=<?= time() ?>">
@@ -96,26 +99,56 @@
                             </h3>
                             
                             <div class="sm-legend-grid">
-                                <div class="sm-legend-item">
-                                    <span class="sm-icon-bg"><svg viewBox="0 0 24 24" fill="none" stroke="#004b93" stroke-width="2"><path d="M3 21V9l9-7 9 7v12M9 21v-9h6v9"/></svg></span>
-                                    Barangay Hall
+                                <?php
+                                $mapLegends = [];
+                                if (isset($conn) && $conn) {
+                                    $legendRes = $conn->query("SELECT * FROM legends WHERE status = 'Active' ORDER BY display_order ASC, id ASC");
+                                    if ($legendRes && $legendRes->num_rows > 0) {
+                                        while ($lRow = $legendRes->fetch_assoc()) {
+                                            $mapLegends[] = $lRow;
+                                        }
+                                    }
+                                }
+                                if (empty($mapLegends)) {
+                                    $jsonLegendFile = __DIR__ . '/Admin/data/legends.json';
+                                    if (file_exists($jsonLegendFile)) {
+                                        $decoded = json_decode(file_get_contents($jsonLegendFile), true);
+                                        if (is_array($decoded) && !empty($decoded)) {
+                                            foreach ($decoded as $dItem) {
+                                                if (($dItem['status'] ?? 'Active') === 'Active') {
+                                                    $mapLegends[] = $dItem;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (empty($mapLegends)): ?>
+                                    <div class="sm-no-legends" style="grid-column: 1 / -1; padding: 14px 8px; text-align: center; color: #94a3b8; font-size: 0.85rem; font-style: italic;">
+                                        No map legends added yet.
+                                    </div>
+                                <?php else:
+                                    foreach ($mapLegends as $legendItem):
+                                        $lId = intval($legendItem['id'] ?? 0);
+                                        $legName = htmlspecialchars($legendItem['category_name'] ?? 'Legend');
+                                        $iconSrc = $legendItem['icon_path'] ?? '';
+                                        $iconType = $legendItem['icon_type'] ?? '';
+                                        $iconColor = htmlspecialchars($legendItem['color'] ?? '#004b93');
+                                ?>
+                                <div class="sm-legend-item" title="<?= $legName ?>" onclick="highlightLandmark(<?= $lId ?>)" style="cursor: pointer;">
+                                    <span class="sm-icon-bg">
+                                        <?php if (!empty($iconType)): ?>
+                                            <i class="bi <?= htmlspecialchars($iconType) ?>" style="color: <?= $iconColor ?>; font-size: 15px;"></i>
+                                        <?php elseif (!empty($iconSrc) && (file_exists($iconSrc) || file_exists(__DIR__ . '/' . $iconSrc))): ?>
+                                            <img src="<?= htmlspecialchars($iconSrc) ?>" alt="<?= $legName ?>" class="sm-legend-img">
+                                        <?php else: ?>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="<?= $iconColor ?>" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <?php endif; ?>
+                                    </span>
+                                    <span class="sm-legend-name"><?= $legName ?></span>
                                 </div>
-                                <div class="sm-legend-item">
-                                    <span class="sm-icon-bg"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
-                                    School
-                                </div>
-                                <div class="sm-legend-item">
-                                    <span class="sm-icon-bg"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
-                                    Court
-                                </div>
-                                <div class="sm-legend-item">
-                                    <span class="sm-icon-bg"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
-                                    Health Center
-                                </div>
-                                <div class="sm-legend-item">
-                                    <span class="sm-icon-bg"><svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></span>
-                                    Other Landmarks
-                                </div>
+                                <?php endforeach;
+                                endif; ?>
                             </div>
                         </div>
                     </div>
@@ -248,6 +281,43 @@
                             </div>
                         </div>
 
+                        <!-- Landmark Pins Layer on Legend (Aerial View) Map (From Admin Legends) -->
+                        <div id="landmarkPinsContainer" class="landmark-pins-container" style="display: none;">
+                            <?php foreach ($mapLegends as $legItem): ?>
+                                <?php 
+                                    if (($legItem['status'] ?? 'Active') === 'Inactive') continue;
+                                    $lId = intval($legItem['id'] ?? 0);
+                                    $lName = htmlspecialchars($legItem['category_name'] ?? '');
+                                    $lTop = floatval($legItem['top_pos'] ?? 50.0);
+                                    $lLeft = floatval($legItem['left_pos'] ?? 50.0);
+                                    $lColor = htmlspecialchars($legItem['color'] ?? '#6366f1');
+                                    $lIcon = htmlspecialchars($legItem['icon_type'] ?? 'bi-building-fill');
+                                    $lPhoto = !empty($legItem['photo']) ? htmlspecialchars($legItem['photo']) : '';
+                                    $lDesc = !empty($legItem['description']) ? htmlspecialchars($legItem['description']) : '';
+                                ?>
+                                <div class="sm-landmark-pin" 
+                                     id="landmarkPin_<?= $lId ?>"
+                                     style="top: <?= $lTop ?>%; left: <?= $lLeft ?>%;"
+                                     title="<?= $lName ?>"
+                                     data-id="<?= $lId ?>"
+                                     data-name="<?= $lName ?>"
+                                     data-photo="<?= $lPhoto ?>"
+                                     data-desc="<?= $lDesc ?>"
+                                     data-color="<?= $lColor ?>"
+                                     onclick="openLandmarkModal(this)">
+                                    <div class="sm-landmark-pill">
+                                        <span><?= $lName ?></span>
+                                    </div>
+                                    <div class="sm-landmark-icon-wrap" style="background-color: <?= $lColor ?>;">
+                                        <i class="bi <?= $lIcon ?>"></i>
+                                    </div>
+                                    <div class="sm-landmark-dot" style="background-color: <?= $lColor ?>;">
+                                        <div class="sm-landmark-pulse" style="background-color: <?= $lColor ?>;"></div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
                         <!-- Markers Layers -->
                         <div id="markers-purok1" class="purok-markers" style="display: none;">
                             <?php
@@ -341,6 +411,30 @@
                         <span class="hm-label">Children</span>
                         <div class="hm-value" id="modalChildrenList"></div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Landmark Photo / Details Modal -->
+        <div id="landmarkModal" class="landmark-modal-overlay" style="display: none;" onclick="closeLandmarkModal(event)">
+            <div class="landmark-modal-dialog" onclick="event.stopPropagation()">
+                <span class="landmark-modal-close" onclick="closeLandmarkModal()">&times;</span>
+                <div class="landmark-modal-header">
+                    <div class="landmark-modal-badge" id="lmBadgeWrap">
+                        <i id="lmBadgeIcon" class="bi bi-building-fill"></i>
+                    </div>
+                    <div>
+                        <h3 class="landmark-modal-title" id="lmTitle">Landmark Details</h3>
+                        <span class="landmark-modal-subtitle">Barangay San Jose, Lapuyan</span>
+                    </div>
+                </div>
+                
+                <div class="landmark-modal-photo-wrap" id="lmPhotoContainer" style="display: none;">
+                    <img src="" id="lmPhotoImg" alt="Landmark Photo">
+                </div>
+                
+                <div class="landmark-modal-body">
+                    <p id="lmDesc" style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;"></p>
                 </div>
             </div>
         </div>

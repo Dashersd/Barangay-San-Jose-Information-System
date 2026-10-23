@@ -103,6 +103,23 @@
     height: 14px;
 }
 
+.sm-icon-bg img,
+.sm-icon-bg img.sm-legend-img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    display: block;
+}
+
+.sm-legend-name {
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .sm-purok-grid {
     display: flex;
     flex-wrap: wrap;
@@ -557,6 +574,220 @@
     transform: translateY(4px);
     transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================================
+   LANDMARK MAP PINS (FROM ADMIN LEGENDS)
+======================================================== */
+.landmark-pins-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 18;
+}
+
+.sm-landmark-pin {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+    z-index: 22;
+}
+
+.sm-landmark-pin:hover {
+    transform: translate(-50%, -110%) scale(1.15);
+    z-index: 50;
+}
+
+.sm-landmark-pin.highlight {
+    animation: landmarkHighlight 1.4s infinite ease-in-out;
+    z-index: 55;
+}
+
+@keyframes landmarkHighlight {
+    0%, 100% { transform: translate(-50%, -100%) scale(1); }
+    50% { transform: translate(-50%, -125%) scale(1.3); }
+}
+
+.sm-landmark-pill {
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 6px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.sm-landmark-icon-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    border: 2px solid #ffffff;
+    transition: all 0.2s ease;
+}
+
+.sm-landmark-icon-wrap i {
+    font-size: 15px;
+}
+
+.sm-landmark-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 2px;
+    position: relative;
+    border: 1.5px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.sm-landmark-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    margin-top: -11px;
+    margin-left: -11px;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: landmarkPulse 2s infinite ease-out;
+    pointer-events: none;
+}
+
+@keyframes landmarkPulse {
+    0% { transform: scale(0.3); opacity: 0.9; }
+    100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Landmark Modal */
+.landmark-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.landmark-modal-dialog {
+    background: #ffffff;
+    border-radius: 16px;
+    max-width: 520px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    animation: landmarkModalIn 0.25s ease-out;
+}
+
+@keyframes landmarkModalIn {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.landmark-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.landmark-modal-close:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.landmark-modal-header {
+    padding: 20px 24px 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.landmark-modal-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #6366f1;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+}
+
+.landmark-modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.landmark-modal-subtitle {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.landmark-modal-photo-wrap {
+    width: 100%;
+    max-height: 300px;
+    background: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.landmark-modal-photo-wrap img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.landmark-modal-body {
+    padding: 18px 24px;
 }
 
 .purok-map-pin:hover .purok-pin-tooltip {

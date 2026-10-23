@@ -16,6 +16,7 @@ function updatePinVisibility() {
     var lapGifPin = document.getElementById('lapuyanGifPin');
     var sjPin = document.getElementById('sanJosePin');
     var purokPins = document.getElementById('purokPinsContainer');
+    var landmarkPins = document.getElementById('landmarkPinsContainer');
     var overviewBtn = document.querySelector('.sm-overview-btn');
     
     if (mainImage) {
@@ -49,6 +50,11 @@ function updatePinVisibility() {
         // 4 Purok Pins (only on Legend.png aerial view)
         if (purokPins) {
             purokPins.style.display = src.includes('Legend.png') ? 'block' : 'none';
+        }
+
+        // Landmark Pins (only on Legend.png aerial view)
+        if (landmarkPins) {
+            landmarkPins.style.display = src.includes('Legend.png') ? 'block' : 'none';
         }
 
         // Overview button text / icon
@@ -362,3 +368,76 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// ========================================================
+// LANDMARK FUNCTIONS (OPEN MODAL & HIGHLIGHT ON MAP)
+// ========================================================
+function openLandmarkModal(pinEl) {
+    if (!pinEl) return;
+    var name = pinEl.getAttribute('data-name') || 'Landmark Details';
+    var photo = pinEl.getAttribute('data-photo') || '';
+    var desc = pinEl.getAttribute('data-desc') || '';
+    var color = pinEl.getAttribute('data-color') || '#6366f1';
+    var iconEl = pinEl.querySelector('.sm-landmark-icon-wrap i');
+    var iconClass = iconEl ? iconEl.className : 'bi bi-geo-alt-fill';
+
+    var modal = document.getElementById('landmarkModal');
+    if (!modal) return;
+
+    var titleEl = document.getElementById('lmTitle');
+    var badgeWrap = document.getElementById('lmBadgeWrap');
+    var badgeIcon = document.getElementById('lmBadgeIcon');
+    var photoContainer = document.getElementById('lmPhotoContainer');
+    var photoImg = document.getElementById('lmPhotoImg');
+    var descEl = document.getElementById('lmDesc');
+
+    if (titleEl) titleEl.textContent = name;
+    if (badgeWrap) badgeWrap.style.backgroundColor = color;
+    if (badgeIcon) badgeIcon.className = iconClass;
+
+    if (photo && photo !== 'null' && photo.trim() !== '') {
+        if (photoImg) photoImg.src = photo;
+        if (photoContainer) photoContainer.style.display = 'flex';
+    } else {
+        if (photoContainer) photoContainer.style.display = 'none';
+    }
+
+    if (descEl) {
+        descEl.textContent = desc ? desc : 'Official landmark in Barangay San Jose, Lapuyan, Zamboanga del Sur.';
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeLandmarkModal(e) {
+    var modal = document.getElementById('landmarkModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function highlightLandmark(id) {
+    var mainImage = document.getElementById('mainMapImage');
+    var src = mainImage ? (mainImage.getAttribute('src') || '') : '';
+
+    // Switch to aerial map if not currently on Legend.png
+    if (!src.includes('Legend.png')) {
+        showAerialMap();
+    }
+
+    var pin = document.getElementById('landmarkPin_' + id);
+    if (pin) {
+        document.querySelectorAll('.sm-landmark-pin').forEach(function(p) {
+            p.classList.remove('highlight');
+        });
+        
+        pin.classList.add('highlight');
+        setTimeout(function() {
+            pin.classList.remove('highlight');
+        }, 3500);
+
+        var photo = pin.getAttribute('data-photo');
+        if (photo && photo !== 'null' && photo.trim() !== '') {
+            openLandmarkModal(pin);
+        }
+    }
+}
+
