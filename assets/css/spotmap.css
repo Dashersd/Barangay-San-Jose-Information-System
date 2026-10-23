@@ -392,3 +392,55 @@
     text-align: right;
 }
 
+.household-modal-details .hm-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 0 4px 0;
+    border-top: 1px dashed #e2e8f0;
+    margin-top: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.household-modal-details .hm-col .hm-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+#modalChildrenList {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    padding-left: 2px;
+}
+
+.child-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    font-size: 0.9rem;
+    color: #1e293b;
+    font-weight: 600;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.child-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #0284c7;
+    flex-shrink: 0;
+}
+

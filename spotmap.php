@@ -16,7 +16,7 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=<?= time() ?>">
-    <link rel="stylesheet" href="assets/css/spotmap.css">
+    <link rel="stylesheet" href="assets/css/spotmap.css?v=<?= time() ?>">
     
     <!-- AOS Animation CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -282,9 +282,9 @@
                         <span class="hm-label">Spouse Name</span>
                         <span class="hm-value" id="modalSpouseName"></span>
                     </div>
-                    <div class="hm-row" id="modalChildrenRow" style="align-items: flex-start;">
+                    <div class="hm-col" id="modalChildrenRow">
                         <span class="hm-label">Children</span>
-                        <div class="hm-value" id="modalChildrenList" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end;"></div>
+                        <div class="hm-value" id="modalChildrenList"></div>
                     </div>
                 </div>
             </div>

@@ -247,15 +247,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     if (Array.isArray(childrenList) && childrenList.length > 0) {
                         childrenList.forEach(function(child) {
-                            var chip = document.createElement('span');
-                            chip.textContent = child;
-                            chip.style.display = 'inline-block';
-                            chip.style.padding = '3px 8px';
-                            chip.style.backgroundColor = '#f1f5f9';
-                            chip.style.border = '1px solid #cbd5e1';
-                            chip.style.borderRadius = '12px';
-                            chip.style.fontSize = '0.85rem';
-                            chip.style.color = '#334155';
+                            var chip = document.createElement('div');
+                            chip.className = 'child-badge-item';
+                            
+                            var dot = document.createElement('span');
+                            dot.className = 'child-badge-dot';
+                            
+                            var textSpan = document.createElement('span');
+                            textSpan.textContent = child;
+                            
+                            chip.appendChild(dot);
+                            chip.appendChild(textSpan);
                             childrenContainer.appendChild(chip);
                         });
                     } else {

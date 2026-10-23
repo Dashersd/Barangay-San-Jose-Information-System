@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-include '../../db_connect.php';
+require_once __DIR__ . '/../../db_connect.php';
 
 $session_id = isset($_GET['session_id']) ? (int)$_GET['session_id'] : 0;
 
@@ -9,7 +9,14 @@ if ($session_id === 0) {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT sender, message, DATE_FORMAT(created_at, '%h:%i %p') as time 
+// Mark all user messages for this session as read
+$upd = $conn->prepare("UPDATE chat_messages SET is_read = 1 WHERE session_id = ? AND sender = 'user' AND is_read = 0");
+if ($upd) {
+    $upd->bind_param("i", $session_id);
+    $upd->execute();
+}
+
+$stmt = $conn->prepare("SELECT id, sender, message, DATE_FORMAT(created_at, '%h:%i %p') as time 
                         FROM chat_messages 
                         WHERE session_id = ? 
                         ORDER BY created_at ASC");
