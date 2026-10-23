@@ -15,6 +15,8 @@ function updatePinVisibility() {
     var lapPin = document.getElementById('lapuyanPin');
     var lapGifPin = document.getElementById('lapuyanGifPin');
     var sjPin = document.getElementById('sanJosePin');
+    var purokPins = document.getElementById('purokPinsContainer');
+    var overviewBtn = document.querySelector('.sm-overview-btn');
     
     if (mainImage) {
         var src = mainImage.getAttribute('src') || '';
@@ -44,6 +46,22 @@ function updatePinVisibility() {
             sjPin.style.display = src.includes('san jose.png') ? 'flex' : 'none';
         }
 
+        // 4 Purok Pins (only on Legend.png aerial view)
+        if (purokPins) {
+            purokPins.style.display = src.includes('Legend.png') ? 'block' : 'none';
+        }
+
+        // Overview button text / icon
+        if (overviewBtn) {
+            if (src.includes('Purok')) {
+                overviewBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Aerial Map';
+                overviewBtn.setAttribute('title', 'Return to Aerial Map with 4 Purok Pins');
+            } else {
+                overviewBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Overview Map';
+                overviewBtn.setAttribute('title', 'Return to Map Overview');
+            }
+        }
+
         // On images with specific pins or on the final interactive legend, map image itself is not clickable
         if (src.includes('Philippines.png') || src.includes('mindanao.jpg') || src.includes('Zamboanga del sur.jpg') || src.includes('Lapuyan.gif') || src.includes('san jose.png') || src.includes('Legend.png')) {
             mainImage.style.cursor = 'default';
@@ -53,53 +71,86 @@ function updatePinVisibility() {
     }
 }
 
-// Global function to reset map to default (Philippines overview)
+// Global function to reset map to default or return to aerial view
 function resetMap() {
     var mainImage = document.getElementById('mainMapImage');
     
     if (mainImage) {
-        currentImageIndex = 0;
-        mainImage.src = mapImagesSequence[currentImageIndex];
-        updatePinVisibility();
-        
-        // Hide all markers
-        var allMarkers = document.querySelectorAll('.purok-markers');
-        allMarkers.forEach(function(el) {
-            el.style.display = 'none';
-        });
+        var src = mainImage.getAttribute('src') || '';
+        if (src.includes('Purok')) {
+            // Return to Aerial Map with 4 pins
+            showAerialMap();
+        } else {
+            // Reset to step 0
+            currentImageIndex = 0;
+            mainImage.src = mapImagesSequence[currentImageIndex];
+            updatePinVisibility();
+            
+            // Hide all markers
+            var allMarkers = document.querySelectorAll('.purok-markers');
+            allMarkers.forEach(function(el) {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('.sm-purok-badge').forEach(function(b) {
+                b.classList.remove('active');
+            });
+        }
     }
 }
 
-// Global function to change map on Purok click
+// Global function to jump directly to Aerial View
+function showAerialMap() {
+    var mainImage = document.getElementById('mainMapImage');
+    if (!mainImage) return;
+    
+    currentImageIndex = mapImagesSequence.indexOf('assets/images/Map/Legend.png');
+    if (currentImageIndex === -1) currentImageIndex = 5;
+    mainImage.src = mapImagesSequence[currentImageIndex];
+    updatePinVisibility();
+    
+    // Hide all markers & remove active badge
+    var allMarkers = document.querySelectorAll('.purok-markers');
+    allMarkers.forEach(function(el) {
+        el.style.display = 'none';
+    });
+    document.querySelectorAll('.sm-purok-badge').forEach(function(b) {
+        b.classList.remove('active');
+    });
+}
+
+// Global function to load a Purok image
+function loadPurok(imgSrc, purokNum) {
+    var mainImage = document.getElementById('mainMapImage');
+    if (!mainImage || !imgSrc) return;
+    
+    mainImage.src = imgSrc;
+    updatePinVisibility();
+    
+    // Hide all purok markers
+    var allMarkers = document.querySelectorAll('.purok-markers');
+    allMarkers.forEach(function(el) {
+        el.style.display = 'none';
+    });
+    
+    // Show selected purok markers
+    var markerDiv = document.getElementById('markers-purok' + purokNum);
+    if (markerDiv) markerDiv.style.display = 'block';
+    
+    // Set active state on corresponding badge
+    document.querySelectorAll('.sm-purok-badge').forEach(function(b) {
+        b.classList.remove('active');
+        if (b.getAttribute('data-image') === imgSrc || b.textContent.trim() === 'Purok ' + purokNum) {
+            b.classList.add('active');
+        }
+    });
+}
+
+// Global function to change map on Purok badge click
 function changeMap(element) {
     var newSrc = element.getAttribute('data-image');
-    var mainImage = document.getElementById('mainMapImage');
-    
-    if (newSrc && mainImage) {
-        mainImage.src = newSrc;
-        updatePinVisibility();
-        
-        // Hide all purok markers
-        var allMarkers = document.querySelectorAll('.purok-markers');
-        allMarkers.forEach(function(el) {
-            el.style.display = 'none';
-        });
-        
-        // Check which purok is selected and show its markers
-        if (newSrc.includes('Purok 1')) {
-            var markerDiv = document.getElementById('markers-purok1');
-            if(markerDiv) markerDiv.style.display = 'block';
-        } else if (newSrc.includes('Purok 2')) {
-            var markerDiv = document.getElementById('markers-purok2');
-            if(markerDiv) markerDiv.style.display = 'block';
-        } else if (newSrc.includes('Purok 3')) {
-            var markerDiv = document.getElementById('markers-purok3');
-            if(markerDiv) markerDiv.style.display = 'block';
-        } else if (newSrc.includes('Purok 4')) {
-            var markerDiv = document.getElementById('markers-purok4');
-            if(markerDiv) markerDiv.style.display = 'block';
-        }
-    }
+    var match = newSrc ? newSrc.match(/Purok\s*(\d+)/i) : null;
+    var purokNum = match ? match[1] : '1';
+    loadPurok(newSrc, purokNum);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -109,9 +160,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const lapGifPin = document.getElementById('lapuyanGifPin');
     const sjPin = document.getElementById('sanJosePin');
     const mainImage = document.getElementById('mainMapImage');
+    const purokPins = document.querySelectorAll('.purok-map-pin');
 
     // Make sure initial state has correct pin visibility and cursor
     updatePinVisibility();
+
+    // 4 Purok Map Pins Click Event (opens Purok 1-4 images)
+    purokPins.forEach(function(pin) {
+        function activatePurokPin(e) {
+            if (e) e.stopPropagation();
+            var imgSrc = pin.getAttribute('data-image');
+            var purokNum = pin.getAttribute('data-purok');
+            loadPurok(imgSrc, purokNum);
+        }
+
+        pin.addEventListener('click', activatePurokPin);
+        pin.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                activatePurokPin(e);
+            }
+        });
+    });
 
     // 1. Click handler for Pin on Philippines Map -> goes to mindanao.jpg
     if (philPin && mainImage) {
@@ -125,6 +195,9 @@ document.addEventListener('DOMContentLoaded', function() {
             var allMarkers = document.querySelectorAll('.purok-markers');
             allMarkers.forEach(function(el) {
                 el.style.display = 'none';
+            });
+            document.querySelectorAll('.sm-purok-badge').forEach(function(b) {
+                b.classList.remove('active');
             });
         });
     }
@@ -142,6 +215,9 @@ document.addEventListener('DOMContentLoaded', function() {
             allMarkers.forEach(function(el) {
                 el.style.display = 'none';
             });
+            document.querySelectorAll('.sm-purok-badge').forEach(function(b) {
+                b.classList.remove('active');
+            });
         });
     }
 
@@ -157,6 +233,9 @@ document.addEventListener('DOMContentLoaded', function() {
             var allMarkers = document.querySelectorAll('.purok-markers');
             allMarkers.forEach(function(el) {
                 el.style.display = 'none';
+            });
+            document.querySelectorAll('.sm-purok-badge').forEach(function(b) {
+                b.classList.remove('active');
             });
         });
     }
@@ -174,22 +253,17 @@ document.addEventListener('DOMContentLoaded', function() {
             allMarkers.forEach(function(el) {
                 el.style.display = 'none';
             });
+            document.querySelectorAll('.sm-purok-badge').forEach(function(b) {
+                b.classList.remove('active');
+            });
         });
     }
 
-    // 5. Click handler for Pin on San Jose Map -> goes to Legend.png
+    // 5. Click handler for Pin on San Jose Map -> goes to Legend.png (Aerial Map with 4 pins)
     if (sjPin && mainImage) {
         sjPin.addEventListener('click', function(e) {
             e.stopPropagation();
-            currentImageIndex = mapImagesSequence.indexOf('assets/images/Map/Legend.png');
-            if (currentImageIndex === -1) currentImageIndex = 5;
-            mainImage.src = mapImagesSequence[currentImageIndex];
-            updatePinVisibility();
-            
-            var allMarkers = document.querySelectorAll('.purok-markers');
-            allMarkers.forEach(function(el) {
-                el.style.display = 'none';
-            });
+            showAerialMap();
         });
     }
 
@@ -209,6 +283,9 @@ document.addEventListener('DOMContentLoaded', function() {
             var allMarkers = document.querySelectorAll('.purok-markers');
             allMarkers.forEach(function(el) {
                 el.style.display = 'none';
+            });
+            document.querySelectorAll('.sm-purok-badge').forEach(function(b) {
+                b.classList.remove('active');
             });
         });
     }

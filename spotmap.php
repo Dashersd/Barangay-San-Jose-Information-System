@@ -128,6 +128,10 @@
                                 4 Puroks of Barangay San Jose
                             </h3>
                             
+                            <button type="button" class="sm-btn" onclick="showAerialMap()" style="margin-bottom: 12px; cursor: pointer;" title="View Aerial Spot Map with 4 Purok Pins">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                View Aerial Map (4 Puroks)
+                            </button>
                             <div class="sm-purok-grid">
                                 <span class="sm-purok-badge" data-image="assets/images/Purok/Purok 1.jpg" onclick="changeMap(this)">Purok 1</span>
                                 <span class="sm-purok-badge" data-image="assets/images/Purok/Purok 2.jpg" onclick="changeMap(this)">Purok 2</span>
@@ -191,6 +195,57 @@
                                 <circle cx="12" cy="10" r="3" fill="#ffffff"></circle>
                             </svg>
                             <div class="pin-pulse"></div>
+                        </div>
+
+                        <!-- 4 Purok Pins Layer on Legend (Aerial View) Map -->
+                        <div id="purokPinsContainer" class="purok-pins-container" style="display: none;">
+                            <div class="purok-map-pin" id="purokPin1" data-image="assets/images/Purok/Purok 1.jpg" data-purok="1" style="top: 26%; left: 30%;" title="Click to view Purok 1" role="button" tabindex="0">
+                                <div class="purok-pin-tooltip">Explore Purok 1</div>
+                                <div class="purok-pin-badge">
+                                    <svg viewBox="0 0 24 24" fill="#fdb913" width="15" height="15"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    <span>Purok 1</span>
+                                </div>
+                                <div class="purok-pin-pointer"></div>
+                                <div class="purok-pin-dot">
+                                    <div class="purok-pin-pulse"></div>
+                                </div>
+                            </div>
+
+                            <div class="purok-map-pin" id="purokPin2" data-image="assets/images/Purok/Purok 2.jpg" data-purok="2" style="top: 52%; left: 42%;" title="Click to view Purok 2" role="button" tabindex="0">
+                                <div class="purok-pin-tooltip">Explore Purok 2</div>
+                                <div class="purok-pin-badge">
+                                    <svg viewBox="0 0 24 24" fill="#fdb913" width="15" height="15"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    <span>Purok 2</span>
+                                </div>
+                                <div class="purok-pin-pointer"></div>
+                                <div class="purok-pin-dot">
+                                    <div class="purok-pin-pulse"></div>
+                                </div>
+                            </div>
+
+                            <div class="purok-map-pin" id="purokPin3" data-image="assets/images/Purok/Purok 3.jpg" data-purok="3" style="top: 52%; left: 58%;" title="Click to view Purok 3" role="button" tabindex="0">
+                                <div class="purok-pin-tooltip">Explore Purok 3</div>
+                                <div class="purok-pin-badge">
+                                    <svg viewBox="0 0 24 24" fill="#fdb913" width="15" height="15"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    <span>Purok 3</span>
+                                </div>
+                                <div class="purok-pin-pointer"></div>
+                                <div class="purok-pin-dot">
+                                    <div class="purok-pin-pulse"></div>
+                                </div>
+                            </div>
+
+                            <div class="purok-map-pin" id="purokPin4" data-image="assets/images/Purok/Purok 4.jpg" data-purok="4" style="top: 48%; left: 74%;" title="Click to view Purok 4" role="button" tabindex="0">
+                                <div class="purok-pin-tooltip">Explore Purok 4</div>
+                                <div class="purok-pin-badge">
+                                    <svg viewBox="0 0 24 24" fill="#fdb913" width="15" height="15"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    <span>Purok 4</span>
+                                </div>
+                                <div class="purok-pin-pointer"></div>
+                                <div class="purok-pin-dot">
+                                    <div class="purok-pin-pulse"></div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Markers Layers -->
