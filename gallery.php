@@ -57,13 +57,14 @@ if ($media_res) {
     <nav class="navbar" id="navbar">
         <div class="navbar-container">
             <!-- Logo & Brand -->
-            <a href="index.php" class="navbar-brand">
+            <div class="navbar-brand">
                 <img src="assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="navbar-logo">
+                <img src="assets/images/Lapuyan Logo.png" alt="Municipality of Lapuyan Logo" class="navbar-logo">
                 <div class="brand-text">
                     <span class="brand-title">BARANGAY SAN JOSE</span>
                     <span class="brand-subtitle">Bayanihan &bull; Serbisyong Totoo</span>
                 </div>
-            </a>
+            </div>
 
             <!-- Desktop Links -->
             <ul class="navbar-links">
@@ -197,6 +198,7 @@ if ($media_res) {
                 <!-- Left Side: Logo & Brand -->
                 <div class="footer-brand">
                     <img src="assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="footer-logo">
+                    <img src="assets/images/Lapuyan Logo.png" alt="Municipality of Lapuyan Logo" class="footer-logo">
                     <div class="footer-brand-text">
                         <h2>BARANGAY<br>SAN JOSE</h2>
                         <p>Bayanihan &bull; Serbisyong Totoo</p>
