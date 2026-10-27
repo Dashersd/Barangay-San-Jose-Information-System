@@ -127,8 +127,7 @@
 }
 
 .admin-dropdown.open > a .chevron-down,
-.admin-dropdown > a.open .chevron-down,
-.admin-dropdown.active > a .chevron-down {
+.admin-dropdown > a.open .chevron-down {
     transform: rotate(180deg);
 }
 
@@ -141,9 +140,8 @@
 }
 
 .admin-dropdown.open > .admin-dropdown-menu,
-.admin-dropdown-menu.show,
-.admin-dropdown.active > .admin-dropdown-menu {
-    display: block !important;
+.admin-dropdown-menu.show {
+    display: block;
 }
 
 .admin-dropdown-menu li {

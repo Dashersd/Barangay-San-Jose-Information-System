@@ -165,7 +165,6 @@ if ($result) {
                         <svg class="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </a>
                     <ul class="admin-dropdown-menu">
-                        <li><a href="legend_files.php">Legend Files</a></li>
                         <li><a href="resident1.php">Resident 1</a></li>
                         <li><a href="resident2.php">Resident 2</a></li>
                         <li><a href="resident3.php">Resident 3</a></li>

@@ -194,7 +194,7 @@ $nextOrder = count($legends) + 1;
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/dashboard.css?v=<?= time() ?>">
     <link rel="stylesheet" href="css/legends_v2.css">
 
     <style>
@@ -831,13 +831,13 @@ $nextOrder = count($legends) + 1;
                         <li><a href="skofficials.php">SK Officials</a></li>
                     </ul>
                 </li>
-                <li class="admin-dropdown active">
-                    <a href="javascript:void(0)" class="dropdown-toggle active">
+                <li class="admin-dropdown">
+                    <a href="javascript:void(0)" class="dropdown-toggle">
                         <span class="nav-icon"><i class="bi bi-geo-alt-fill"></i></span>
                         Spot Map
                         <i class="bi bi-chevron-down chevron-down"></i>
                     </a>
-                    <ul class="admin-dropdown-menu show" style="display: block;">
+                    <ul class="admin-dropdown-menu">
                         <li><a href="legends.php" class="active">Legends</a></li>
                         <li><a href="purok1.php">Purok 1</a></li>
                         <li><a href="purok2.php">Purok 2</a></li>
@@ -852,7 +852,6 @@ $nextOrder = count($legends) + 1;
                         <i class="bi bi-chevron-down chevron-down"></i>
                     </a>
                     <ul class="admin-dropdown-menu">
-                        <li><a href="legend_files.php">Legend Files</a></li>
                         <li><a href="resident1.php">Resident 1</a></li>
                         <li><a href="resident2.php">Resident 2</a></li>
                         <li><a href="resident3.php">Resident 3</a></li>

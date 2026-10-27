@@ -13,12 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!parentLi) return;
             
             const menu = parentLi.querySelector('.admin-dropdown-menu');
-            const isCurrentlyOpen = parentLi.classList.contains('open');
+            const isCurrentlyOpen = parentLi.classList.contains('open') || 
+                                    parentLi.classList.contains('active') ||
+                                    this.classList.contains('open') ||
+                                    this.classList.contains('active') ||
+                                    (menu && (menu.classList.contains('show') || menu.style.display === 'block'));
 
-            // Close other dropdowns if single-dropdown accordion is preferred, or toggle this one
             if (isCurrentlyOpen) {
-                parentLi.classList.remove('open');
-                this.classList.remove('open');
+                parentLi.classList.remove('open', 'active');
+                this.classList.remove('open', 'active');
                 if (menu) {
                     menu.classList.remove('show');
                     menu.style.display = 'none';
@@ -37,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auto-open dropdown if current page is inside it
     document.querySelectorAll('.admin-dropdown').forEach(dropdown => {
         const activeLink = dropdown.querySelector('.admin-dropdown-menu a.active');
-        if (activeLink || dropdown.classList.contains('active')) {
+        if (activeLink || dropdown.classList.contains('active') || dropdown.querySelector('.dropdown-toggle.open')) {
             dropdown.classList.add('open');
             const toggle = dropdown.querySelector('.dropdown-toggle');
             if (toggle) toggle.classList.add('open');
