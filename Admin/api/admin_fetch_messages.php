@@ -16,7 +16,7 @@ if ($upd) {
     $upd->execute();
 }
 
-$stmt = $conn->prepare("SELECT id, sender, message, DATE_FORMAT(created_at, '%h:%i %p') as time 
+$stmt = $conn->prepare("SELECT id, sender, message, attachment_file, attachment_name, DATE_FORMAT(created_at, '%h:%i %p') as time 
                         FROM chat_messages 
                         WHERE session_id = ? 
                         ORDER BY created_at ASC");

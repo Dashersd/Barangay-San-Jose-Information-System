@@ -261,6 +261,102 @@ $selectedService = isset($_GET['service']) ? trim($_GET['service']) : '';
             });
         });
 
+        function getPublicChatFileMeta(ext) {
+            ext = (ext || '').toLowerCase();
+            if (ext === 'pdf') {
+                return {
+                    badge: 'PDF Document',
+                    bg: '#fee2e2',
+                    icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ef4444" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>'
+                };
+            }
+            if (ext === 'doc' || ext === 'docx') {
+                return {
+                    badge: 'Word Document',
+                    bg: '#dbeafe',
+                    icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>'
+                };
+            }
+            if (ext === 'jpg' || ext === 'jpeg' || ext === 'png') {
+                return {
+                    badge: 'Image Document',
+                    bg: '#dcfce7',
+                    icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#059669" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>'
+                };
+            }
+            return {
+                badge: 'Official Document',
+                bg: '#f1f5f9',
+                icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#64748b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>'
+            };
+        }
+
+        function renderPublicChatDocCard(filePath, fileName) {
+            if (!filePath) return '';
+            const ext = filePath.split('.').pop().toLowerCase();
+            const meta = getPublicChatFileMeta(ext);
+            const rawName = fileName || filePath.split('/').pop();
+            const safeName = $('<div>').text(rawName).html();
+            const cleanUrl = filePath.replace(/^\/+/, '');
+
+            return `
+                <div class="chat-doc-card">
+                    <div class="chat-doc-main">
+                        <div class="chat-doc-icon" style="background:${meta.bg};">
+                            ${meta.icon}
+                        </div>
+                        <div class="chat-doc-info">
+                            <span class="chat-doc-title" title="${safeName}">${safeName}</span>
+                            <span class="chat-doc-badge">${meta.badge}</span>
+                        </div>
+                    </div>
+                    <div class="chat-doc-actions">
+                        <a href="${cleanUrl}" download="${safeName}" class="btn-chat-doc-dl" target="_blank">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Download
+                        </a>
+                        <button type="button" class="btn-chat-doc-print" onclick="printCitizenChatDoc('${cleanUrl}', '${ext}')">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            Print
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.printCitizenChatDoc = function(fileUrl, ext) {
+            ext = (ext || '').toLowerCase();
+            if (ext === 'pdf') {
+                const printWindow = window.open(fileUrl, '_blank');
+                if (printWindow) {
+                    printWindow.onload = function() {
+                        try { printWindow.print(); } catch(e) {}
+                    };
+                }
+            } else if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
+                const printWindow = window.open('', '_blank');
+                if (printWindow) {
+                    printWindow.document.write(`
+                        <html>
+                            <head><title>Print Document</title><style>body{margin:0;display:flex;align-items:center;justify-content:center;background:#fff;} img{max-width:98vw;max-height:98vh;object-fit:contain;}</style></head>
+                            <body onload="window.print();">
+                                <img src="${fileUrl}" alt="Print Preview" />
+                            </body>
+                        </html>
+                    `);
+                    printWindow.document.close();
+                }
+            } else {
+                alert('For Word/Office documents (.doc, .docx), please download the file to open and print.');
+                const tempLink = document.createElement('a');
+                tempLink.href = fileUrl;
+                tempLink.download = '';
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
+            }
+        };
+
         function fetchUserMessages() {
             $.get('api/chat_fetch.php', function(res) {
                 if(res.status === 'success') {
@@ -268,15 +364,19 @@ $selectedService = isset($_GET['service']) ? trim($_GET['service']) : '';
                     res.messages.forEach(msg => {
                         const isUser = msg.sender === 'user';
                         const align = isUser ? 'flex-end' : 'flex-start';
-                        const bg = isUser ? 'var(--primary)' : '#e2e8f0';
+                        const bg = isUser ? 'var(--primary)' : '#f8fafc';
                         const color = isUser ? '#fff' : '#1e293b';
-                        const nameDisplay = isUser ? '' : '<strong style="display:block; margin-bottom:5px; font-size:0.85em;">Admin</strong>';
+                        const borderStyle = isUser ? 'none' : '1px solid #e2e8f0';
+                        const nameDisplay = isUser ? '' : '<strong style="display:block; margin-bottom:5px; font-size:0.85em; color:#0f172a;">Barangay San Jose Official</strong>';
+                        const safeMsg = msg.message ? $('<div>').text(msg.message).html().replace(/\n/g, '<br>') : '';
+                        const docCard = msg.attachment_file ? renderPublicChatDocCard(msg.attachment_file, msg.attachment_name) : '';
                         
                         html += `
-                            <div style="align-self:${align}; max-width:80%;">
-                                <div style="background:${bg}; color:${color}; padding:12px 16px; border-radius:12px; font-size:14px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="align-self:${align}; max-width:85%;">
+                                <div style="background:${bg}; color:${color}; border:${borderStyle}; padding:12px 16px; border-radius:12px; font-size:14px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
                                     ${nameDisplay}
-                                    <p style="margin:0; line-height:1.4;">${msg.message}</p>
+                                    ${safeMsg ? `<p style="margin:0; line-height:1.4;">${safeMsg}</p>` : ''}
+                                    ${docCard}
                                     <span style="display:block; text-align:right; font-size:0.75em; margin-top:8px; opacity:0.8;">${msg.time}</span>
                                 </div>
                             </div>

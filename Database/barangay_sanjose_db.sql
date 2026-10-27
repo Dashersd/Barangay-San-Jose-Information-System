@@ -403,10 +403,35 @@ CREATE TABLE IF NOT EXISTS `chat_messages` (
   `session_id` int(11) NOT NULL,
   `sender` enum('user','admin') NOT NULL,
   `message` text NOT NULL,
+  `attachment_file` varchar(255) DEFAULT NULL,
+  `attachment_name` varchar(255) DEFAULT NULL,
   `is_read` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `session_id` (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `services`
+--
+
+CREATE TABLE IF NOT EXISTS `services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(150) NOT NULL,
+  `description` text NOT NULL,
+  `requirements` text DEFAULT NULL,
+  `document_file` varchar(255) DEFAULT NULL,
+  `fee` varchar(100) DEFAULT 'Free',
+  `processing_time` varchar(100) DEFAULT 'Same Day',
+  `icon` varchar(50) NOT NULL DEFAULT 'document',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  `btn_text` varchar(50) DEFAULT 'Request Document',
+  `btn_link` varchar(255) DEFAULT 'contact.php',
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 COMMIT;

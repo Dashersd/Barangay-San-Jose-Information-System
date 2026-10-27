@@ -3,15 +3,49 @@
 require_once __DIR__ . '/../services_db.php';
 
 // Handle Form Actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     $action = $_POST['action'] ?? '';
+
+    // File upload handler
+    $handleUpload = function() {
+        if (!isset($_FILES['serviceDocument']) || $_FILES['serviceDocument']['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+        $file = $_FILES['serviceDocument'];
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $allowed = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+        if (!in_array($ext, $allowed)) {
+            return false; // Invalid extension
+        }
+        $uploadDir = dirname(__DIR__) . '/uploads/documents/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        $filename = time() . '_' . uniqid() . '.' . $ext;
+        $targetPath = $uploadDir . $filename;
+        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+            return 'uploads/documents/' . $filename;
+        }
+        return false;
+    };
 
     // 1. Add Service
     if ($action === 'add_service') {
+        $docFilePath = null;
+        if (isset($_FILES['serviceDocument']) && $_FILES['serviceDocument']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $uploadResult = $handleUpload();
+            if ($uploadResult === false) {
+                header("Location: service.php?msg=invalid_file");
+                exit;
+            }
+            $docFilePath = $uploadResult;
+        }
+
         $data = [
             'title' => trim($_POST['title'] ?? ''),
             'description' => trim($_POST['description'] ?? ''),
             'requirements' => trim($_POST['requirements'] ?? ''),
+            'document_file' => $docFilePath,
             'fee' => trim($_POST['fee'] ?? 'Free'),
             'processing_time' => trim($_POST['processing_time'] ?? 'Same Day'),
             'icon' => trim($_POST['icon'] ?? 'document'),
@@ -26,6 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: service.php?msg=created");
             exit;
         } else {
+            if ($docFilePath) {
+                delete_service_document_file($docFilePath);
+            }
             header("Location: service.php?msg=empty_title");
             exit;
         }
@@ -34,10 +71,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 2. Edit Service
     if ($action === 'edit_service') {
         $id = intval($_POST['service_id'] ?? 0);
+        $curr = get_service_by_id($conn, $id);
+        if (!$curr) {
+            header("Location: service.php?msg=error");
+            exit;
+        }
+
+        $removeDoc = ($_POST['removeDocument'] ?? '0') === '1';
+        $docFilePath = $curr['document_file'] ?? null;
+
+        // If admin requested removal of the existing document
+        if ($removeDoc && !empty($docFilePath)) {
+            delete_service_document_file($docFilePath);
+            $docFilePath = null;
+        }
+
+        // If a new file is uploaded
+        if (isset($_FILES['serviceDocument']) && $_FILES['serviceDocument']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $uploadResult = $handleUpload();
+            if ($uploadResult === false) {
+                header("Location: service.php?msg=invalid_file");
+                exit;
+            }
+            // Remove old file when replacing
+            if (!empty($docFilePath)) {
+                delete_service_document_file($docFilePath);
+            }
+            $docFilePath = $uploadResult;
+        }
+
         $data = [
             'title' => trim($_POST['title'] ?? ''),
             'description' => trim($_POST['description'] ?? ''),
             'requirements' => trim($_POST['requirements'] ?? ''),
+            'document_file' => $docFilePath,
             'fee' => trim($_POST['fee'] ?? 'Free'),
             'processing_time' => trim($_POST['processing_time'] ?? 'Same Day'),
             'icon' => trim($_POST['icon'] ?? 'document'),
@@ -98,6 +165,7 @@ if ($msg === 'created') $alert_text = 'Service added successfully and is now liv
 if ($msg === 'updated') $alert_text = 'Service details updated successfully!';
 if ($msg === 'deleted') $alert_text = 'Service deleted successfully!';
 if ($msg === 'status_changed') $alert_text = 'Service status toggled successfully!';
+if ($msg === 'invalid_file') { $alert_text = 'Invalid document format. Allowed extensions: PDF, DOC, DOCX, JPG, JPEG, PNG.'; $alert_type = 'error'; }
 if ($msg === 'empty_title') { $alert_text = 'Service title is required.'; $alert_type = 'error'; }
 if ($msg === 'error') { $alert_text = 'An error occurred while saving the service.'; $alert_type = 'error'; }
 ?>
@@ -325,6 +393,7 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                                     <th>Service Name &amp; Details</th>
                                     <th>Description</th>
                                     <th>Requirements</th>
+                                    <th style="text-align: center;">Document File</th>
                                     <th style="text-align: center;">Order</th>
                                     <th style="text-align: center;">Status</th>
                                     <th style="text-align: center;">Actions</th>
@@ -333,7 +402,7 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                             <tbody>
                                 <?php if (empty($services)): ?>
                                     <tr>
-                                        <td colspan="7" class="empty-table-state">
+                                        <td colspan="8" class="empty-table-state">
                                             <div class="empty-state-icon-box">
                                                 <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                                             </div>
@@ -355,7 +424,7 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                                                     <span class="service-title-text"><?= htmlspecialchars($srv['title']) ?></span>
                                                     <div class="service-chips">
                                                         <?php if (!empty($srv['fee'])): ?>
-                                                            <span class="service-chip chip-fee" title="Service Fee">₱ <?= htmlspecialchars($srv['fee']) ?></span>
+                                                             <span class="service-chip chip-fee" title="Service Fee">₱ <?= htmlspecialchars($srv['fee']) ?></span>
                                                         <?php endif; ?>
                                                         <?php if (!empty($srv['processing_time'])): ?>
                                                             <span class="service-chip chip-time" title="Processing Time">⏱ <?= htmlspecialchars($srv['processing_time']) ?></span>
@@ -371,6 +440,16 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                                                     <span title="<?= htmlspecialchars($srv['requirements']) ?>"><?= htmlspecialchars($srv['requirements']) ?></span>
                                                 <?php else: ?>
                                                     <span style="color: #cbd5e1; font-style: italic;">None specified</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <?php if (!empty($srv['document_file'])): ?>
+                                                    <a href="../<?= htmlspecialchars($srv['document_file']) ?>" download target="_blank" class="badge badge-doc-file" title="Download <?= htmlspecialchars(basename($srv['document_file'])) ?>">
+                                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px; vertical-align: -1px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                                        Ready File
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span style="color: #94a3b8; font-style: italic; font-size: 0.85rem;">No file</span>
                                                 <?php endif; ?>
                                             </td>
                                             <td style="text-align: center;">
@@ -424,9 +503,10 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                 </h2>
                 <button type="button" class="modal-close" onclick="closeServiceModal();">&times;</button>
             </div>
-            <form id="serviceForm" action="service.php" method="POST">
+            <form id="serviceForm" action="service.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" id="formAction" value="add_service">
                 <input type="hidden" name="service_id" id="serviceId" value="">
+                <input type="hidden" name="removeDocument" id="editRemoveDocument" value="0">
 
                 <div class="modal-body custom-scrollbar">
                     <!-- Service Title -->
@@ -484,6 +564,38 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                         <small class="form-help">List the required documents or qualifications needed by the resident.</small>
                     </div>
 
+                    <!-- Ready-Made Document Template Upload -->
+                    <div class="form-group document-upload-group" style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 1.1rem; margin-bottom: 1.25rem;">
+                        <label for="serviceDocumentInput" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; font-weight: 700; color: #1e293b;">
+                            <span style="display: inline-flex; align-items: center; gap: 0.45rem;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                                Attach Document Template (Ready-Made Form)
+                            </span>
+                            <span style="font-size: 0.75rem; font-weight: 600; color: #64748b; background: #e2e8f0; padding: 2px 8px; border-radius: 999px;">PDF, DOC, DOCX, JPG, PNG</span>
+                        </label>
+
+                        <!-- Existing Attached Document Preview Box -->
+                        <div id="existingDocBox" style="display: none; align-items: center; justify-content: space-between; background: #ffffff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.75rem;">
+                            <div style="display: flex; align-items: center; gap: 0.6rem; overflow: hidden;">
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#059669" stroke-width="2" style="flex-shrink: 0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><polyline points="9 15 12 18 15 15"></polyline></svg>
+                                <div style="display: flex; flex-direction: column; overflow: hidden;">
+                                    <span id="existingDocName" style="font-size: 0.88rem; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;">document.pdf</span>
+                                    <a id="existingDocLink" href="#" target="_blank" download style="font-size: 0.8rem; color: #2563eb; text-decoration: underline; font-weight: 500;">Click to Download / View current file</a>
+                                </div>
+                            </div>
+                            <button type="button" id="removeDocBtn" onclick="removeAttachedDocument();" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                Remove File
+                            </button>
+                        </div>
+
+                        <!-- File Input -->
+                        <input type="file" name="serviceDocument" id="serviceDocumentInput" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="form-control" style="background: #ffffff; padding: 0.5rem 0.75rem;">
+                        <small class="form-help" style="margin-top: 0.4rem; display: block; color: #64748b; font-size: 0.8rem;">
+                            Upload a blank form/template. Citizens will be able to directly download or print this document from the public services page.
+                        </small>
+                    </div>
+
                     <!-- Row: Button Text & Link -->
                     <div class="form-row">
                         <div class="form-group">
@@ -525,6 +637,9 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
             form.reset();
             document.getElementById('formAction').value = 'add_service';
             document.getElementById('serviceId').value = '';
+            document.getElementById('editRemoveDocument').value = '0';
+            document.getElementById('serviceDocumentInput').value = '';
+            document.getElementById('existingDocBox').style.display = 'none';
             document.getElementById('modalHeaderTitle').textContent = 'Add New Service';
             document.getElementById('saveServiceSubmitBtn').innerHTML = `
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -541,6 +656,8 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
             form.reset();
             document.getElementById('formAction').value = 'edit_service';
             document.getElementById('serviceId').value = service.id || '';
+            document.getElementById('editRemoveDocument').value = '0';
+            document.getElementById('serviceDocumentInput').value = '';
             document.getElementById('modalHeaderTitle').textContent = 'Edit Service';
             document.getElementById('saveServiceSubmitBtn').innerHTML = `
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
@@ -558,9 +675,38 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
             document.getElementById('serviceBtnLink').value = service.btn_link || 'contact.php';
             document.getElementById('serviceDisplayOrder').value = service.display_order || '0';
 
+            // Document Preview Handling
+            const existingDocBox = document.getElementById('existingDocBox');
+            const existingDocName = document.getElementById('existingDocName');
+            const existingDocLink = document.getElementById('existingDocLink');
+
+            if (service.document_file && service.document_file.trim() !== '') {
+                const rawPath = service.document_file.trim();
+                const parts = rawPath.split('/');
+                const fname = parts[parts.length - 1];
+                existingDocName.textContent = fname;
+                existingDocLink.href = '../' + rawPath;
+                existingDocBox.style.display = 'flex';
+            } else {
+                existingDocBox.style.display = 'none';
+            }
+
             modal.style.display = 'flex';
             setTimeout(() => document.getElementById('serviceTitle').focus(), 50);
         }
+
+        function removeAttachedDocument() {
+            document.getElementById('editRemoveDocument').value = '1';
+            document.getElementById('existingDocBox').style.display = 'none';
+            document.getElementById('serviceDocumentInput').value = '';
+        }
+
+        // If user selects a new file, reset removeDocument flag
+        document.getElementById('serviceDocumentInput').addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                document.getElementById('editRemoveDocument').value = '0';
+            }
+        });
 
         function closeServiceModal() {
             modal.style.display = 'none';

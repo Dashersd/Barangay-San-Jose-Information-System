@@ -299,13 +299,68 @@
                             <button type="button" class="quick-reply-chip" data-text="Thank you for reaching out to Barangay San Jose. Have a great day!">Thank you for reaching out</button>
                         </div>
 
-                        <!-- Chat Input Bar -->
+                        <!-- Chat Input Bar with Messenger-style Document Attachment -->
                         <div class="chat-input-area">
-                            <input type="text" class="chat-input" id="admin-chat-input" placeholder="Type your reply to resident here... (Press Enter to send)">
-                            <button class="btn-send" id="admin-send-btn">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                                Send Reply
-                            </button>
+                            <div class="chat-input-wrapper">
+                                <!-- Staged Attachment Preview (shown when file is selected) -->
+                                <div id="admin-staged-attachment" class="staged-attachment-bar" style="display: none;">
+                                    <div class="staged-att-content">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                                        <div class="staged-att-details">
+                                            <span class="staged-att-label">Attached:</span>
+                                            <span id="staged-att-name" class="staged-att-name">document.pdf</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="staged-att-remove" id="btn-remove-staged-att" title="Remove attachment">&times;</button>
+                                </div>
+
+                                <div class="chat-input-controls">
+                                    <!-- Attachment Menu Toggle -->
+                                    <div class="chat-attachment-dropdown-wrap">
+                                        <button type="button" class="btn-chat-attach" id="btn-chat-attach" title="Attach &amp; Send Document/Form">
+                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                                        </button>
+                                        
+                                        <!-- Hidden file input for uploading from device -->
+                                        <input type="file" id="admin-chat-file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
+
+                                        <!-- Attachment Popup Menu -->
+                                        <div class="chat-attach-menu" id="chat-attach-menu" style="display: none;">
+                                            <button type="button" class="attach-menu-item" id="btn-attach-upload">
+                                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2563eb" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                                Upload Document from Device...
+                                            </button>
+                                            <button type="button" class="attach-menu-item" id="btn-attach-service-form">
+                                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#059669" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                                Select Ready Barangay Form...
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <input type="text" class="chat-input" id="admin-chat-input" placeholder="Type your reply to resident here... (Press Enter to send)">
+                                    
+                                    <button class="btn-send" id="admin-send-btn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                        Send Reply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Forms Picker Modal -->
+                <div id="serviceFormsModal" class="service-forms-modal" style="display: none;" onclick="if(event.target === this) $('#serviceFormsModal').fadeOut(150);">
+                    <div class="service-forms-modal-dialog">
+                        <div class="service-forms-modal-header">
+                            <h3>
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#15803d" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                Select Barangay Service Form
+                            </h3>
+                            <button type="button" class="service-forms-modal-close" id="close-service-forms-modal">&times;</button>
+                        </div>
+                        <div class="service-forms-modal-body" id="service-forms-list">
+                            <!-- Populated dynamically -->
                         </div>
                     </div>
                 </div>
@@ -328,6 +383,8 @@
         let currentSearchQuery = '';
         let cachedSessions = [];
         let titleBlinkInterval = null;
+        let stagedFile = null;
+        let stagedServiceForm = null;
         const originalTitle = document.title;
 
         // Initialize Audio Toggle state
@@ -752,14 +809,16 @@
                         res.messages.forEach(msg => {
                             const isAdmin = (msg.sender === 'admin');
                             const typeClass = isAdmin ? 'admin-message' : 'user-message';
-                            const safeMsg = $('<div>').text(msg.message).html().replace(/\n/g, '<br>');
+                            const safeMsg = $('<div>').text(msg.message || '').html().replace(/\n/g, '<br>');
                             const avatarInitial = isAdmin ? 'A' : (activeResidentName ? activeResidentName.charAt(0).toUpperCase() : 'U');
+                            const docCardHtml = msg.attachment_file ? renderChatDocCard(msg.attachment_file, msg.attachment_name, isAdmin) : '';
 
                             html += `
                                 <div class="message-wrapper ${typeClass}">
                                     ${!isAdmin ? `<div class="msg-sender-avatar" title="${activeResidentName}">${avatarInitial}</div>` : ''}
                                     <div class="message-bubble">
-                                        <p>${safeMsg}</p>
+                                        ${safeMsg ? `<p>${safeMsg}</p>` : ''}
+                                        ${docCardHtml}
                                         <div class="msg-footer">
                                             <span class="msg-time">${msg.time}</span>
                                             ${isAdmin ? `
@@ -846,23 +905,255 @@
             setTimeout(() => $btn.css('opacity', '1'), 400);
         });
 
-        // Send Reply Message
+        // Document Card Helpers
+        function getFileIconAndBadge(ext) {
+            ext = (ext || '').toLowerCase();
+            if (ext === 'pdf') {
+                return {
+                    badge: 'PDF Document',
+                    color: '#ef4444',
+                    bg: '#fee2e2',
+                    icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ef4444" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>'
+                };
+            }
+            if (ext === 'doc' || ext === 'docx') {
+                return {
+                    badge: 'Word Document',
+                    color: '#2563eb',
+                    bg: '#dbeafe',
+                    icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>'
+                };
+            }
+            if (ext === 'jpg' || ext === 'jpeg' || ext === 'png') {
+                return {
+                    badge: 'Image Document',
+                    color: '#059669',
+                    bg: '#dcfce7',
+                    icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#059669" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>'
+                };
+            }
+            return {
+                badge: 'Official Document',
+                color: '#64748b',
+                bg: '#f1f5f9',
+                icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#64748b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>'
+            };
+        }
+
+        function renderChatDocCard(filePath, fileName, isAdmin) {
+            if (!filePath) return '';
+            const ext = filePath.split('.').pop().toLowerCase();
+            const meta = getFileIconAndBadge(ext);
+            const rawName = fileName || filePath.split('/').pop();
+            const safeName = $('<div>').text(rawName).html();
+            const fullUrl = '../' + filePath.replace(/^\/+/, '');
+
+            return `
+                <div class="chat-doc-card">
+                    <div class="chat-doc-main">
+                        <div class="chat-doc-icon" style="background:${meta.bg};">
+                            ${meta.icon}
+                        </div>
+                        <div class="chat-doc-info">
+                            <span class="chat-doc-title" title="${safeName}">${safeName}</span>
+                            <span class="chat-doc-badge">${meta.badge}</span>
+                        </div>
+                    </div>
+                    <div class="chat-doc-actions">
+                        <a href="${fullUrl}" download="${safeName}" class="btn-chat-doc-dl" target="_blank">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Download
+                        </a>
+                        <button type="button" class="btn-chat-doc-print" onclick="printChatDoc('${fullUrl}', '${ext}')">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            Print
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.printChatDoc = function(fileUrl, ext) {
+            ext = (ext || '').toLowerCase();
+            if (ext === 'pdf') {
+                const printWindow = window.open(fileUrl, '_blank');
+                if (printWindow) {
+                    printWindow.onload = function() {
+                        try { printWindow.print(); } catch(e) {}
+                    };
+                }
+            } else if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
+                const printWindow = window.open('', '_blank');
+                if (printWindow) {
+                    printWindow.document.write(`
+                        <html>
+                            <head><title>Print Document</title><style>body{margin:0;display:flex;align-items:center;justify-content:center;background:#fff;} img{max-width:98vw;max-height:98vh;object-fit:contain;}</style></head>
+                            <body onload="window.print();">
+                                <img src="${fileUrl}" alt="Print Preview" />
+                            </body>
+                        </html>
+                    `);
+                    printWindow.document.close();
+                }
+            } else {
+                alert('For Word/Office documents (.doc, .docx), please download the file to open and print directly.');
+                const tempLink = document.createElement('a');
+                tempLink.href = fileUrl;
+                tempLink.download = '';
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
+            }
+        };
+
+        // Attachment Dropdown Handlers
+        $('#btn-chat-attach').on('click', function(e) {
+            e.stopPropagation();
+            $('#chat-attach-menu').toggle();
+        });
+
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.chat-attachment-dropdown-wrap').length) {
+                $('#chat-attach-menu').hide();
+            }
+        });
+
+        // 1. Upload from device
+        $('#btn-attach-upload').on('click', function() {
+            $('#chat-attach-menu').hide();
+            $('#admin-chat-file-input').click();
+        });
+
+        $('#admin-chat-file-input').on('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                if (file.size > 20 * 1024 * 1024) {
+                    alert('File is too large (max 20MB).');
+                    $(this).val('');
+                    return;
+                }
+                stagedFile = file;
+                stagedServiceForm = null;
+                const sizeKb = (file.size / 1024).toFixed(1);
+                $('#staged-att-name').text(file.name + ' (' + sizeKb + ' KB)');
+                $('#admin-staged-attachment').fadeIn(150);
+                $('#admin-chat-input').focus();
+            }
+        });
+
+        // 2. Select ready service form
+        $('#btn-attach-service-form').on('click', function() {
+            $('#chat-attach-menu').hide();
+            $('#serviceFormsModal').fadeIn(200);
+            loadServiceForms();
+        });
+
+        function loadServiceForms() {
+            $('#service-forms-list').html('<p style="text-align:center;color:#94a3b8;padding:1.5rem;">Loading available service forms...</p>');
+            $.get('api/admin_get_service_forms.php', function(res) {
+                if (res.status === 'success' && res.forms && res.forms.length > 0) {
+                    let html = '';
+                    res.forms.forEach(f => {
+                        const ext = f.file_path.split('.').pop().toUpperCase();
+                        html += `
+                            <div class="service-form-card" data-path="${f.file_path}" data-title="${f.title}" data-name="${f.file_name}">
+                                <div class="service-form-card-info">
+                                    <div class="service-form-icon-wrap">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="service-form-card-title">${f.title}</h4>
+                                        <p class="service-form-card-sub">${f.file_name} • <span style="font-weight:700;color:#15803d;">${ext}</span></p>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-select-service-form">Attach Form</button>
+                            </div>
+                        `;
+                    });
+                    $('#service-forms-list').html(html);
+                } else {
+                    $('#service-forms-list').html(`
+                        <div style="text-align:center;padding:2.5rem 1rem;color:#64748b;">
+                            <p style="margin:0 0 0.5rem 0;font-weight:700;">No Ready-Made Service Forms Available</p>
+                            <span style="font-size:0.82rem;color:#94a3b8;">You can attach document templates to services in the Services management page first.</span>
+                        </div>
+                    `);
+                }
+            });
+        }
+
+        $(document).on('click', '.service-form-card, .btn-select-service-form', function(e) {
+            const card = $(this).closest('.service-form-card');
+            const path = card.data('path');
+            const title = card.data('title');
+            const name = card.data('name');
+            stagedServiceForm = { path: path, name: `${title} (${name})` };
+            stagedFile = null;
+            $('#admin-chat-file-input').val('');
+            $('#staged-att-name').text(stagedServiceForm.name);
+            $('#admin-staged-attachment').fadeIn(150);
+            $('#serviceFormsModal').fadeOut(150);
+            $('#admin-chat-input').focus();
+        });
+
+        $('#close-service-forms-modal').on('click', function() {
+            $('#serviceFormsModal').fadeOut(150);
+        });
+
+        // 3. Remove staged attachment
+        $('#btn-remove-staged-att').on('click', function() {
+            stagedFile = null;
+            stagedServiceForm = null;
+            $('#admin-chat-file-input').val('');
+            $('#admin-staged-attachment').fadeOut(150);
+        });
+
+        // Send Reply Message with Attachment Support
         function sendReply() {
             const msg = $('#admin-chat-input').val();
-            if (!activeSessionId || msg.trim() === '') return;
+            if (!activeSessionId) return;
+            if (msg.trim() === '' && !stagedFile && !stagedServiceForm) return;
 
             const $btn = $('#admin-send-btn');
             $btn.prop('disabled', true).css('opacity', '0.7');
 
-            $.post('api/admin_send_message.php', { session_id: activeSessionId, message: msg }, function(res) {
-                $btn.prop('disabled', false).css('opacity', '1');
-                if (res.status === 'success') {
-                    $('#admin-chat-input').val('');
-                    fetchMessages(true);
-                    fetchSessions();
+            const formData = new FormData();
+            formData.append('session_id', activeSessionId);
+            formData.append('message', msg.trim());
+
+            if (stagedFile) {
+                formData.append('chatDocument', stagedFile);
+            }
+            if (stagedServiceForm) {
+                formData.append('service_doc_path', stagedServiceForm.path);
+                formData.append('service_doc_name', stagedServiceForm.name);
+            }
+
+            $.ajax({
+                url: 'api/admin_send_message.php',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    $btn.prop('disabled', false).css('opacity', '1');
+                    if (res.status === 'success') {
+                        $('#admin-chat-input').val('');
+                        stagedFile = null;
+                        stagedServiceForm = null;
+                        $('#admin-chat-file-input').val('');
+                        $('#admin-staged-attachment').hide();
+                        fetchMessages(true);
+                        fetchSessions();
+                    } else {
+                        alert(res.message || 'Failed to send message');
+                    }
+                },
+                error: function() {
+                    $btn.prop('disabled', false).css('opacity', '1');
+                    alert('Network error while sending message.');
                 }
-            }).fail(function() {
-                $btn.prop('disabled', false).css('opacity', '1');
             });
         }
 

@@ -9,7 +9,7 @@ if(empty($token)) {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT m.sender, m.message, DATE_FORMAT(m.created_at, '%h:%i %p') as time 
+$stmt = $conn->prepare("SELECT m.sender, m.message, m.attachment_file, m.attachment_name, DATE_FORMAT(m.created_at, '%h:%i %p') as time 
                         FROM chat_messages m 
                         JOIN chat_sessions s ON m.session_id = s.id 
                         WHERE s.session_token = ? 

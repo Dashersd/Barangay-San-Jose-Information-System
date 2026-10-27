@@ -15,6 +15,7 @@ function init_services_table($conn) {
         `title` VARCHAR(150) NOT NULL,
         `description` TEXT NOT NULL,
         `requirements` TEXT DEFAULT NULL,
+        `document_file` VARCHAR(255) DEFAULT NULL,
         `fee` VARCHAR(100) DEFAULT 'Free',
         `processing_time` VARCHAR(100) DEFAULT 'Same Day',
         `icon` VARCHAR(50) NOT NULL DEFAULT 'document',
@@ -28,6 +29,12 @@ function init_services_table($conn) {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
 
     $conn->query($tableSql);
+
+    // Migration check: Ensure document_file column exists for existing tables
+    $colCheck = $conn->query("SHOW COLUMNS FROM `services` LIKE 'document_file'");
+    if ($colCheck && $colCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE `services` ADD COLUMN `document_file` VARCHAR(255) NULL AFTER `requirements`");
+    }
 
     // Check if table is empty; if so, seed the default services from Barangay San Jose
     $checkRes = $conn->query("SELECT COUNT(*) AS total FROM `services`");
@@ -155,6 +162,20 @@ function get_service_by_id($conn, $id) {
 }
 
 /**
+ * Safely delete an uploaded document file from disk
+ */
+function delete_service_document_file($filepath) {
+    if (empty($filepath)) return false;
+    // Prevent directory traversal
+    $cleanRel = str_replace(['..\\', '../', '..'], '', trim($filepath));
+    $fullPath = __DIR__ . '/' . ltrim($cleanRel, '/\\');
+    if (is_file($fullPath) && file_exists($fullPath)) {
+        return @unlink($fullPath);
+    }
+    return false;
+}
+
+/**
  * Add a new service
  */
 function add_service($conn, $data) {
@@ -163,6 +184,7 @@ function add_service($conn, $data) {
     $title = trim($data['title'] ?? '');
     $desc = trim($data['description'] ?? '');
     $reqs = trim($data['requirements'] ?? '');
+    $docFile = !empty($data['document_file']) ? trim($data['document_file']) : null;
     $fee = trim($data['fee'] ?? 'Free');
     $time = trim($data['processing_time'] ?? 'Same Day');
     $icon = trim($data['icon'] ?? 'document');
@@ -174,12 +196,12 @@ function add_service($conn, $data) {
     if (empty($title)) return false;
 
     $stmt = $conn->prepare("INSERT INTO `services` 
-        (`title`, `description`, `requirements`, `fee`, `processing_time`, `icon`, `status`, `btn_text`, `btn_link`, `display_order`) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        (`title`, `description`, `requirements`, `document_file`, `fee`, `processing_time`, `icon`, `status`, `btn_text`, `btn_link`, `display_order`) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) return false;
 
-    $stmt->bind_param("sssssssssi", $title, $desc, $reqs, $fee, $time, $icon, $status, $btnText, $btnLink, $order);
+    $stmt->bind_param("ssssssssssi", $title, $desc, $reqs, $docFile, $fee, $time, $icon, $status, $btnText, $btnLink, $order);
     $ok = $stmt->execute();
     $stmt->close();
     return $ok;
@@ -205,12 +227,21 @@ function update_service($conn, $id, $data) {
     $btnLink = trim($data['btn_link'] ?? 'contact.php');
     $order = intval($data['display_order'] ?? 0);
 
+    // If document_file key is passed, use it; otherwise preserve current
+    if (array_key_exists('document_file', $data)) {
+        $docFile = !empty($data['document_file']) ? trim($data['document_file']) : null;
+    } else {
+        $current = get_service_by_id($conn, $id);
+        $docFile = $current ? ($current['document_file'] ?? null) : null;
+    }
+
     if (empty($title)) return false;
 
     $stmt = $conn->prepare("UPDATE `services` SET 
         `title` = ?, 
         `description` = ?, 
         `requirements` = ?, 
+        `document_file` = ?,
         `fee` = ?, 
         `processing_time` = ?, 
         `icon` = ?, 
@@ -222,7 +253,7 @@ function update_service($conn, $id, $data) {
 
     if (!$stmt) return false;
 
-    $stmt->bind_param("sssssssssii", $title, $desc, $reqs, $fee, $time, $icon, $status, $btnText, $btnLink, $order, $id);
+    $stmt->bind_param("ssssssssssii", $title, $desc, $reqs, $docFile, $fee, $time, $icon, $status, $btnText, $btnLink, $order, $id);
     $ok = $stmt->execute();
     $stmt->close();
     return $ok;
@@ -236,6 +267,12 @@ function delete_service($conn, $id) {
 
     $id = intval($id);
     if ($id <= 0) return false;
+
+    // Delete attached physical file if exists
+    $srv = get_service_by_id($conn, $id);
+    if ($srv && !empty($srv['document_file'])) {
+        delete_service_document_file($srv['document_file']);
+    }
 
     $stmt = $conn->prepare("DELETE FROM `services` WHERE `id` = ?");
     if (!$stmt) return false;
