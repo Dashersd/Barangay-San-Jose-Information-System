@@ -62,6 +62,41 @@ if ($home_announcements_res) {
         $home_announcements[] = $row;
     }
 }
+
+// Fetch Hero Background Slides & Slideshow Speed
+$hero_slides = [];
+$hero_speed = 5;
+if (isset($conn) && !$conn->connect_error) {
+    $b_check = $conn->query("SHOW TABLES LIKE 'barangay_information'");
+    if ($b_check && $b_check->num_rows > 0) {
+        $col_check = $conn->query("SHOW COLUMNS FROM `barangay_information` LIKE 'hero_slideshow_speed'");
+        if ($col_check && $col_check->num_rows > 0) {
+            $speed_res = $conn->query("SELECT hero_slideshow_speed FROM barangay_information LIMIT 1");
+            if ($speed_res && $s_row = $speed_res->fetch_assoc()) {
+                if (!empty($s_row['hero_slideshow_speed'])) {
+                    $hero_speed = intval($s_row['hero_slideshow_speed']);
+                    if (!in_array($hero_speed, [3, 5])) $hero_speed = 5;
+                }
+            }
+        }
+    }
+
+    $h_check = $conn->query("SHOW TABLES LIKE 'hero_backgrounds'");
+    if ($h_check && $h_check->num_rows > 0) {
+        $h_res = $conn->query("SELECT * FROM hero_backgrounds WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
+        if ($h_res) {
+            while ($h_row = $h_res->fetch_assoc()) {
+                if (file_exists(__DIR__ . '/' . $h_row['image_path'])) {
+                    $hero_slides[] = $h_row['image_path'];
+                }
+            }
+        }
+    }
+}
+if (empty($hero_slides)) {
+    $hero_slides[] = 'assets/images/Barangay Hall.png';
+}
+
 // Barangay San Jose Web-Based Information System
 ?>
 <!DOCTYPE html>
@@ -87,6 +122,71 @@ if ($home_announcements_res) {
 
     <!-- AOS Animation CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+    .hero,
+    .hero-section {
+        position: relative !important;
+        overflow: hidden !important;
+        min-height: 80vh !important;
+        display: flex !important;
+        align-items: center !important;
+        color: #ffffff !important;
+        padding: 10rem 0 !important;
+        background: #0d2847 !important;
+    }
+
+    .hero::before,
+    .hero-section::before {
+        display: none !important;
+        content: none !important;
+    }
+
+    .hero-bg-container {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+    }
+
+    .hero-bg-slide {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background-position: center !important;
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+        opacity: 0;
+        transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        will-change: opacity !important;
+    }
+
+    .hero-bg-slide.active {
+        opacity: 1 !important;
+    }
+
+    .hero-overlay {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: linear-gradient(90deg, rgba(13, 40, 71, 0.88) 0%, rgba(13, 40, 71, 0.68) 45%, rgba(0, 0, 0, 0.35) 100%) !important;
+        z-index: 2 !important;
+        pointer-events: none !important;
+    }
+
+    .hero-container {
+        position: relative !important;
+        z-index: 3 !important;
+    }
+    </style>
 </head>
 
 <body>
@@ -130,7 +230,15 @@ if ($home_announcements_res) {
     </nav>
 
     <!-- 1. Hero Section -->
-    <section class="hero">
+    <section class="hero hero-section" id="hero-section" data-speed="<?= $hero_speed ?>">
+        <div class="hero-bg-container">
+            <?php foreach ($hero_slides as $i => $slide_path): ?>
+                <div class="hero-bg-slide <?= $i === 0 ? 'active' : '' ?>" style="background-image: url('<?= htmlspecialchars($slide_path) ?>');"></div>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="hero-overlay"></div>
+
         <div class="container hero-container">
             <div class="hero-content">
                 <p class="hero-subtitle" data-aos="fade-up">WELCOME TO</p>
@@ -780,6 +888,47 @@ if ($home_announcements_res) {
             closeHomeLightbox();
         }
     });
+
+    function initHeroBackgroundSlideshow() {
+        const heroSection = document.getElementById('hero-section');
+        if (!heroSection) return;
+        const slides = Array.from(heroSection.querySelectorAll('.hero-bg-slide'));
+        if (!slides || slides.length <= 1) return;
+
+        const speedSeconds = parseInt(heroSection.getAttribute('data-speed'), 10) || 5;
+        const intervalMs = Math.max(2, speedSeconds) * 1000;
+        let currentIdx = 0;
+
+        slides.forEach(function(s, i) {
+            s.style.opacity = (i === 0) ? '1' : '0';
+            s.style.zIndex = (i === 0) ? '1' : '0';
+        });
+
+        setInterval(function() {
+            const prevIdx = currentIdx;
+            currentIdx = (currentIdx + 1) % slides.length;
+
+            const prevSlide = slides[prevIdx];
+            const nextSlide = slides[currentIdx];
+
+            nextSlide.style.zIndex = '2';
+            nextSlide.style.opacity = '1';
+
+            prevSlide.style.zIndex = '1';
+
+            setTimeout(function() {
+                prevSlide.style.opacity = '0';
+                prevSlide.style.zIndex = '0';
+                nextSlide.style.zIndex = '1';
+            }, 1300);
+        }, intervalMs);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHeroBackgroundSlideshow);
+    } else {
+        initHeroBackgroundSlideshow();
+    }
     </script>
 </body>
 

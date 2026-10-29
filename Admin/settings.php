@@ -89,6 +89,18 @@ foreach ($columnsToCheck as $col => $def) {
     ensureColumnExists($conn, 'barangay_information', $col, $def);
 }
 
+// Auto-create hero_backgrounds table
+$conn->query("CREATE TABLE IF NOT EXISTS `hero_backgrounds` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `image_path` VARCHAR(255) NOT NULL,
+  `sort_order` INT DEFAULT 0,
+  `is_active` TINYINT(1) DEFAULT 1,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+// Ensure hero_slideshow_speed column exists in barangay_information
+ensureColumnExists($conn, 'barangay_information', 'hero_slideshow_speed', "INT DEFAULT 5");
+
 // Auto-seed barangay_information if 0 rows exist
 $infoCountRes = $conn->query("SELECT COUNT(*) FROM `barangay_information`");
 if ($infoCountRes && (int)$infoCountRes->fetch_row()[0] === 0) {
@@ -358,6 +370,75 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['action']) && 
     exit;
 }
 
+// Action 5: Upload Hero Background Images & Save Slideshow Speed
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['action']) && $_POST['action'] === 'upload_hero_bg') {
+    $speed = isset($_POST['hero_slideshow_speed']) ? intval($_POST['hero_slideshow_speed']) : 5;
+    if (!in_array($speed, [3, 5])) $speed = 5;
+
+    $conn->query("UPDATE barangay_information SET hero_slideshow_speed = $speed WHERE id = 1");
+
+    $upload_dir = '../uploads/hero/';
+    if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+
+    $uploaded_count = 0;
+    if (isset($_FILES['hero_images']) && !empty($_FILES['hero_images']['name'][0])) {
+        $total_files = count($_FILES['hero_images']['name']);
+        for ($i = 0; $i < $total_files; $i++) {
+            if ($_FILES['hero_images']['error'][$i] === UPLOAD_ERR_OK) {
+                $orig_name = $_FILES['hero_images']['name'][$i];
+                $ext = strtolower(pathinfo($orig_name, PATHINFO_EXTENSION));
+                if (in_array($ext, ['png', 'jpg', 'jpeg', 'webp'])) {
+                    $filename = 'hero_' . time() . '_' . uniqid() . '.' . $ext;
+                    $target = $upload_dir . $filename;
+                    if (move_uploaded_file($_FILES['hero_images']['tmp_name'][$i], $target)) {
+                        $db_path = 'uploads/hero/' . $filename;
+                        $stmt = $conn->prepare("INSERT INTO hero_backgrounds (image_path) VALUES (?)");
+                        $stmt->bind_param("s", $db_path);
+                        $stmt->execute();
+                        $stmt->close();
+                        $uploaded_count++;
+                    }
+                }
+            }
+        }
+    }
+
+    if ($uploaded_count > 0) {
+        logActivity($conn, 'Hero Slides Uploaded', "$uploaded_count background image(s) uploaded for hero section ($speed-second interval).");
+        header("Location: settings.php?msg=hero_uploaded&count=$uploaded_count&tab=hero_bg");
+        exit;
+    } else {
+        logActivity($conn, 'Hero Slideshow Settings Updated', "Slideshow interval set to $speed seconds.");
+        header("Location: settings.php?msg=hero_speed_saved&tab=hero_bg");
+        exit;
+    }
+}
+
+// Action 6: Delete Hero Background Image
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_hero_bg') {
+    $hero_id = intval($_POST['hero_id'] ?? 0);
+    if ($hero_id > 0) {
+        $stmt = $conn->prepare("SELECT image_path FROM hero_backgrounds WHERE id = ?");
+        $stmt->bind_param("i", $hero_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($res && $row = $res->fetch_assoc()) {
+            $file = '../' . $row['image_path'];
+            if (file_exists($file)) {
+                @unlink($file);
+            }
+            $del_stmt = $conn->prepare("DELETE FROM hero_backgrounds WHERE id = ?");
+            $del_stmt->bind_param("i", $hero_id);
+            $del_stmt->execute();
+            $del_stmt->close();
+            logActivity($conn, 'Hero Slide Deleted', "Deleted hero background ID $hero_id");
+        }
+        $stmt->close();
+    }
+    header("Location: settings.php?msg=hero_deleted&tab=hero_bg");
+    exit;
+}
+
 // =========================================================================
 // 4. DATA RETRIEVAL FOR RENDERING
 // =========================================================================
@@ -399,6 +480,16 @@ if ($urRes) $unreadChatCount = (int)$urRes->fetch_row()[0];
 $msg = $_GET['msg'] ?? '';
 $err = $_GET['err'] ?? '';
 $activeTab = $_GET['tab'] ?? 'profile';
+$active_tab = $activeTab;
+
+// Fetch Hero Background Slides
+$hero_slides = [];
+$h_res = $conn->query("SELECT * FROM hero_backgrounds ORDER BY sort_order ASC, id ASC");
+if ($h_res) {
+    while ($h_row = $h_res->fetch_assoc()) {
+        $hero_slides[] = $h_row;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -421,13 +512,16 @@ $activeTab = $_GET['tab'] ?? 'profile';
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="css/dashboard.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="css/settings.css?v=<?= time() ?>">
 
     <style>
-        /* Modern Government Settings & Control Center Styling */
+        /* Modern Government Settings & Control Center Styling (Barangay San Jose Blue & Navy Theme) */
         :root {
-            --gov-green: #093d25;
-            --gov-green-hover: #062b1a;
-            --gov-green-subtle: #ecfdf5;
+            --gov-navy: #0d2847;
+            --gov-navy-hover: #091e36;
+            --gov-blue: #1a73e8;
+            --gov-blue-hover: #1557b0;
+            --gov-blue-subtle: #e8f0fe;
             --gov-gold: #fbbf24;
             --slate-border: #e2e8f0;
             --slate-bg: #f8fafc;
@@ -454,9 +548,9 @@ $activeTab = $_GET['tab'] ?? 'profile';
             animation: fadeIn 0.3s ease;
         }
         .settings-alert-success {
-            background-color: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            color: #065f46;
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
         }
         .settings-alert-danger {
             background-color: #fef2f2;
@@ -483,38 +577,46 @@ $activeTab = $_GET['tab'] ?? 'profile';
             opacity: 1;
         }
 
-        /* 5-Tab Navigation Bar */
+        /* 6-Tab Navigation Bar - Single Row Layout */
         .settings-tabs-wrapper {
             background: #ffffff;
             border: 1px solid var(--slate-border);
             border-radius: 12px;
-            padding: 0.5rem;
+            padding: 0.45rem;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 2px 6px rgba(13, 40, 71, 0.04);
         }
         .settings-nav-tabs {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.35rem;
             list-style: none;
             margin: 0;
             padding: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .settings-nav-tabs::-webkit-scrollbar {
+            display: none;
         }
         .settings-nav-item {
             flex: 1 1 auto;
+            min-width: 0;
         }
         .settings-tab-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.6rem;
+            gap: 0.45rem;
             width: 100%;
-            padding: 0.85rem 1.15rem;
+            padding: 0.75rem 0.7rem;
             border-radius: 8px;
             border: none;
             background: transparent;
             color: var(--slate-text-muted);
-            font-size: 0.92rem;
+            font-size: 0.84rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -522,16 +624,17 @@ $activeTab = $_GET['tab'] ?? 'profile';
             white-space: nowrap;
         }
         .settings-tab-btn i {
-            font-size: 1.15rem;
+            font-size: 1rem;
+            flex-shrink: 0;
         }
         .settings-tab-btn:hover {
-            background-color: var(--slate-bg);
-            color: var(--slate-text-dark);
+            background-color: var(--gov-blue-subtle);
+            color: var(--gov-blue);
         }
         .settings-tab-btn.active {
-            background-color: var(--gov-green);
+            background-color: var(--gov-navy);
             color: #ffffff;
-            box-shadow: 0 4px 10px rgba(9, 61, 37, 0.25);
+            box-shadow: 0 4px 10px rgba(13, 40, 71, 0.25);
         }
         .settings-tab-btn.active i {
             color: var(--gov-gold);
@@ -572,8 +675,8 @@ $activeTab = $_GET['tab'] ?? 'profile';
             width: 44px;
             height: 44px;
             border-radius: 10px;
-            background: var(--gov-green-subtle);
-            color: var(--gov-green);
+            background: var(--gov-blue-subtle);
+            color: var(--gov-blue);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -637,8 +740,8 @@ $activeTab = $_GET['tab'] ?? 'profile';
         }
         .form-control-custom:focus {
             outline: none;
-            border-color: var(--gov-green);
-            box-shadow: 0 0 0 3px rgba(9, 61, 37, 0.12);
+            border-color: var(--gov-blue);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.14);
         }
         textarea.form-control-custom {
             resize: vertical;
@@ -699,8 +802,8 @@ $activeTab = $_GET['tab'] ?? 'profile';
             gap: 0.5rem;
             padding: 0.65rem 1.25rem;
             background: #ffffff;
-            color: var(--gov-green);
-            border: 1px solid var(--gov-green);
+            color: var(--gov-blue);
+            border: 1px solid var(--gov-blue);
             border-radius: 8px;
             font-size: 0.88rem;
             font-weight: 600;
@@ -708,7 +811,7 @@ $activeTab = $_GET['tab'] ?? 'profile';
             transition: all 0.2s;
         }
         .btn-upload-file:hover {
-            background: var(--gov-green);
+            background: var(--gov-blue);
             color: #ffffff;
         }
 
@@ -745,7 +848,7 @@ $activeTab = $_GET['tab'] ?? 'profile';
             align-items: center;
             gap: 0.5rem;
             padding: 0.8rem 1.75rem;
-            background: var(--gov-green);
+            background: var(--gov-blue);
             color: #ffffff;
             border: none;
             border-radius: 8px;
@@ -753,10 +856,10 @@ $activeTab = $_GET['tab'] ?? 'profile';
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 4px 8px rgba(9, 61, 37, 0.2);
+            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.25);
         }
         .btn-save-primary:hover {
-            background: var(--gov-green-hover);
+            background: var(--gov-blue-hover);
             transform: translateY(-1px);
         }
         .btn-danger-custom {
@@ -792,11 +895,11 @@ $activeTab = $_GET['tab'] ?? 'profile';
             align-items: center;
             gap: 1.5rem;
             padding: 1.5rem;
-            background: linear-gradient(135deg, #093d25 0%, #0d2847 100%);
+            background: linear-gradient(135deg, #0d2847 0%, #1a73e8 100%);
             border-radius: 12px;
             color: #ffffff;
             margin-bottom: 2rem;
-            box-shadow: 0 6px 15px rgba(9, 61, 37, 0.2);
+            box-shadow: 0 6px 15px rgba(13, 40, 71, 0.22);
         }
         .admin-badge-avatar {
             width: 72px;
@@ -821,7 +924,7 @@ $activeTab = $_GET['tab'] ?? 'profile';
         .admin-badge-info p {
             margin: 0 0 0.65rem 0;
             font-size: 0.92rem;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
         }
         .admin-badge-pills {
             display: flex;
@@ -845,9 +948,9 @@ $activeTab = $_GET['tab'] ?? 'profile';
             border: 1px solid rgba(251, 191, 36, 0.4);
         }
         .badge-pill-emerald {
-            background: rgba(16, 185, 129, 0.2);
-            color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.4);
+            background: rgba(56, 189, 248, 0.2);
+            color: #bae6fd;
+            border: 1px solid rgba(56, 189, 248, 0.4);
         }
 
         /* Tab 4: System Health Cards Grid */
@@ -878,14 +981,14 @@ $activeTab = $_GET['tab'] ?? 'profile';
             left: 0;
             right: 0;
             height: 4px;
-            background: var(--gov-green);
+            background: var(--gov-blue);
         }
         .sys-stat-icon {
             width: 42px;
             height: 42px;
             border-radius: 10px;
-            background: #f1f5f9;
-            color: var(--gov-green);
+            background: var(--gov-blue-subtle);
+            color: var(--gov-blue);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -908,7 +1011,7 @@ $activeTab = $_GET['tab'] ?? 'profile';
         }
         .sys-stat-sub {
             font-size: 0.8rem;
-            color: #10b981;
+            color: var(--gov-blue);
             display: flex;
             align-items: center;
             gap: 0.3rem;
@@ -1259,6 +1362,30 @@ $activeTab = $_GET['tab'] ?? 'profile';
                             </div>
                             <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
                         </div>
+                    <?php elseif ($msg === 'hero_uploaded'): ?>
+                        <div class="settings-alert settings-alert-success">
+                            <div class="alert-content">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span><strong>Success!</strong> <?= (isset($_GET['count']) ? intval($_GET['count']) : '') ?> Hero background image(s) uploaded successfully!</span>
+                            </div>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
+                        </div>
+                    <?php elseif ($msg === 'hero_speed_saved'): ?>
+                        <div class="settings-alert settings-alert-success">
+                            <div class="alert-content">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span><strong>Success!</strong> Hero slideshow settings updated successfully!</span>
+                            </div>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
+                        </div>
+                    <?php elseif ($msg === 'hero_deleted'): ?>
+                        <div class="settings-alert settings-alert-success">
+                            <div class="alert-content">
+                                <i class="bi bi-trash3-fill"></i>
+                                <span><strong>Removed:</strong> Hero background image removed successfully!</span>
+                            </div>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
+                        </div>
                     <?php endif; ?>
 
                     <?php if (!empty($err)): ?>
@@ -1271,13 +1398,19 @@ $activeTab = $_GET['tab'] ?? 'profile';
                         </div>
                     <?php endif; ?>
 
-                    <!-- 5-Tab Navigation Bar -->
+                    <!-- 6-Tab Navigation Bar -->
                     <div class="settings-tabs-wrapper">
                         <ul class="settings-nav-tabs">
                             <li class="settings-nav-item">
                                 <button type="button" class="settings-tab-btn <?= $activeTab === 'profile' ? 'active' : '' ?>" data-tab="profile">
                                     <i class="bi bi-building"></i>
                                     <span>Barangay Profile</span>
+                                </button>
+                            </li>
+                            <li class="settings-nav-item">
+                                <button type="button" class="settings-tab-btn tab-btn <?= $activeTab === 'hero_bg' ? 'active' : '' ?>" data-tab="hero_bg" onclick="switchTab('hero_bg', this)">
+                                    <i class="bi bi-images"></i>
+                                    <span>Hero Background</span>
                                 </button>
                             </li>
                             <li class="settings-nav-item">
@@ -1414,6 +1547,102 @@ $activeTab = $_GET['tab'] ?? 'profile';
                     </div>
 
                     <!-- ========================================================= -->
+                    <!-- TAB 1B: HERO BACKGROUND & SLIDESHOW -->
+                    <!-- ========================================================= -->
+                    <div id="tab-hero_bg" class="settings-tab-pane tab-pane <?= $active_tab === 'hero_bg' ? 'active' : '' ?>">
+                        <div class="settings-card">
+                            <div class="settings-card-header">
+                                <div class="card-header-title">
+                                    <div class="card-header-icon">
+                                        <i class="bi bi-images"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="settings-card-title">Hero Background & Slideshow</h3>
+                                        <p class="settings-card-subtitle">Manage the homepage hero background photo. If multiple photos are uploaded, they will automatically smooth crossfade in the background behind the static text.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <?php 
+                            $slide_count = count($hero_slides);
+                            $current_speed = intval($info['hero_slideshow_speed'] ?? 5);
+                            if (!in_array($current_speed, [3, 5])) $current_speed = 5;
+                            ?>
+                            <div class="hero-status-pill <?= $slide_count > 1 ? 'status-multi' : ($slide_count === 1 ? 'status-single' : 'status-empty') ?>">
+                                <?php if ($slide_count > 1): ?>
+                                    <i class="bi bi-play-circle-fill"></i> <div><strong>Smooth Slideshow Active:</strong> <?= $slide_count ?> background images rotating every <?= $current_speed ?> seconds. The hero text remains static and unchanged.</div>
+                                <?php elseif ($slide_count === 1): ?>
+                                    <i class="bi bi-image"></i> <div><strong>Single Static Background:</strong> 1 custom background photo is currently active on the homepage hero section.</div>
+                                <?php else: ?>
+                                    <i class="bi bi-info-circle-fill"></i> <div><strong>Default Background:</strong> No custom photos uploaded yet. The homepage is currently displaying the default photo (<code>assets/images/Barangay Hall.png</code>).</div>
+                                <?php endif; ?>
+                            </div>
+
+                            <form action="settings.php" method="POST" enctype="multipart/form-data" class="hero-upload-form">
+                                <input type="hidden" name="action" value="upload_hero_bg">
+                                <div class="form-row">
+                                    <div class="form-group" style="flex: 2;">
+                                        <label><i class="bi bi-cloud-arrow-up-fill"></i> Upload Background Photo(s)</label>
+                                        <input type="file" name="hero_images[]" multiple accept="image/png, image/jpeg, image/jpg, image/webp" class="form-control" id="heroImagesInput" onchange="previewHeroUploads(this)">
+                                        <span class="form-hint">You can select multiple photos at once. Supported formats: PNG, JPG, JPEG, WEBP. High-resolution landscape photos recommended.</span>
+                                    </div>
+                                    <div class="form-group" style="flex: 1;">
+                                        <label><i class="bi bi-stopwatch"></i> Slideshow Speed</label>
+                                        <select name="hero_slideshow_speed" class="form-control">
+                                            <option value="3" <?= $current_speed === 3 ? 'selected' : '' ?>>3 Seconds (Fast)</option>
+                                            <option value="5" <?= $current_speed === 5 ? 'selected' : '' ?>>5 Seconds (Recommended - Smooth)</option>
+                                        </select>
+                                        <span class="form-hint">Controls how long each background photo remains before smoothly crossfading to the next.</span>
+                                    </div>
+                                </div>
+
+                                <div id="heroUploadPreview" class="hero-preview-row" style="display: none;"></div>
+
+                                <button type="submit" class="btn-save-settings">
+                                    <i class="bi bi-upload"></i> Save & Upload Backgrounds
+                                </button>
+                            </form>
+
+                            <div class="hero-gallery-section" style="margin-top: 30px; padding-top: 25px; border-top: 1px solid #e2e8f0;">
+                                <h4 class="hero-gallery-title" style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="bi bi-collection"></i> Active Background Images (<?= $slide_count ?>)
+                                </h4>
+                                
+                                <?php if ($slide_count === 0): ?>
+                                    <div class="hero-empty-state" style="text-align: center; padding: 30px 20px; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; color: #64748b; max-width: 100%; box-sizing: border-box;">
+                                        <div class="hero-default-preview" style="width: 100%; max-width: 320px; height: 160px; margin: 0 auto 16px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; background: #0f172a;">
+                                            <img src="../assets/images/Barangay Hall.png" alt="Default Hero Image" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                        </div>
+                                        <p style="margin: 0; font-size: 0.95rem; color: #334155;"><strong>Currently using the default Barangay San Jose background photo.</strong></p>
+                                        <p style="margin: 5px 0 0; font-size: 0.85rem; color: #64748b;">Upload photos above to customize your homepage hero background or activate a smooth slideshow.</p>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="hero-grid">
+                                        <?php foreach ($hero_slides as $index => $slide): ?>
+                                            <div class="hero-card">
+                                                <div class="hero-card-img-wrap" style="position: relative; width: 100%; height: 160px; background: #0f172a; overflow: hidden;">
+                                                    <img src="../<?= htmlspecialchars($slide['image_path']) ?>" alt="Hero Slide <?= $index + 1 ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                                    <span class="hero-card-badge">Slide #<?= $index + 1 ?></span>
+                                                </div>
+                                                <div class="hero-card-footer">
+                                                    <span class="hero-card-date"><i class="bi bi-calendar3"></i> <?= date('M d, Y', strtotime($slide['created_at'])) ?></span>
+                                                    <form action="settings.php" method="POST" onsubmit="return confirm('Are you sure you want to remove this background image?');" style="margin: 0;">
+                                                        <input type="hidden" name="action" value="delete_hero_bg">
+                                                        <input type="hidden" name="hero_id" value="<?= $slide['id'] ?>">
+                                                        <button type="submit" class="btn-delete-hero" title="Delete this image">
+                                                            <i class="bi bi-trash3-fill"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========================================================= -->
                     <!-- TAB 2: HOTLINES & CONTACTS -->
                     <!-- ========================================================= -->
                     <div class="settings-tab-pane <?= $activeTab === 'contacts' ? 'active' : '' ?>" id="tab-contacts">
@@ -1453,7 +1682,7 @@ $activeTab = $_GET['tab'] ?? 'profile';
                                         <span class="form-hint">Ambulance, health center medical triage and midwife on duty</span>
                                     </div>
                                     <div class="form-group-custom">
-                                        <label class="form-label-custom"><i class="bi bi-person-badge" style="color: #093d25;"></i> Barangay Tanod & Peace Corps</label>
+                                        <label class="form-label-custom"><i class="bi bi-person-badge" style="color: #0d2847;"></i> Barangay Tanod & Peace Corps</label>
                                         <input type="text" name="tanod_hotline" class="form-control-custom" value="<?= htmlspecialchars($info['tanod_hotline'] ?? '+63 945 112 3344') ?>" placeholder="e.g., +63 945 112 3344">
                                         <span class="form-hint">Barangay Security Desk and patrol dispatch contact</span>
                                     </div>
@@ -1651,7 +1880,7 @@ $activeTab = $_GET['tab'] ?? 'profile';
                                     <h4>Full System Database Snapshot (.sql)</h4>
                                     <p>Generates an instant, complete SQL backup with DROP TABLE, CREATE TABLE, and INSERT statements for all <?= (int)$tableCount ?> active tables.</p>
                                     <?php if ($lastBackup): ?>
-                                        <p style="margin-top: 0.5rem; font-size: 0.82rem; color: #047857;">
+                                        <p style="margin-top: 0.5rem; font-size: 0.82rem; color: #0284c7;">
                                             <i class="bi bi-clock-history"></i> Last export generated on: <strong><?= date('M d, Y h:i A', strtotime($lastBackup['created_at'])) ?></strong>
                                         </p>
                                     <?php endif; ?>
@@ -1666,7 +1895,7 @@ $activeTab = $_GET['tab'] ?? 'profile';
 
                             <div style="margin-top: 1.75rem; padding: 1.25rem; background: #f8fafc; border-radius: 8px; border: 1px solid var(--slate-border);">
                                 <h5 style="margin: 0 0 0.5rem 0; font-size: 0.95rem; font-weight: 700; color: #334155;">
-                                    <i class="bi bi-shield-shaded" style="color: var(--gov-green);"></i> Backup & Recovery Best Practices
+                                    <i class="bi bi-shield-shaded" style="color: var(--gov-blue);"></i> Backup & Recovery Best Practices
                                 </h5>
                                 <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem; color: #64748b; line-height: 1.6;">
                                     <li>Store exported <code>.sql</code> files in an encrypted or offline secure storage drive.</li>
@@ -1720,7 +1949,7 @@ $activeTab = $_GET['tab'] ?? 'profile';
                                                 <?php
                                                     $actionBadgeClass = 'log-badge-default';
                                                     $act = strtoupper($log['action']);
-                                                    if (strpos($act, 'PROFILE') !== false) $actionBadgeClass = 'log-badge-profile';
+                                                    if (strpos($act, 'PROFILE') !== false || strpos($act, 'HERO') !== false) $actionBadgeClass = 'log-badge-profile';
                                                     elseif (strpos($act, 'CONTACT') !== false) $actionBadgeClass = 'log-badge-contacts';
                                                     elseif (strpos($act, 'SECURITY') !== false) $actionBadgeClass = 'log-badge-security';
                                                     elseif (strpos($act, 'BACKUP') !== false) $actionBadgeClass = 'log-badge-backup';
@@ -1774,13 +2003,13 @@ $activeTab = $_GET['tab'] ?? 'profile';
             });
         });
 
-        function switchTab(tabId) {
+        function switchTab(tabId, btnEl) {
             // Remove active from all buttons & panes
             document.querySelectorAll('.settings-tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.settings-tab-pane').forEach(p => p.classList.remove('active'));
 
             // Activate matching button
-            const activeBtn = document.querySelector(`.settings-tab-btn[data-tab="${tabId}"]`);
+            const activeBtn = btnEl || document.querySelector(`.settings-tab-btn[data-tab="${tabId}"]`);
             if (activeBtn) activeBtn.classList.add('active');
 
             // Activate matching pane
@@ -1791,6 +2020,29 @@ $activeTab = $_GET['tab'] ?? 'profile';
             const url = new URL(window.location);
             url.searchParams.set('tab', tabId);
             window.history.replaceState({}, '', url);
+        }
+
+        // Live Upload Preview for Hero Background Images
+        function previewHeroUploads(input) {
+            const previewContainer = document.getElementById('heroUploadPreview');
+            if (!previewContainer) return;
+            previewContainer.innerHTML = '';
+            if (input.files && input.files.length > 0) {
+                previewContainer.style.display = 'flex';
+                for (let i = 0; i < input.files.length; i++) {
+                    const file = input.files[i];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const thumb = document.createElement('div');
+                        thumb.className = 'hero-thumb-preview';
+                        thumb.innerHTML = '<img src="' + e.target.result + '" alt="Selected"><span class="thumb-name">' + file.name + '</span>';
+                        previewContainer.appendChild(thumb);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            } else {
+                previewContainer.style.display = 'none';
+            }
         }
 
         // Initialize active tab from URL query parameter on load
