@@ -1958,20 +1958,25 @@
 
 /* Official Resident Response Bar (Bottom Bar Matching Reference Image) */
 .official-response-bar {
+    width: 100%;
+    box-sizing: border-box;
     padding: 1rem 1.75rem;
     background: #ffffff;
     border-top: 1px solid #e2e8f0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1.25rem;
+    flex-wrap: nowrap;
 }
 
 .official-response-left {
     display: flex;
     align-items: center;
     gap: 0.85rem;
+    flex: 1;
+    min-width: 0;
 }
 
 .official-response-icon-circle {
@@ -1987,6 +1992,10 @@
     flex-shrink: 0;
 }
 
+.official-response-text {
+    min-width: 0;
+}
+
 .official-response-text h4 {
     margin: 0 0 0.15rem;
     font-size: 0.92rem;
@@ -1998,10 +2007,13 @@
     margin: 0;
     font-size: 0.8rem;
     color: #64748b;
+    line-height: 1.35;
 }
 
 .btn-send-response-gmail {
-    display: inline-flex;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
     align-items: center;
     gap: 0.5rem;
     padding: 0.7rem 1.35rem;

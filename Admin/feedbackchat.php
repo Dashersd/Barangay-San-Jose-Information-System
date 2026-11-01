@@ -623,12 +623,12 @@ require_once __DIR__ . '/../db_connect.php';
                     `Municipality of Lapuyan, Zamboanga del Sur`
                 );
                 const gmailUrl = `https://mail.google.com/mail/?authuser=mugiw200@gmail.com&view=cm&fs=1&to=${encodeURIComponent(cleanEmail)}&su=${subj}&body=${bodyText}`;
-                $('#btn-send-response-gmail, #btn-send-doc-gmail').attr('href', gmailUrl).show();
+                $('#btn-send-response-gmail, #btn-send-doc-gmail').attr('href', gmailUrl).css('display', 'inline-flex');
             } else {
                 $('#active-verified-email-badge').hide();
                 $('#response-bar-email-label').text('verified Gmail');
                 const gmailUrl = `https://mail.google.com/mail/?authuser=mugiw200@gmail.com&view=cm&fs=1&su=${encodeURIComponent('Official Response - Barangay San Jose')}`;
-                $('#btn-send-response-gmail, #btn-send-doc-gmail').attr('href', gmailUrl);
+                $('#btn-send-response-gmail, #btn-send-doc-gmail').attr('href', gmailUrl).css('display', 'inline-flex');
             }
         }
 
