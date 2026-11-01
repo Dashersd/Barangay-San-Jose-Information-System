@@ -86,4 +86,41 @@ document.addEventListener('DOMContentLoaded', function() {
     if (announcementModal && addAnnouncementBtn) {
         addAnnouncementBtn.addEventListener('click', () => announcementModal.classList.add('show'));
     }
+
+    // Initialize Mobile Sidebar Drawer (<= 991px)
+    if (typeof initAdminMobileSidebar === 'function') {
+        initAdminMobileSidebar();
+    } else if (!window.__adminMobileSidebarInitialized) {
+        window.__adminMobileSidebarInitialized = true;
+        const sidebar = document.querySelector('.admin-sidebar');
+        if (sidebar) {
+            let backdrop = document.getElementById('sidebar-overlay-backdrop');
+            if (!backdrop) {
+                backdrop = document.createElement('div');
+                backdrop.id = 'sidebar-overlay-backdrop';
+                backdrop.className = 'sidebar-overlay-backdrop';
+                document.body.appendChild(backdrop);
+            }
+            const toggleBtnEl = document.getElementById('btn-admin-mobile-sidebar-toggle');
+            const closeDrawer = () => {
+                sidebar.classList.remove('mobile-open');
+                backdrop.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+            const openDrawer = () => {
+                sidebar.classList.add('mobile-open');
+                backdrop.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+            if (toggleBtnEl) {
+                toggleBtnEl.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    sidebar.classList.contains('mobile-open') ? closeDrawer() : openDrawer();
+                });
+            }
+            sidebar.querySelectorAll('.sidebar-mobile-close-btn').forEach(btn => btn.addEventListener('click', closeDrawer));
+            backdrop.addEventListener('click', closeDrawer);
+        }
+    }
 });

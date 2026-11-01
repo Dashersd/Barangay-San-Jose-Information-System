@@ -19,9 +19,9 @@ $res = $conn->query("SELECT COUNT(*) FROM purok3_locations"); if ($res) $p3Count
 $res = $conn->query("SELECT COUNT(*) FROM purok4_locations"); if ($res) $p4Count = (int)$res->fetch_row()[0];
 $totalHouseholds = $p1Count + $p2Count + $p3Count + $p4Count;
 
-// Inquiries / Chat Sessions
+// Inquiries / Feedback Chats
 $totalInquiries = 0;
-$res = $conn->query("SELECT COUNT(*) FROM chat_sessions");
+$res = $conn->query("SELECT COUNT(DISTINCT thread_id) FROM feedback_chats");
 if ($res) $totalInquiries = (int)$res->fetch_row()[0];
 
 // Announcements
@@ -44,15 +44,24 @@ $totalOfficials = $barangayOfficialsCount + $skOfficialsCount;
 // 2. Recent Citizen Inquiries
 $recentInquiries = [];
 $unreadChatCount = 0;
-$urRes = $conn->query("SELECT COUNT(*) FROM chat_messages WHERE sender = 'user' AND is_read = 0");
+$urRes = $conn->query("SELECT COUNT(*) FROM feedback_chats WHERE sender_type = 'user' AND is_read = 0");
 if ($urRes) $unreadChatCount = (int)$urRes->fetch_row()[0];
 
-$inqQuery = "SELECT cs.id, cs.user_name, cs.service_type, cs.status, cs.created_at,
-    COALESCE((SELECT cm.message FROM chat_messages cm WHERE cm.session_id = cs.id ORDER BY cm.id DESC LIMIT 1), 'No messages yet') AS last_msg,
-    COALESCE((SELECT cm.created_at FROM chat_messages cm WHERE cm.session_id = cs.id ORDER BY cm.id DESC LIMIT 1), cs.created_at) AS last_time,
-    (SELECT COUNT(*) FROM chat_messages cm WHERE cm.session_id = cs.id AND cm.sender = 'user' AND cm.is_read = 0) AS unread_count
-    FROM chat_sessions cs 
-    ORDER BY last_time DESC 
+$inqQuery = "SELECT 
+    t.thread_id AS id,
+    (SELECT sender_name FROM feedback_chats WHERE thread_id = t.thread_id ORDER BY id ASC LIMIT 1) AS user_name,
+    (SELECT service_type FROM feedback_chats WHERE thread_id = t.thread_id ORDER BY id ASC LIMIT 1) AS service_type,
+    'active' AS status,
+    t.first_created AS created_at,
+    COALESCE((SELECT message FROM feedback_chats WHERE thread_id = t.thread_id ORDER BY id DESC LIMIT 1), 'No messages yet') AS last_msg,
+    t.last_time,
+    (SELECT COUNT(*) FROM feedback_chats WHERE thread_id = t.thread_id AND sender_type = 'user' AND is_read = 0) AS unread_count
+    FROM (
+        SELECT thread_id, MAX(created_at) AS last_time, MIN(created_at) AS first_created
+        FROM feedback_chats
+        GROUP BY thread_id
+    ) t
+    ORDER BY t.last_time DESC 
     LIMIT 4";
 $inqRes = $conn->query($inqQuery);
 if ($inqRes) {

@@ -2,58 +2,77 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../../db_connect.php';
 
-// Ensure is_read column exists in chat_messages table
-$checkCol = $conn->query("SHOW COLUMNS FROM chat_messages LIKE 'is_read'");
-if ($checkCol && $checkCol->num_rows == 0) {
-    $conn->query("ALTER TABLE chat_messages ADD COLUMN is_read TINYINT(1) NOT NULL DEFAULT 0");
+function formatRelativeInquiryTime($datetimeStr) {
+    if (empty($datetimeStr)) return '';
+    $ts = strtotime($datetimeStr);
+    if (!$ts) return '';
+    $diff = time() - $ts;
+    if ($diff < 60) return 'Just now';
+    if ($diff < 3600) return floor($diff / 60) . 'm ago';
+    if ($diff < 86400) return floor($diff / 3600) . 'h ago';
+    if ($diff < 604800) return floor($diff / 86400) . 'd ago';
+    return date('M d', $ts);
 }
 
-
-// Fetch sessions ordered by latest activity (newest message first)
-$sql = "SELECT s.id, s.user_name, s.service_type, s.created_at,
-        (SELECT message FROM chat_messages WHERE session_id = s.id ORDER BY id DESC LIMIT 1) as last_msg,
-        (SELECT DATE_FORMAT(created_at, '%h:%i %p') FROM chat_messages WHERE session_id = s.id ORDER BY id DESC LIMIT 1) as time,
-        (SELECT id FROM chat_messages WHERE session_id = s.id ORDER BY id DESC LIMIT 1) as last_msg_id,
-        (SELECT sender FROM chat_messages WHERE session_id = s.id ORDER BY id DESC LIMIT 1) as last_sender,
-        (SELECT COUNT(*) FROM chat_messages WHERE session_id = s.id AND sender = 'user' AND is_read = 0) as unread_count,
-        COALESCE((SELECT created_at FROM chat_messages WHERE session_id = s.id ORDER BY id DESC LIMIT 1), s.created_at) as last_activity
-        FROM chat_sessions s 
-        ORDER BY last_activity DESC";
+// Fetch distinct inquiry threads from feedback_chats ordered by latest activity
+$sql = "SELECT 
+            t.thread_id,
+            t.thread_id AS id,
+            (SELECT sender_name FROM feedback_chats WHERE thread_id = t.thread_id ORDER BY id ASC LIMIT 1) AS sender_name,
+            (SELECT email FROM feedback_chats WHERE thread_id = t.thread_id AND email IS NOT NULL AND email != '' ORDER BY id ASC LIMIT 1) AS email,
+            (SELECT service_type FROM feedback_chats WHERE thread_id = t.thread_id ORDER BY id ASC LIMIT 1) AS service_type,
+            (SELECT message FROM feedback_chats WHERE thread_id = t.thread_id ORDER BY id DESC LIMIT 1) AS last_msg,
+            (SELECT DATE_FORMAT(created_at, '%h:%i %p') FROM feedback_chats WHERE thread_id = t.thread_id ORDER BY id DESC LIMIT 1) AS time,
+            (SELECT id FROM feedback_chats WHERE thread_id = t.thread_id ORDER BY id DESC LIMIT 1) AS last_msg_id,
+            (SELECT sender_type FROM feedback_chats WHERE thread_id = t.thread_id ORDER BY id DESC LIMIT 1) AS last_sender,
+            (SELECT COUNT(*) FROM feedback_chats WHERE thread_id = t.thread_id AND sender_type = 'user' AND is_read = 0) AS unread_count,
+            t.last_activity,
+            t.first_created AS created_at
+        FROM (
+            SELECT thread_id, MAX(created_at) AS last_activity, MIN(created_at) AS first_created, MAX(id) AS max_id
+            FROM feedback_chats
+            GROUP BY thread_id
+        ) t
+        ORDER BY t.last_activity DESC, t.max_id DESC";
 
 $result = $conn->query($sql);
 $sessions = [];
 if ($result) {
-    while($row = $result->fetch_assoc()){
+    while ($row = $result->fetch_assoc()) {
         $row['unread_count'] = (int)$row['unread_count'];
+        $row['user_name'] = $row['sender_name'] ?: 'Resident';
+        $row['sender_name'] = $row['user_name'];
+        $row['email'] = $row['email'] ?: '';
+        $row['service_type'] = $row['service_type'] ?: 'General Inquiry';
+        $row['relative_time'] = formatRelativeInquiryTime($row['last_activity']);
         $sessions[] = $row;
     }
 }
 
 // Total unread user messages count
-$unreadRes = $conn->query("SELECT COUNT(*) as total_unread FROM chat_messages WHERE sender = 'user' AND is_read = 0");
+$unreadRes = $conn->query("SELECT COUNT(*) AS total_unread FROM feedback_chats WHERE sender_type = 'user' AND is_read = 0");
 $total_unread = 0;
 if ($unreadRes && $uRow = $unreadRes->fetch_assoc()) {
     $total_unread = (int)$uRow['total_unread'];
 }
 
 // Latest incoming user message across the entire system
-$latestMsgRes = $conn->query("SELECT m.id, m.session_id, m.message, DATE_FORMAT(m.created_at, '%h:%i %p') as time, s.user_name, s.service_type 
-                              FROM chat_messages m 
-                              JOIN chat_sessions s ON m.session_id = s.id 
-                              WHERE m.sender = 'user' 
-                              ORDER BY m.id DESC LIMIT 1");
+$latestMsgRes = $conn->query("SELECT id, thread_id, thread_id AS session_id, sender_name, sender_name AS user_name, email, service_type, message, DATE_FORMAT(created_at, '%h:%i %p') AS time
+                              FROM feedback_chats
+                              WHERE sender_type = 'user'
+                              ORDER BY id DESC LIMIT 1");
 $latest_message = ($latestMsgRes && $latestMsgRes->num_rows > 0) ? $latestMsgRes->fetch_assoc() : null;
 
 // List of unread sender notifications for the bell dropdown
-$notifSql = "SELECT s.id as session_id, s.user_name, s.service_type, m.message, DATE_FORMAT(m.created_at, '%h:%i %p') as time, m.id as msg_id
-             FROM chat_messages m
-             JOIN chat_sessions s ON m.session_id = s.id
-             WHERE m.sender = 'user' AND m.is_read = 0
-             ORDER BY m.id DESC LIMIT 10";
+$notifSql = "SELECT id AS msg_id, thread_id, thread_id AS session_id, sender_name, sender_name AS user_name, email, service_type, message, DATE_FORMAT(created_at, '%h:%i %p') AS time, created_at
+             FROM feedback_chats
+             WHERE sender_type = 'user' AND is_read = 0
+             ORDER BY id DESC LIMIT 12";
 $notifRes = $conn->query($notifSql);
 $notifications = [];
 if ($notifRes) {
-    while($nRow = $notifRes->fetch_assoc()){
+    while ($nRow = $notifRes->fetch_assoc()) {
+        $nRow['relative_time'] = formatRelativeInquiryTime($nRow['created_at']);
         $notifications[] = $nRow;
     }
 }
@@ -61,6 +80,7 @@ if ($notifRes) {
 echo json_encode([
     "status" => "success",
     "sessions" => $sessions,
+    "threads" => $sessions,
     "total_unread" => $total_unread,
     "latest_message" => $latest_message,
     "notifications" => $notifications

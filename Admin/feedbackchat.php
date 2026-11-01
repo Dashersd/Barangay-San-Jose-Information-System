@@ -1,12 +1,13 @@
 <?php
-// Feedback Chat
+// Feedback & Inquiries Portal - Barangay San Jose
+require_once __DIR__ . '/../db_connect.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback Chat - Admin Panel</title>
+    <title>Feedback &amp; Inquiries - Admin Panel</title>
 
     <!-- Favicon / Tab Logo -->
     <link rel="icon" type="image/png" href="../assets/images/San Jose Logo 2.png">
@@ -15,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -123,7 +125,8 @@
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                         </span>
-                        Feedback Chat
+                        Feedback &amp; Inquiries
+                        <span class="nav-badge" id="nav-inquiries-badge" style="display:none;">0</span>
                         <span class="nav-badge" id="nav-chat-badge" style="display:none;">0</span>
                     </a>
                 </li>
@@ -150,14 +153,21 @@
         <main class="admin-main">
             <!-- Header -->
             <header class="admin-header">
-                <div class="header-left">
-                    <h1>Feedback Chat</h1>
-                    <p>Live Resident Communications &amp; Inquiry Center</p>
+                <div class="header-left" style="display:flex; align-items:center; gap: 0.75rem;">
+                    <button type="button" class="btn-admin-mobile-sidebar-toggle" id="btn-admin-mobile-sidebar-toggle" aria-label="Toggle Sidebar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <h1 style="display:flex; align-items:center; gap:0.6rem; margin:0; font-size:1.35rem; font-weight:800; color:#0d2847;">
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; background:#1a73e8; color:#ffffff;">
+                            <i class="bi bi-chat-dots-fill" style="font-size:1rem;"></i>
+                        </span>
+                        Feedback &amp; Resident Inquiries
+                    </h1>
                 </div>
                 
                 <div class="header-right-actions">
                     <!-- Audio Sound Alert Toggle -->
-                    <button type="button" class="btn-audio-toggle" id="btn-audio-toggle" title="Toggle sound alerts on new inquiries">
+                    <button type="button" class="btn-audio-toggle" id="btn-sound-toggle" title="Toggle sound alerts on new inquiries">
                         <span id="audio-toggle-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                         </span>
@@ -192,13 +202,23 @@
                     <!-- User Profile -->
                     <div class="header-user-profile">
                         <div class="user-text">
-                            <span class="user-name">System Admin</span>
+                            <span class="user-name">Barangay Secretary</span>
                             <span class="user-role">Administrator</span>
                         </div>
-                        <div class="user-avatar">A</div>
+                        <div class="user-avatar" style="background:#fbbf24; color:#0d2847; font-weight:800;">A</div>
                     </div>
                 </div>
             </header>
+
+            <!-- Full-Width Desktop Notification Banner -->
+            <div class="desktop-notif-banner" id="desktop-notif-banner">
+                <div class="banner-text">
+                    <i class="bi bi-info-circle-fill" style="font-size:1rem; color:#fbbf24;"></i>
+                    <span>Enable desktop notifications to receive immediate alerts when residents submit feedback or inquiry messages.</span>
+                    <button type="button" class="btn-enable-notif" id="btn-enable-notif">Enable Notifications</button>
+                </div>
+                <button type="button" class="btn-banner-close" id="btn-banner-close" title="Dismiss">&times;</button>
+            </div>
 
             <!-- Content Area -->
             <div class="admin-content chat-page-wrapper">
@@ -206,32 +226,21 @@
                 <!-- Floating Real-Time Toast Container -->
                 <div class="chat-toast-container" id="chat-toast-container"></div>
 
-                <!-- Desktop Notification Banner -->
-                <div class="desktop-notif-banner" id="desktop-notif-banner" style="display:none;">
-                    <div class="banner-text">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                        <span><strong>Stay Alerted:</strong> Turn on browser notifications so you immediately know when a resident reaches out, even if you are on another tab.</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <button type="button" class="btn-enable-notif" id="btn-enable-notif">Enable Notifications</button>
-                        <button type="button" class="btn-banner-close" id="btn-banner-close" title="Dismiss">&times;</button>
-                    </div>
-                </div>
-
-                <div class="chat-container">
+                <div class="chat-container messenger-layout" id="messenger-layout">
                     <!-- Chat Sidebar (Conversations List) -->
-                    <div class="chat-sidebar">
+                    <div class="chat-sidebar threads-panel">
                         <div class="chat-sidebar-header">
                             <div class="chat-sidebar-title-row">
                                 <h3>
-                                    Resident Inquiries
-                                    <span class="count-pill" id="stat-sidebar-count">0</span>
+                                    <i class="bi bi-inbox-fill" style="color:#0d2847;"></i>
+                                    Inquiries
                                 </h3>
+                                <span class="count-pill" id="stat-sidebar-count">0 Total</span>
                             </div>
                             <!-- Search Bar -->
                             <div class="chat-search-wrap">
-                                <svg viewBox="0 0 24 24" width="16" height="16" style="width:16px; height:16px; max-width:16px; max-height:16px; position:absolute; left:10px; color:#94a3b8; pointer-events:none;" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                                <input type="text" class="chat-search-input" id="chat-search-input" placeholder="Search resident or service...">
+                                <svg viewBox="0 0 24 24" width="15" height="15" style="width:15px; height:15px; max-width:15px; max-height:15px; position:absolute; left:12px; color:#94a3b8; pointer-events:none;" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" class="chat-search-input" id="search-threads-input" placeholder="Search by name, email, service...">
                                 <button type="button" class="chat-search-clear" id="chat-search-clear" title="Clear search">&times;</button>
                             </div>
                             <!-- Filter Tabs -->
@@ -257,7 +266,7 @@
                                 </svg>
                             </div>
                             <h3>Select a Resident Conversation</h3>
-                            <p>Choose an inquiry from the list on the left to review messages and send official responses in real-time.</p>
+                            <p>Choose an inquiry from the list on the left to review verified Gmail inquiries and send official responses via Gmail.</p>
                             <div class="empty-quick-stats">
                                 <span class="stat-tag"><strong id="stat-total-convos">0</strong> Total Inquiries</span>
                                 <span class="stat-tag highlight"><strong id="stat-unread-convos">0</strong> Unread</span>
@@ -266,25 +275,41 @@
                     </div>
 
                     <!-- Chat Main Area (Active Conversation) -->
-                    <div class="chat-main" id="chat-main-area" style="display:none;">
+                    <div class="chat-main conversation-panel" id="chat-main-area" style="display:none;">
                         <!-- Header -->
-                        <div class="chat-main-header">
+                        <div class="chat-main-header conversation-header">
                             <div class="chat-resident-profile">
+                                <button type="button" class="btn-mobile-back-threads" id="btn-mobile-back-threads" title="Back to Inquiries">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                </button>
                                 <div class="chat-header-avatar" id="current-chat-avatar">U</div>
                                 <div class="chat-header-info">
                                     <h3 id="current-chat-name">Resident Name</h3>
-                                    <div class="chat-header-meta">
-                                        <span class="status-indicator">
+                                    <div class="chat-header-meta" style="flex-wrap:wrap; margin-bottom:4px;">
+                                        <span class="status-indicator-pill">
                                             <span class="status-dot"></span>
                                             Citizen Inquirer
                                         </span>
-                                        <span class="chat-header-service-badge" id="current-chat-service">General</span>
+                                        <span class="chat-header-service-badge" id="active-service-tag">Barangay Clearance</span>
+                                    </div>
+                                    <div class="chat-header-email-row" id="active-verified-email-badge" style="display:none;">
+                                        <span class="header-email-text">
+                                            <i class="bi bi-envelope"></i>
+                                            <span id="active-verified-email-text">resident@gmail.com</span>
+                                        </span>
+                                        <span class="header-verified-pill">
+                                            <i class="bi bi-shield-check"></i> Verified
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                             <div class="chat-header-actions">
+                                <a href="#" target="_blank" rel="noopener noreferrer" class="btn-send-doc-gmail" id="btn-send-doc-gmail">
+                                    <i class="bi bi-envelope-paper-fill"></i>
+                                    Send Document via Gmail
+                                </a>
                                 <button type="button" class="btn-header-action" id="btn-refresh-chat" title="Refresh messages">
-                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                    <i class="bi bi-arrow-clockwise"></i>
                                     Refresh
                                 </button>
                             </div>
@@ -295,64 +320,21 @@
                             <!-- Dynamically loaded messages -->
                         </div>
 
-                        <!-- Canned Quick Replies -->
-                        <div class="quick-replies-bar">
-                            <span class="quick-reply-label">
-                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                                Quick:
-                            </span>
-                            <button type="button" class="quick-reply-chip" data-text="Good day! How may we assist you today?">Good day! How may we assist you?</button>
-                            <button type="button" class="quick-reply-chip" data-text="Please bring 1 valid ID and visit the Barangay Hall during office hours (8AM - 5PM).">Visit Barangay Hall with 1 valid ID</button>
-                            <button type="button" class="quick-reply-chip" data-text="Your requested document is ready for pickup at the barangay hall.">Ready for pickup</button>
-                            <button type="button" class="quick-reply-chip" data-text="Thank you for reaching out to Barangay San Jose. Have a great day!">Thank you for reaching out</button>
-                        </div>
-
-                        <!-- Chat Input Bar with Messenger-style Document Attachment -->
-                        <div class="chat-input-area">
-                            <div class="chat-input-wrapper">
-                                <!-- Staged Attachment Preview (shown when file is selected) -->
-                                <div id="admin-staged-attachment" class="staged-attachment-bar" style="display: none;">
-                                    <div class="staged-att-content">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
-                                        <div class="staged-att-details">
-                                            <span class="staged-att-label">Attached:</span>
-                                            <span id="staged-att-name" class="staged-att-name">document.pdf</span>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="staged-att-remove" id="btn-remove-staged-att" title="Remove attachment">&times;</button>
+                        <!-- Official Resident Response Bar (Bottom Footer Matching Reference UI) -->
+                        <div class="official-response-bar" id="official-response-bar">
+                            <div class="official-response-left">
+                                <div class="official-response-icon-circle">
+                                    <i class="bi bi-envelope-check-fill"></i>
                                 </div>
-
-                                <div class="chat-input-controls">
-                                    <!-- Attachment Menu Toggle -->
-                                    <div class="chat-attachment-dropdown-wrap">
-                                        <button type="button" class="btn-chat-attach" id="btn-chat-attach" title="Attach &amp; Send Document/Form">
-                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                                        </button>
-                                        
-                                        <!-- Hidden file input for uploading from device -->
-                                        <input type="file" id="admin-chat-file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
-
-                                        <!-- Attachment Popup Menu -->
-                                        <div class="chat-attach-menu" id="chat-attach-menu" style="display: none;">
-                                            <button type="button" class="attach-menu-item" id="btn-attach-upload">
-                                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2563eb" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                                                Upload Document from Device...
-                                            </button>
-                                            <button type="button" class="attach-menu-item" id="btn-attach-service-form">
-                                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#059669" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                                Select Ready Barangay Form...
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <input type="text" class="chat-input" id="admin-chat-input" placeholder="Type your reply to resident here... (Press Enter to send)">
-                                    
-                                    <button class="btn-send" id="admin-send-btn">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                                        Send Reply
-                                    </button>
+                                <div class="official-response-text">
+                                    <h4>Official Resident Response</h4>
+                                    <p>Resident inquiries and document requests are responded to directly via verified Gmail (<span id="response-bar-email-label">verified Gmail</span>).</p>
                                 </div>
                             </div>
+                            <a href="#" target="_blank" rel="noopener noreferrer" class="btn-send-response-gmail" id="btn-send-response-gmail">
+                                <i class="bi bi-envelope-fill"></i>
+                                Send Response via Gmail
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -362,7 +344,7 @@
                     <div class="service-forms-modal-dialog">
                         <div class="service-forms-modal-header">
                             <h3>
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#15803d" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1a73e8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
                                 Select Barangay Service Form
                             </h3>
                             <button type="button" class="service-forms-modal-close" id="close-service-forms-modal">&times;</button>
@@ -373,16 +355,39 @@
                     </div>
                 </div>
 
+                <!-- Image Lightbox Modal -->
+                <div id="image-lightbox-modal" class="image-lightbox-modal" onclick="if(event.target === this) closeChatImageLightbox();">
+                    <div class="image-lightbox-dialog">
+                        <button type="button" class="image-lightbox-close" onclick="closeChatImageLightbox()" title="Close">&times;</button>
+                        <img id="image-lightbox-img" src="" alt="Attachment Preview">
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="Admin JS/admin.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
+    window.openChatImageLightbox = function(imgUrl) {
+        const modal = document.getElementById('image-lightbox-modal');
+        const img = document.getElementById('image-lightbox-img');
+        if (modal && img) {
+            img.src = imgUrl;
+            modal.classList.add('active');
+        }
+    };
+    window.closeChatImageLightbox = function() {
+        const modal = document.getElementById('image-lightbox-modal');
+        if (modal) modal.classList.remove('active');
+    };
+
     $(document).ready(function() {
         let activeSessionId = null;
         let activeResidentName = '';
+        let activeResidentEmail = '';
         let activeServiceType = '';
         let lastSeenMsgId = null;
         let isFirstFetch = true;
@@ -397,19 +402,20 @@
 
         // Initialize Audio Toggle state
         function updateAudioButtonUI() {
+            const $btn = $('#btn-sound-toggle, #btn-audio-toggle');
             if (soundEnabled) {
-                $('#btn-audio-toggle').removeClass('muted');
+                $btn.removeClass('muted');
                 $('#audio-toggle-icon').html('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>');
                 $('#audio-toggle-label').text('Sound On');
             } else {
-                $('#btn-audio-toggle').addClass('muted');
+                $btn.addClass('muted');
                 $('#audio-toggle-icon').html('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>');
                 $('#audio-toggle-label').text('Muted');
             }
         }
         updateAudioButtonUI();
 
-        $('#btn-audio-toggle').on('click', function() {
+        $('#btn-sound-toggle, #btn-audio-toggle').on('click', function() {
             soundEnabled = !soundEnabled;
             localStorage.setItem('admin_chat_sound', soundEnabled ? 'true' : 'false');
             updateAudioButtonUI();
@@ -418,7 +424,7 @@
             }
         });
 
-        // Web Audio Synthesizer Chime
+        // Web Audio Synthesizer Chime (Two-tone F5 -> C6)
         function playNotificationSound() {
             if (!soundEnabled) return;
             try {
@@ -427,11 +433,11 @@
                 const ctx = new AudioContext();
 
                 const now = ctx.currentTime;
-                // Tone 1: D5 (587.33Hz)
+                // Tone 1: F5 (698.46Hz)
                 const osc1 = ctx.createOscillator();
                 const gain1 = ctx.createGain();
                 osc1.type = 'sine';
-                osc1.frequency.setValueAtTime(587.33, now);
+                osc1.frequency.setValueAtTime(698.46, now);
                 gain1.gain.setValueAtTime(0.25, now);
                 gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
                 osc1.connect(gain1);
@@ -439,11 +445,11 @@
                 osc1.start(now);
                 osc1.stop(now + 0.35);
 
-                // Tone 2: A5 (880Hz)
+                // Tone 2: C6 (1046.50Hz)
                 const osc2 = ctx.createOscillator();
                 const gain2 = ctx.createGain();
                 osc2.type = 'sine';
-                osc2.frequency.setValueAtTime(880, now + 0.12);
+                osc2.frequency.setValueAtTime(1046.50, now + 0.12);
                 gain2.gain.setValueAtTime(0.3, now + 0.12);
                 gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
                 osc2.connect(gain2);
@@ -458,7 +464,10 @@
         // Browser Desktop Notifications
         function checkNotificationPermission() {
             if ("Notification" in window) {
-                if (Notification.permission === "default" && localStorage.getItem('dismiss_notif_banner') !== 'true') {
+                if (Notification.permission === "granted") {
+                    $('#desktop-notif-label').text('Alerts Active');
+                    $('#desktop-notif-banner').hide();
+                } else if (Notification.permission === "default" && localStorage.getItem('dismiss_notif_banner') !== 'true') {
                     $('#desktop-notif-banner').slideDown(200);
                 } else {
                     $('#desktop-notif-banner').hide();
@@ -467,10 +476,11 @@
         }
         checkNotificationPermission();
 
-        $('#btn-enable-notif').on('click', function() {
+        $('#btn-enable-notif, #btn-desktop-notif-toggle').on('click', function() {
             if ("Notification" in window) {
                 Notification.requestPermission().then(function(permission) {
                     if (permission === "granted") {
+                        $('#desktop-notif-label').text('Alerts Active');
                         $('#desktop-notif-banner').slideUp(200);
                         new Notification("Barangay San Jose Notifications Enabled", {
                             body: "You will now receive alerts whenever a resident contacts you.",
@@ -492,7 +502,7 @@
             stopTitleBlink();
             let isAlternate = false;
             titleBlinkInterval = setInterval(() => {
-                document.title = isAlternate ? `🔔 New message from ${senderName}!` : originalTitle;
+                document.title = isAlternate ? `🔔 New inquiry from ${senderName}!` : originalTitle;
                 isAlternate = !isAlternate;
             }, 1200);
         }
@@ -510,11 +520,12 @@
         });
 
         // Floating Toast Notification
-        function showToast(sender, service, message, sessionId) {
+        function showToast(sender, service, message, sessionId, email) {
             const toastId = 'toast-' + Date.now();
             const safeSender = $('<div>').text(sender).html();
             const safeService = $('<div>').text(service).html();
             const safeMsg = $('<div>').text(message).html();
+            const safeEmail = $('<div>').text(email || '').html();
 
             const toastHtml = `
                 <div class="chat-toast" id="${toastId}">
@@ -526,7 +537,7 @@
                     </div>
                     <div class="chat-toast-content">
                         <div class="chat-toast-meta">
-                            <span class="chat-toast-title">New Resident Message</span>
+                            <span class="chat-toast-title">New Verified Inquiry</span>
                             <span class="chat-toast-time">Just now</span>
                         </div>
                         <div class="chat-toast-sender">
@@ -535,7 +546,7 @@
                         </div>
                         <div class="chat-toast-msg">"${safeMsg}"</div>
                         <div class="chat-toast-actions">
-                            <button type="button" class="btn-toast-open" data-id="${sessionId}" data-name="${safeSender}" data-service="${safeService}">
+                            <button type="button" class="btn-toast-open" data-id="${sessionId}" data-name="${safeSender}" data-service="${safeService}" data-email="${safeEmail}">
                                 Reply Now
                             </button>
                             <button type="button" class="btn-toast-dismiss">Dismiss</button>
@@ -546,7 +557,6 @@
 
             $('#chat-toast-container').append(toastHtml);
 
-            // Auto dismiss after 8 seconds
             setTimeout(() => {
                 const $t = $('#' + toastId);
                 $t.css({ opacity: 0, transform: 'translateX(60px)' });
@@ -564,7 +574,8 @@
             const sid = $(this).data('id');
             const name = $(this).data('name');
             const service = $(this).data('service');
-            openConversation(sid, name, service);
+            const email = $(this).data('email') || '';
+            openConversation(sid, name, service, email);
             const $t = $(this).closest('.chat-toast');
             $t.css({ opacity: 0, transform: 'translateX(60px)' });
             setTimeout(() => $t.remove(), 300);
@@ -584,7 +595,7 @@
 
         // Mark All Read Button
         $('#btn-mark-all-read').on('click', function() {
-            $.post('api/admin_mark_all_read.php', function(res) {
+            $.post('api/admin_mark_all_read.php', function() {
                 fetchSessions();
             });
         });
@@ -592,15 +603,47 @@
         let lastRenderedMessagesJson = '';
         let lastRenderedSessionsJson = '';
 
-        // Open Conversation Helper
-        function openConversation(id, name, service) {
-            if (activeSessionId == id && $('#chat-main-area').is(':visible')) {
-                return; // Already open, prevent re-render flicker
+        function updateGmailComposeButton(name, email, service) {
+            const cleanEmail = (email || '').trim();
+            if (cleanEmail) {
+                $('#active-verified-email-text').text(cleanEmail);
+                $('#active-verified-email-badge').css('display', 'flex');
+                $('#response-bar-email-label').text(cleanEmail);
+                $('#official-response-bar').show();
+
+                const subj = encodeURIComponent(`Official Response: ${service || 'Resident Inquiry'} - Barangay San Jose`);
+                const bodyText = encodeURIComponent(
+                    `Dear ${name || 'Resident'},\n\n` +
+                    `Greetings from Barangay San Jose!\n\n` +
+                    `Thank you for reaching out regarding your "${service || 'General Inquiry'}" inquiry. ` +
+                    `Please find our official response / requested barangay document below:\n\n` +
+                    `[Type official Barangay San Jose response or attach requested document here]\n\n` +
+                    `Respectfully,\n` +
+                    `Barangay San Jose Administration\n` +
+                    `Municipality of Lapuyan, Zamboanga del Sur`
+                );
+                const gmailUrl = `https://mail.google.com/mail/?authuser=mugiw200@gmail.com&view=cm&fs=1&to=${encodeURIComponent(cleanEmail)}&su=${subj}&body=${bodyText}`;
+                $('#btn-send-response-gmail, #btn-send-doc-gmail').attr('href', gmailUrl).show();
+            } else {
+                $('#active-verified-email-badge').hide();
+                $('#response-bar-email-label').text('verified Gmail');
+                const gmailUrl = `https://mail.google.com/mail/?authuser=mugiw200@gmail.com&view=cm&fs=1&su=${encodeURIComponent('Official Response - Barangay San Jose')}`;
+                $('#btn-send-response-gmail, #btn-send-doc-gmail').attr('href', gmailUrl);
             }
+        }
+
+        // Open Conversation Helper
+        function openConversation(id, name, service, email) {
             activeSessionId = id;
-            activeResidentName = name;
-            activeServiceType = service;
-            lastRenderedMessagesJson = ''; // Reset so messages render fresh once
+            activeResidentName = name || 'Resident';
+            activeServiceType = service || 'General Inquiry';
+            if (typeof email !== 'undefined' && email !== null) {
+                activeResidentEmail = email;
+            } else {
+                const match = cachedSessions.find(s => s.id == id || s.thread_id == id);
+                activeResidentEmail = match && match.email ? match.email : '';
+            }
+            lastRenderedMessagesJson = '';
 
             // Highlight in sidebar
             $('.conversation-item').removeClass('active');
@@ -610,30 +653,35 @@
             // Switch to chat view smoothly
             $('#chat-empty-state').hide();
             $('#chat-main-area').show();
+            $('#messenger-layout').addClass('mobile-thread-open');
 
             // Update Header Info
-            const initial = name ? name.charAt(0).toUpperCase() : 'U';
+            const initial = activeResidentName ? activeResidentName.charAt(0).toUpperCase() : 'U';
             $('#current-chat-avatar').text(initial);
-            $('#current-chat-name').text(name);
-            $('#current-chat-service').text(service ? service : 'General Inquiry');
+            $('#current-chat-name').text(activeResidentName);
+            $('#active-service-tag, #current-chat-service').text(activeServiceType);
+            updateGmailComposeButton(activeResidentName, activeResidentEmail, activeServiceType);
             $('#admin-chat-input').focus();
 
             fetchMessages(true);
             stopTitleBlink();
         }
 
+        $('#btn-mobile-back-threads').on('click', function() {
+            $('#messenger-layout').removeClass('mobile-thread-open');
+        });
+
         // Render Conversation List from Cache
         function renderConversationList() {
             let filtered = cachedSessions.filter(s => {
-                // Search filter
                 if (currentSearchQuery) {
                     const q = currentSearchQuery.toLowerCase();
                     const nameMatch = (s.user_name || '').toLowerCase().includes(q);
+                    const emailMatch = (s.email || '').toLowerCase().includes(q);
                     const serviceMatch = (s.service_type || '').toLowerCase().includes(q);
                     const msgMatch = (s.last_msg || '').toLowerCase().includes(q);
-                    if (!nameMatch && !serviceMatch && !msgMatch) return false;
+                    if (!nameMatch && !emailMatch && !serviceMatch && !msgMatch) return false;
                 }
-                // Tab filter
                 if (currentFilter === 'unread') {
                     return (parseInt(s.unread_count) || 0) > 0;
                 }
@@ -656,25 +704,31 @@
 
             let html = '';
             filtered.forEach(s => {
-                const activeClass = (s.id == activeSessionId) ? 'active' : '';
+                const tid = s.thread_id || s.id;
+                const activeClass = (tid == activeSessionId) ? 'active' : '';
                 const unreadCount = parseInt(s.unread_count) || 0;
-                const hasUnreadClass = (unreadCount > 0 && s.id != activeSessionId) ? 'has-unread' : '';
-                const unreadBadge = (unreadCount > 0 && s.id != activeSessionId) ? `<span class="conv-unread-pill">${unreadCount} new</span>` : '';
+                const hasUnreadClass = (unreadCount > 0 && tid != activeSessionId) ? 'has-unread' : '';
+                const unreadBadge = (unreadCount > 0 && tid != activeSessionId) ? `<span class="conv-unread-pill">${unreadCount} new</span>` : '';
                 const safeLastMsg = s.last_msg ? $('<div>').text(s.last_msg).html() : 'No messages yet';
+                const safeName = $('<div>').text(s.user_name || 'Resident').html();
+                const safeEmail = $('<div>').text(s.email || '').html();
+                const safeService = $('<div>').text(s.service_type || 'General').html();
                 const initial = s.user_name ? s.user_name.charAt(0).toUpperCase() : 'U';
+                const timeDisplay = s.relative_time || s.time || '';
 
                 html += `
-                    <div class="conversation-item ${activeClass} ${hasUnreadClass}" data-id="${s.id}" data-name="${s.user_name}" data-service="${s.service_type}">
+                    <div class="conversation-item thread-item ${activeClass} ${hasUnreadClass}" data-id="${tid}" data-name="${safeName}" data-service="${safeService}" data-email="${safeEmail}">
                         <div class="conv-avatar">${initial}</div>
                         <div class="conv-body">
                             <div class="conv-header">
-                                <span class="conv-name">${s.user_name}</span>
-                                <span class="conv-time">${s.time || ''}</span>
+                                <span class="conv-name">${safeName}</span>
+                                <span class="conv-time">${s.time || timeDisplay}</span>
                             </div>
                             <div class="conv-meta">
-                                <span class="conv-service-tag">${s.service_type || 'General'}</span>
+                                <span class="conv-service-tag"><i class="bi bi-tag-fill"></i> ${safeService}</span>
                                 ${unreadBadge}
                             </div>
+                            ${safeEmail ? `<div class="conv-email-line"><i class="bi bi-envelope"></i> ${safeEmail}</div>` : ''}
                             <div class="conv-preview">${safeLastMsg}</div>
                         </div>
                     </div>
@@ -689,22 +743,24 @@
                 if (res.status === 'success') {
                     cachedSessions = res.sessions || [];
 
-                    // Update Counters
                     const totalCount = cachedSessions.length;
                     const totalUnread = res.total_unread || 0;
 
-                    $('#stat-sidebar-count').text(totalCount);
+                    $('#stat-sidebar-count').text(`${totalCount} Total`);
                     $('#stat-total-convos').text(totalCount);
                     $('#stat-unread-convos').text(totalUnread);
                     $('#unread-filter-count').text(totalUnread);
 
-                    // Update Top Badges
+                    // Update Top & Sidebar Badges
                     if (totalUnread > 0) {
-                        $('#notif-count-badge').text(totalUnread > 99 ? '99+' : totalUnread).show();
-                        $('#nav-chat-badge').text(totalUnread > 99 ? '99+' : totalUnread).show();
+                        const badgeVal = totalUnread > 99 ? '99+' : totalUnread;
+                        $('#notif-count-badge').text(badgeVal).show();
+                        $('#nav-inquiries-badge').text(badgeVal).show();
+                        $('#nav-chat-badge').hide();
                         $('#notif-pill-count').text(`${totalUnread} Unread`);
                     } else {
                         $('#notif-count-badge').hide();
+                        $('#nav-inquiries-badge').hide();
                         $('#nav-chat-badge').hide();
                         $('#notif-pill-count').text('0 Unread');
                     }
@@ -713,17 +769,22 @@
                     if (res.notifications && res.notifications.length > 0) {
                         let notifHtml = '';
                         res.notifications.forEach(n => {
+                            const tid = n.thread_id || n.session_id;
                             const initial = n.user_name ? n.user_name.charAt(0).toUpperCase() : 'U';
+                            const safeName = $('<div>').text(n.user_name || 'Resident').html();
+                            const safeService = $('<div>').text(n.service_type || 'General').html();
+                            const safeEmail = $('<div>').text(n.email || '').html();
+                            const safeMsg = $('<div>').text(n.message || '').html();
                             notifHtml += `
-                                <div class="notif-item unread notif-open-chat" data-id="${n.session_id}" data-name="${n.user_name}" data-service="${n.service_type}">
+                                <div class="notif-item unread notif-open-chat" data-id="${tid}" data-name="${safeName}" data-service="${safeService}" data-email="${safeEmail}">
                                     <div class="notif-avatar">${initial}</div>
                                     <div class="notif-content">
                                         <div class="notif-user-row">
-                                            <span class="notif-sender-name">${n.user_name}</span>
-                                            <span class="notif-time">${n.time || ''}</span>
+                                            <span class="notif-sender-name">${safeName}</span>
+                                            <span class="notif-time">${n.relative_time || n.time || ''}</span>
                                         </div>
-                                        <div><span class="notif-service-tag">${n.service_type}</span></div>
-                                        <div class="notif-preview-msg">${n.message}</div>
+                                        <div><span class="notif-service-tag">${safeService}</span></div>
+                                        <div class="notif-preview-msg">${safeMsg}</div>
                                     </div>
                                 </div>
                             `;
@@ -739,46 +800,40 @@
 
                         if (isFirstFetch) {
                             lastSeenMsgId = currentMsgId;
-                            // Auto open first chat on initial load if available
                             if (!activeSessionId && cachedSessions.length > 0) {
                                 const first = cachedSessions[0];
-                                openConversation(first.id, first.user_name, first.service_type);
+                                openConversation(first.thread_id || first.id, first.user_name, first.service_type, first.email);
                             }
                             isFirstFetch = false;
                         } else if (lastSeenMsgId && currentMsgId > lastSeenMsgId) {
                             lastSeenMsgId = currentMsgId;
                             const lm = res.latest_message;
+                            const lmThreadId = lm.thread_id || lm.session_id;
 
-                            // 1. Play Chime
                             playNotificationSound();
-
-                            // 2. Show Visual Floating Toast
-                            showToast(lm.user_name, lm.service_type, lm.message, lm.session_id);
-
-                            // 3. Tab Title Alert
+                            showToast(lm.user_name, lm.service_type, lm.message, lmThreadId, lm.email);
                             startTitleBlink(lm.user_name);
 
-                            // 4. Desktop Notification (if granted)
                             if ("Notification" in window && Notification.permission === "granted") {
-                                const desktopNotif = new Notification(`New message from ${lm.user_name}`, {
+                                const desktopNotif = new Notification(`New inquiry from ${lm.user_name}`, {
                                     body: `[${lm.service_type}] ${lm.message}`,
                                     icon: "../assets/images/San Jose Logo 2.png"
                                 });
                                 desktopNotif.onclick = function() {
                                     window.focus();
-                                    openConversation(lm.session_id, lm.user_name, lm.service_type);
+                                    openConversation(lmThreadId, lm.user_name, lm.service_type, lm.email);
                                     desktopNotif.close();
                                 };
                             }
 
-                            // If this session is currently open, fetch messages right away
-                            if (activeSessionId == lm.session_id) {
+                            if (activeSessionId == lmThreadId) {
                                 fetchMessages(true);
                             }
                         }
+                    } else if (isFirstFetch) {
+                        isFirstFetch = false;
                     }
 
-                    // Only re-render sidebar list if sessions actually changed
                     const currentSessionsJson = JSON.stringify(cachedSessions);
                     if (currentSessionsJson !== lastRenderedSessionsJson) {
                         lastRenderedSessionsJson = currentSessionsJson;
@@ -788,24 +843,23 @@
             });
         }
 
-        // Fetch Messages for active session without glitching
+        // Fetch Messages for active thread without glitching
         function fetchMessages(forceScroll = false) {
             if (!activeSessionId) return;
-            $.get('api/admin_fetch_messages.php', { session_id: activeSessionId }, function(res) {
+            $.get('api/admin_fetch_messages.php', { thread_id: activeSessionId, session_id: activeSessionId }, function(res) {
                 if (res.status === 'success') {
-                    const currentMessagesJson = JSON.stringify(res.messages || []);
+                    if (res.thread && res.thread.email && !activeResidentEmail) {
+                        activeResidentEmail = res.thread.email;
+                        updateGmailComposeButton(activeResidentName, activeResidentEmail, activeServiceType);
+                    }
 
-                    // IF MESSAGES HAVE NOT CHANGED AND NO FORCE SCROLL, DO NOT TOUCH DOM (PREVENTS GLITCHING)
+                    const currentMessagesJson = JSON.stringify(res.messages || []);
                     if (currentMessagesJson === lastRenderedMessagesJson && !forceScroll) {
                         return;
                     }
                     lastRenderedMessagesJson = currentMessagesJson;
 
-                    let html = `
-                        <div class="chat-date-divider">
-                            <span>Official Resident Feedback & Inquiry Thread</span>
-                        </div>
-                    `;
+                    let html = '';
 
                     if (!res.messages || res.messages.length === 0) {
                         html += `
@@ -815,25 +869,28 @@
                         `;
                     } else {
                         res.messages.forEach(msg => {
-                            const isAdmin = (msg.sender === 'admin');
+                            const isAdmin = (msg.sender === 'admin' || msg.sender_type === 'admin');
                             const typeClass = isAdmin ? 'admin-message' : 'user-message';
                             const safeMsg = $('<div>').text(msg.message || '').html().replace(/\n/g, '<br>');
+                            const safeSenderLabel = $('<div>').text(isAdmin ? 'Barangay Official' : activeResidentName).html();
+                            const safeSrvLabel = $('<div>').text(msg.service_type || activeServiceType || 'General Inquiry').html();
                             const avatarInitial = isAdmin ? 'A' : (activeResidentName ? activeResidentName.charAt(0).toUpperCase() : 'U');
-                            const docCardHtml = msg.attachment_file ? renderChatDocCard(msg.attachment_file, msg.attachment_name, isAdmin) : '';
+                            const attFile = msg.file_attachment || msg.attachment_file;
+                            const attName = msg.file_name || msg.attachment_name;
+                            const docCardHtml = attFile ? renderChatDocCard(attFile, attName, isAdmin) : '';
 
                             html += `
                                 <div class="message-wrapper ${typeClass}">
                                     ${!isAdmin ? `<div class="msg-sender-avatar" title="${activeResidentName}">${avatarInitial}</div>` : ''}
-                                    <div class="message-bubble">
-                                        ${safeMsg ? `<p>${safeMsg}</p>` : ''}
-                                        ${docCardHtml}
-                                        <div class="msg-footer">
+                                    <div class="msg-column">
+                                        <span class="msg-sender-name-above">${safeSenderLabel}</span>
+                                        <div class="message-bubble">
+                                            ${!isAdmin ? `<div class="msg-service-pill"><i class="bi bi-tag-fill"></i> Service: ${safeSrvLabel}</div>` : ''}
+                                            ${safeMsg ? `<p>${safeMsg}</p>` : ''}
+                                            ${docCardHtml}
+                                        </div>
+                                        <div class="msg-footer-outside">
                                             <span class="msg-time">${msg.time}</span>
-                                            ${isAdmin ? `
-                                                <svg class="msg-check" viewBox="0 0 24 24" width="13" height="13" style="width:13px; height:13px; max-width:13px; max-height:13px; vertical-align:middle; display:inline-block;" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                                </svg>
-                                            ` : ''}
                                         </div>
                                     </div>
                                     ${isAdmin ? `<div class="msg-sender-avatar" title="Barangay Admin">${avatarInitial}</div>` : ''}
@@ -860,7 +917,8 @@
             const sid = $(this).data('id');
             const name = $(this).data('name');
             const service = $(this).data('service');
-            openConversation(sid, name, service);
+            const email = $(this).data('email') || '';
+            openConversation(sid, name, service, email);
         });
 
         // Click Notification Dropdown Item
@@ -868,12 +926,13 @@
             const sid = $(this).data('id');
             const name = $(this).data('name');
             const service = $(this).data('service');
+            const email = $(this).data('email') || '';
             $('#notif-dropdown').fadeOut(150);
-            openConversation(sid, name, service);
+            openConversation(sid, name, service, email);
         });
 
         // Search conversations in real-time
-        $('#chat-search-input').on('input', function() {
+        $('#search-threads-input, #chat-search-input').on('input', function() {
             currentSearchQuery = $(this).val().trim();
             if (currentSearchQuery.length > 0) {
                 $('#chat-search-clear').show();
@@ -884,7 +943,7 @@
         });
 
         $('#chat-search-clear').on('click', function() {
-            $('#chat-search-input').val('');
+            $('#search-threads-input, #chat-search-input').val('');
             currentSearchQuery = '';
             $(this).hide();
             renderConversationList();
@@ -932,12 +991,12 @@
                     icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>'
                 };
             }
-            if (ext === 'jpg' || ext === 'jpeg' || ext === 'png') {
+            if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'webp') {
                 return {
-                    badge: 'Image Document',
-                    color: '#059669',
-                    bg: '#dcfce7',
-                    icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#059669" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>'
+                    badge: 'Image Attachment',
+                    color: '#1a73e8',
+                    bg: '#dbeafe',
+                    icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1a73e8" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>'
                 };
             }
             return {
@@ -955,9 +1014,11 @@
             const rawName = fileName || filePath.split('/').pop();
             const safeName = $('<div>').text(rawName).html();
             const fullUrl = '../' + filePath.replace(/^\/+/, '');
+            const isImg = ['jpg', 'jpeg', 'png', 'webp'].includes(ext);
 
             return `
                 <div class="chat-doc-card">
+                    ${isImg ? `<img src="${fullUrl}" alt="${safeName}" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;cursor:pointer;" onclick="openChatImageLightbox('${fullUrl}')">` : ''}
                     <div class="chat-doc-main">
                         <div class="chat-doc-icon" style="background:${meta.bg};">
                             ${meta.icon}
@@ -1071,7 +1132,7 @@
                                     </div>
                                     <div>
                                         <h4 class="service-form-card-title">${f.title}</h4>
-                                        <p class="service-form-card-sub">${f.file_name} • <span style="font-weight:700;color:#15803d;">${ext}</span></p>
+                                        <p class="service-form-card-sub">${f.file_name} • <span style="font-weight:700;color:#1a73e8;">${ext}</span></p>
                                     </div>
                                 </div>
                                 <button type="button" class="btn-select-service-form">Attach Form</button>
@@ -1090,7 +1151,7 @@
             });
         }
 
-        $(document).on('click', '.service-form-card, .btn-select-service-form', function(e) {
+        $(document).on('click', '.service-form-card, .btn-select-service-form', function() {
             const card = $(this).closest('.service-form-card');
             const path = card.data('path');
             const title = card.data('title');
@@ -1126,6 +1187,7 @@
             $btn.prop('disabled', true).css('opacity', '0.7');
 
             const formData = new FormData();
+            formData.append('thread_id', activeSessionId);
             formData.append('session_id', activeSessionId);
             formData.append('message', msg.trim());
 
@@ -1174,9 +1236,9 @@
             }
         });
 
-        // Poll every 3 seconds without glitching
-        setInterval(fetchSessions, 3000);
-        setInterval(fetchMessages, 3000);
+        // Poll every 4.5 seconds without glitching
+        setInterval(fetchSessions, 4500);
+        setInterval(fetchMessages, 4500);
         fetchSessions();
     });
     </script>

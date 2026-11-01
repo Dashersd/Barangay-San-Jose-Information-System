@@ -231,3 +231,409 @@
         gap: 0.25rem;
     }
 }
+
+/* ==========================================================================
+   6. Resident Inquiry Form, Success Card & Pop-Up Gmail OTP Verification Modal
+   ========================================================================== */
+.inquiry-card-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1a73e8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.65rem;
+}
+
+.inquiry-form-subtext {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 1.35rem;
+    line-height: 1.5;
+}
+
+.inquiry-alert-banner {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    display: none;
+    align-items: center;
+    gap: 8px;
+}
+.inquiry-alert-banner.error {
+    display: flex;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+.inquiry-alert-banner.success {
+    display: flex;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+}
+
+/* Confirmation / Success Card (#inquiry-success-card) */
+#inquiry-success-card {
+    text-align: center;
+    padding: 2.25rem 1.5rem;
+    background: #f8fafc;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 16px;
+    animation: otpModalFadeIn 0.3s ease;
+}
+
+.inquiry-success-icon-circle {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0d2847 0%, #1a73e8 100%);
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.15rem;
+    box-shadow: 0 8px 20px rgba(26, 115, 232, 0.25);
+}
+
+.inquiry-success-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0d2847;
+    margin-bottom: 0.5rem;
+}
+
+.inquiry-success-desc {
+    font-size: 0.92rem;
+    color: #475569;
+    max-width: 420px;
+    margin: 0 auto 1.25rem;
+    line-height: 1.55;
+}
+
+.verified-gmail-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #eff6ff;
+    border: 1px solid #93c5fd;
+    color: #1e3a8a;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.btn-send-another {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.78rem 1.65rem;
+    border-radius: 10px;
+    background: #0d2847;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-send-another:hover {
+    background: #1a73e8;
+    transform: translateY(-1px);
+}
+
+/* Gmail OTP Verification Modal (#gmail-otp-modal-backdrop) */
+#gmail-otp-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9999999;
+    background: rgba(13, 40, 71, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: otpModalFadeIn 0.25s ease;
+}
+
+#gmail-otp-modal-backdrop.active {
+    display: flex;
+}
+
+.gmail-otp-modal-dialog {
+    width: 100%;
+    max-width: 460px;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 24px 48px rgba(13, 40, 71, 0.32);
+    padding: 2rem 1.85rem 1.75rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.gmail-otp-modal-dialog::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #0d2847 0%, #1a73e8 55%, #fbbf24 100%);
+}
+
+.gmail-otp-close-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 1.2rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.gmail-otp-close-btn:hover {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.gmail-otp-shield-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0d2847 0%, #1a73e8 100%);
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 8px 18px rgba(13, 40, 71, 0.22);
+}
+
+.gmail-otp-modal-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #0d2847;
+    margin: 0 0 0.4rem;
+}
+
+.gmail-otp-modal-subtitle {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0 0 0.65rem;
+    line-height: 1.45;
+}
+
+.gmail-otp-target-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gmail-otp-dev-hint {
+    display: none;
+    background: #fffbeb;
+    border: 1px dashed #f59e0b;
+    color: #92400e;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.gmail-otp-digits-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 1.15rem;
+}
+
+.gmail-otp-digit-box {
+    width: 48px;
+    height: 56px;
+    border-radius: 12px;
+    border: 2px solid #cbd5e1;
+    background: #f8fafc;
+    color: #0d2847;
+    font-size: 1.35rem;
+    font-weight: 800;
+    text-align: center;
+    outline: none;
+    transition: all 0.18s ease;
+    font-family: 'Inter', monospace;
+}
+
+.gmail-otp-digit-box:focus {
+    border-color: #1a73e8;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.15);
+    transform: translateY(-1px);
+}
+
+.gmail-otp-digit-box.filled {
+    border-color: #0d2847;
+    background: #eff6ff;
+}
+
+.gmail-otp-countdown-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    padding: 7px 14px;
+    margin-bottom: 1.15rem;
+    font-size: 0.8rem;
+    color: #475569;
+}
+
+.gmail-otp-timer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700;
+    color: #0d2847;
+}
+
+.gmail-otp-resend-btn {
+    background: none;
+    border: none;
+    color: #1a73e8;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+.gmail-otp-resend-btn:disabled {
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+.gmail-otp-resend-btn:not(:disabled):hover {
+    text-decoration: underline;
+    color: #0d2847;
+}
+
+.gmail-otp-modal-alert {
+    display: none;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+.gmail-otp-modal-alert.error {
+    display: block;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+.gmail-otp-modal-alert.success {
+    display: block;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+}
+
+.btn-verify-otp-submit {
+    width: 100%;
+    padding: 0.88rem 1.25rem;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #0d2847 0%, #1a73e8 100%);
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 6px 16px rgba(26, 115, 232, 0.28);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.btn-verify-otp-submit:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(26, 115, 232, 0.36);
+}
+.btn-verify-otp-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+@keyframes otpModalFadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 480px) {
+    .gmail-otp-modal-dialog {
+        padding: 1.5rem 1.15rem 1.35rem;
+    }
+    .gmail-otp-digits-row {
+        gap: 6px;
+    }
+    .gmail-otp-digit-box {
+        width: 40px;
+        height: 48px;
+        font-size: 1.15rem;
+        border-radius: 10px;
+    }
+    .gmail-otp-countdown-bar {
+        flex-direction: column;
+        gap: 4px;
+        border-radius: 12px;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .gmail-otp-digits-row {
+        gap: 4px;
+    }
+    .gmail-otp-digit-box {
+        width: 35px;
+        height: 44px;
+        font-size: 1.05rem;
+    }
+}
+

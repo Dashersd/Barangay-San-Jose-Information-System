@@ -2,7 +2,9 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../../db_connect.php';
 
-$res = $conn->query("UPDATE chat_messages SET is_read = 1 WHERE sender = 'user' AND is_read = 0");
+$res = $conn->query("UPDATE feedback_chats SET is_read = 1 WHERE sender_type = 'user' AND is_read = 0");
+// Also mark legacy table if it exists
+$conn->query("UPDATE chat_messages SET is_read = 1 WHERE sender = 'user' AND is_read = 0");
 
 if ($res) {
     echo json_encode(["status" => "success"]);

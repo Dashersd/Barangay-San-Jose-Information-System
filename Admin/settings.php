@@ -82,6 +82,8 @@ $columnsToCheck = [
     'health_hotline'  => "VARCHAR(50) DEFAULT '+63 920 987 6543'",
     'tanod_hotline'   => "VARCHAR(50) DEFAULT '+63 945 112 3344'",
     'facebook_url'    => "VARCHAR(255) DEFAULT 'https://facebook.com/BarangaySanJoseOfficial'",
+    'smtp_email'      => "VARCHAR(150) DEFAULT 'mugiw200@gmail.com'",
+    'smtp_app_password' => "VARCHAR(100) DEFAULT ''",
     'updated_at'      => "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
 ];
 
@@ -271,9 +273,16 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['action']) && 
     $health_hotline = trim($_POST['health_hotline'] ?? '');
     $tanod_hotline = trim($_POST['tanod_hotline'] ?? '');
     $facebook_url = trim($_POST['facebook_url'] ?? '');
+    $smtp_email = trim($_POST['smtp_email'] ?? 'mugiw200@gmail.com');
+    $smtp_app_password = trim($_POST['smtp_app_password'] ?? '');
 
-    $stmt = $conn->prepare("UPDATE barangay_information SET official_email=?, main_contact=?, police_hotline=?, fire_hotline=?, health_hotline=?, tanod_hotline=?, facebook_url=? WHERE id = 1");
-    $stmt->bind_param("sssssss", $official_email, $main_contact, $police_hotline, $fire_hotline, $health_hotline, $tanod_hotline, $facebook_url);
+    if ($smtp_app_password !== '') {
+        $stmt = $conn->prepare("UPDATE barangay_information SET official_email=?, main_contact=?, police_hotline=?, fire_hotline=?, health_hotline=?, tanod_hotline=?, facebook_url=?, smtp_email=?, smtp_app_password=? WHERE id = 1");
+        $stmt->bind_param("sssssssss", $official_email, $main_contact, $police_hotline, $fire_hotline, $health_hotline, $tanod_hotline, $facebook_url, $smtp_email, $smtp_app_password);
+    } else {
+        $stmt = $conn->prepare("UPDATE barangay_information SET official_email=?, main_contact=?, police_hotline=?, fire_hotline=?, health_hotline=?, tanod_hotline=?, facebook_url=?, smtp_email=? WHERE id = 1");
+        $stmt->bind_param("ssssssss", $official_email, $main_contact, $police_hotline, $fire_hotline, $health_hotline, $tanod_hotline, $facebook_url, $smtp_email);
+    }
 
     if ($stmt->execute()) {
         $stmt->close();
@@ -473,7 +482,7 @@ $lastBackup = ($lastBackupRes && $lbRow = $lastBackupRes->fetch_assoc()) ? $lbRo
 
 // Unread chat badge count
 $unreadChatCount = 0;
-$urRes = $conn->query("SELECT COUNT(*) FROM chat_messages WHERE sender = 'user' AND is_read = 0");
+$urRes = $conn->query("SELECT COUNT(*) FROM feedback_chats WHERE sender_type = 'user' AND is_read = 0");
 if ($urRes) $unreadChatCount = (int)$urRes->fetch_row()[0];
 
 // Flash messages
@@ -1717,6 +1726,31 @@ if ($h_res) {
                                     <label class="form-label-custom"><i class="bi bi-facebook" style="color: #1877f2;"></i> Official Facebook Page URL</label>
                                     <input type="url" name="facebook_url" class="form-control-custom" value="<?= htmlspecialchars($info['facebook_url'] ?? 'https://facebook.com/BarangaySanJoseOfficial') ?>" placeholder="https://facebook.com/BarangaySanJoseOfficial">
                                     <span class="form-hint">Community social media link for advisories and public announcements</span>
+                                </div>
+
+                                <div class="settings-card-header" style="margin-top: 1.5rem;">
+                                    <div class="card-header-title">
+                                        <div class="card-header-icon">
+                                            <i class="bi bi-shield-lock-fill"></i>
+                                        </div>
+                                        <div>
+                                            <h3>Gmail OTP SMTP Mailer Configuration</h3>
+                                            <p>Configure the Gmail account and 16-character Google App Password used to send 6-digit OTP verification codes to residents' Gmail Inbox &amp; Spam folders</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-grid-2">
+                                    <div class="form-group-custom">
+                                        <label class="form-label-custom"><i class="bi bi-google" style="color: #ea4335;"></i> Gmail SMTP Sender Account</label>
+                                        <input type="email" name="smtp_email" class="form-control-custom" value="<?= htmlspecialchars($info['smtp_email'] ?? 'mugiw200@gmail.com') ?>" placeholder="mugiw200@gmail.com">
+                                        <span class="form-hint">Gmail address that dispatches the 6-digit OTP verification emails</span>
+                                    </div>
+                                    <div class="form-group-custom">
+                                        <label class="form-label-custom"><i class="bi bi-key-fill" style="color: #1a73e8;"></i> Google 16-Character App Password</label>
+                                        <input type="password" name="smtp_app_password" class="form-control-custom" value="" placeholder="<?= !empty($info['smtp_app_password']) ? '•••••••••••••••• (Saved — enter new to replace)' : 'e.g., abcd efgh ijkl mnop' ?>">
+                                        <span class="form-hint">Generate at <strong>myaccount.google.com/apppasswords</strong> (requires 2-Step Verification enabled on the Gmail account)</span>
+                                    </div>
                                 </div>
 
                                 <div class="form-actions-bar">

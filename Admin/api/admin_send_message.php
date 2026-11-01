@@ -2,13 +2,19 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../../db_connect.php';
 
-$session_id = isset($_POST['session_id']) ? (int)$_POST['session_id'] : 0;
+$thread_id = '';
+if (!empty($_POST['thread_id'])) {
+    $thread_id = trim($_POST['thread_id']);
+} elseif (!empty($_POST['session_id'])) {
+    $thread_id = trim($_POST['session_id']);
+}
+
 $message = isset($_POST['message']) ? trim($_POST['message']) : '';
 $attachment_file = null;
 $attachment_name = null;
 
-if ($session_id <= 0) {
-    echo json_encode(["status" => "error", "message" => "Invalid session"]);
+if ($thread_id === '') {
+    echo json_encode(["status" => "error", "message" => "Invalid thread ID"]);
     exit;
 }
 
@@ -18,8 +24,8 @@ if (!empty($_POST['service_doc_path'])) {
     $fullTest = dirname(dirname(__DIR__)) . '/' . ltrim($cleanPath, '/\\');
     if (is_file($fullTest)) {
         $attachment_file = ltrim($cleanPath, '/\\');
-        $attachment_name = !empty($_POST['service_doc_name']) 
-            ? trim($_POST['service_doc_name']) 
+        $attachment_name = !empty($_POST['service_doc_name'])
+            ? trim($_POST['service_doc_name'])
             : basename($attachment_file);
     }
 }
@@ -28,10 +34,10 @@ if (!empty($_POST['service_doc_path'])) {
 if (isset($_FILES['chatDocument']) && $_FILES['chatDocument']['error'] === UPLOAD_ERR_OK) {
     $file = $_FILES['chatDocument'];
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $allowed = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+    $allowed = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'webp'];
 
     if (!in_array($ext, $allowed)) {
-        echo json_encode(["status" => "error", "message" => "Invalid file type. Allowed: PDF, DOC, DOCX, JPG, PNG."]);
+        echo json_encode(["status" => "error", "message" => "Invalid file type. Allowed: PDF, DOC, DOCX, JPG, PNG, WEBP."]);
         exit;
     }
 
@@ -62,8 +68,26 @@ if (empty($message) && !empty($attachment_name)) {
     $message = "Sent a document: " . $attachment_name;
 }
 
-$stmt = $conn->prepare("INSERT INTO chat_messages (session_id, sender, message, attachment_file, attachment_name) VALUES (?, 'admin', ?, ?, ?)");
-$stmt->bind_param("isss", $session_id, $message, $attachment_file, $attachment_name);
+// Look up resident thread info so thread metadata remains consistent
+$sender_name = 'Barangay San Jose Admin';
+$email = null;
+$service_type = 'General Inquiry';
+
+$metaStmt = $conn->prepare("SELECT sender_name, email, service_type FROM feedback_chats WHERE thread_id = ? ORDER BY id ASC LIMIT 1");
+if ($metaStmt) {
+    $metaStmt->bind_param("s", $thread_id);
+    $metaStmt->execute();
+    $metaRes = $metaStmt->get_result();
+    if ($metaRow = $metaRes->fetch_assoc()) {
+        $sender_name = $metaRow['sender_name'] ?: 'Resident';
+        $email = $metaRow['email'];
+        $service_type = $metaRow['service_type'] ?: 'General Inquiry';
+    }
+    $metaStmt->close();
+}
+
+$stmt = $conn->prepare("INSERT INTO feedback_chats (thread_id, sender_name, email, service_type, sender_type, message, file_attachment, file_name, is_read) VALUES (?, ?, ?, ?, 'admin', ?, ?, ?, 1)");
+$stmt->bind_param("sssssss", $thread_id, $sender_name, $email, $service_type, $message, $attachment_file, $attachment_name);
 
 if ($stmt->execute()) {
     echo json_encode([
@@ -74,4 +98,5 @@ if ($stmt->execute()) {
 } else {
     echo json_encode(["status" => "error", "message" => $conn->error]);
 }
+$stmt->close();
 ?>

@@ -119,6 +119,7 @@ if (empty($hero_slides)) {
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/gallery.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/contact.css?v=<?= time() ?>">
 
     <!-- AOS Animation CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -567,53 +568,136 @@ if (empty($hero_slides)) {
 
                 <!-- Right Side -->
                 <div class="contact-home-right" data-aos="fade-left">
-                    <h2 class="contact-heading">Start a Live Chat</h2>
-                    <?php $has_chat = isset($_SESSION['chat_token']) && !empty($_SESSION['chat_token']); ?>
-                    <form class="contact-form" id="live-chat-form" action="#" method="POST" style="<?php echo $has_chat ? 'display:none;' : ''; ?>">
-                        <div class="form-group">
-                            <label>Your Name</label>
-                            <input type="text" placeholder="Enter your name" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Service Type</label>
-                            <select name="service" required>
-                                <option value="" disabled selected>Select service</option>
-                                <?php if (!empty($all_active_services)): ?>
-                                    <?php foreach ($all_active_services as $srvItem): ?>
-                                        <option value="<?= htmlspecialchars($srvItem['title']) ?>">
-                                            <?= htmlspecialchars($srvItem['title']) ?>
+                    <!-- Inquiry Form Card -->
+                    <div id="inquiry-form-card">
+                        <span class="inquiry-card-header-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Gmail OTP Verified Inquiry
+                        </span>
+                        <h2 class="contact-heading" style="margin-bottom: 0.35rem;">Send an Official Inquiry</h2>
+                        <p class="inquiry-form-subtext">Verify your Gmail address with a 6-digit OTP code so our Barangay Administration can respond directly to your inbox. <strong>Please check both your Gmail Inbox and Spam/Junk folder</strong> for the verification code.</p>
+
+                        <div id="inquiry-form-alert" class="inquiry-alert-banner"></div>
+
+                        <form class="contact-form" id="resident-inquiry-form" action="#" method="POST">
+                            <div class="form-group">
+                                <label for="inquiry-name">Your Name <span style="color:#ef4444;">*</span></label>
+                                <input type="text" id="inquiry-name" name="name" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inquiry-email">Gmail / Email Address <span style="color:#ef4444;">*</span></label>
+                                <input type="email" id="inquiry-email" name="email" placeholder="yourname@gmail.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inquiry-service-type">Service Type / Subject <span style="color:#ef4444;">*</span></label>
+                                <select id="inquiry-service-type" name="service_type" required>
+                                    <option value="" disabled selected>Select service or subject</option>
+                                    <?php
+                                    $defaultServices = [
+                                        'Barangay Clearance',
+                                        'Certificate of Indigency',
+                                        'Business Clearance',
+                                        'Certificate of Residency',
+                                        'General Inquiry / Feedback'
+                                    ];
+                                    $serviceOptions = [];
+                                    if (!empty($all_active_services)) {
+                                        foreach ($all_active_services as $srvItem) {
+                                            if (!empty($srvItem['title']) && !in_array($srvItem['title'], $serviceOptions)) {
+                                                $serviceOptions[] = $srvItem['title'];
+                                            }
+                                        }
+                                    }
+                                    foreach ($defaultServices as $defSrv) {
+                                        if (!in_array($defSrv, $serviceOptions)) {
+                                            $serviceOptions[] = $defSrv;
+                                        }
+                                    }
+                                    foreach ($serviceOptions as $srvTitle):
+                                    ?>
+                                        <option value="<?= htmlspecialchars($srvTitle) ?>">
+                                            <?= htmlspecialchars($srvTitle) ?>
                                         </option>
                                     <?php endforeach; ?>
-                                <?php else: ?>
-                                    <option value="Barangay Clearance">Barangay Clearance</option>
-                                    <option value="Certificate of Indigency">Certificate of Indigency</option>
-                                    <option value="Business Clearance">Business Clearance</option>
-                                    <option value="Certificate of Residency">Certificate of Residency</option>
-                                <?php endif; ?>
-                                <option value="Other Inquiry">Other Inquiry</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Initial Message</label>
-                            <textarea rows="4" placeholder="How can we help you?" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary contact-submit">START CHAT</button>
-                    </form>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="inquiry-message">Message / Request Details <span style="color:#ef4444;">*</span></label>
+                                <textarea id="inquiry-message" name="message" rows="4" placeholder="How can Barangay San Jose assist you today?" required></textarea>
+                            </div>
+                            <button type="submit" id="btn-submit-inquiry" class="btn btn-primary contact-submit">
+                                Verify Gmail &amp; Submit Inquiry &rarr;
+                            </button>
+                        </form>
+                    </div>
 
-                    <!-- Chat UI (Hidden Initially) -->
-                    <div id="live-chat-ui" style="<?php echo $has_chat ? '' : 'display:none;'; ?> border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; overflow:hidden;">
-                        <div id="user-chat-messages" style="height: 300px; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:10px;">
-                            <!-- Messages -->
+                    <!-- Inquiry Confirmation Card (Shown after OTP Verification) -->
+                    <div id="inquiry-success-card" style="display: none;">
+                        <div class="inquiry-success-icon-circle">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                         </div>
-                        <div style="display:flex; border-top:1px solid #e2e8f0; padding:15px; background:#fff;">
-                            <input type="text" id="user-chat-input" placeholder="Type a message..." style="flex:1; border:1px solid #cbd5e1; border-radius:8px; padding:10px 15px; margin-right:10px; outline:none; font-family:inherit;">
-                            <button id="user-chat-send" class="btn btn-primary" style="padding:10px 20px; border-radius:8px;">SEND</button>
+                        <h3 class="inquiry-success-title">Inquiry Verified &amp; Submitted!</h3>
+                        <p class="inquiry-success-desc">
+                            Thank you, <strong id="success-resident-name">Resident</strong>. Your inquiry has been officially recorded in the Barangay San Jose Portal. Our officials will send their response directly to your verified Gmail:
+                        </p>
+                        <div>
+                            <span class="verified-gmail-pill">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2.4"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                                <span id="success-verified-email">resident@gmail.com</span>
+                            </span>
                         </div>
+                        <button type="button" id="btn-send-another-inquiry" class="btn-send-another">
+                            Send Another Inquiry
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Pop-Up Gmail OTP Verification Modal -->
+    <div id="gmail-otp-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="gmail-otp-title">
+        <div class="gmail-otp-modal-dialog">
+            <button type="button" class="gmail-otp-close-btn" id="btn-modal-close-otp" title="Close verification">&times;</button>
+            <div class="gmail-otp-shield-badge">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+            </div>
+            <h3 class="gmail-otp-modal-title" id="gmail-otp-title">Gmail OTP Verification</h3>
+            <p class="gmail-otp-modal-subtitle">Enter the 6-digit verification code sent to your Gmail address (please check both your <strong>Gmail Inbox</strong> and <strong>Spam / Junk folder</strong>):</p>
+            <div class="gmail-otp-target-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <span id="modal-otp-target-email">resident@gmail.com</span>
+            </div>
+            <div style="font-size: 0.78rem; color: #475569; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 0.5rem 0.75rem; margin-bottom: 0.85rem; line-height: 1.4;">
+                💡 <strong>Didn't see the email?</strong> Check your <strong>Spam</strong>, <strong>Junk</strong>, or <strong>Promotions</strong> folder in Gmail, or wait 30 seconds and click <strong>Resend Code</strong>.
+            </div>
+
+            <div id="modal-otp-dev-hint" class="gmail-otp-dev-hint"></div>
+            <div id="modal-otp-alert" class="gmail-otp-modal-alert"></div>
+
+            <div class="gmail-otp-digits-row" id="gmail-otp-digits-row">
+                <input type="text" inputmode="numeric" maxlength="1" class="gmail-otp-digit-box" data-idx="0" autocomplete="one-time-code" aria-label="Digit 1">
+                <input type="text" inputmode="numeric" maxlength="1" class="gmail-otp-digit-box" data-idx="1" aria-label="Digit 2">
+                <input type="text" inputmode="numeric" maxlength="1" class="gmail-otp-digit-box" data-idx="2" aria-label="Digit 3">
+                <input type="text" inputmode="numeric" maxlength="1" class="gmail-otp-digit-box" data-idx="3" aria-label="Digit 4">
+                <input type="text" inputmode="numeric" maxlength="1" class="gmail-otp-digit-box" data-idx="4" aria-label="Digit 5">
+                <input type="text" inputmode="numeric" maxlength="1" class="gmail-otp-digit-box" data-idx="5" aria-label="Digit 6">
+            </div>
+
+            <div class="gmail-otp-countdown-bar">
+                <span class="gmail-otp-timer-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Expires in: <strong id="modal-otp-countdown">03:00</strong>
+                </span>
+                <button type="button" class="gmail-otp-resend-btn" id="btn-modal-resend-otp" disabled>Resend Code (30s)</button>
+            </div>
+
+            <button type="button" class="btn-verify-otp-submit" id="btn-modal-verify-otp">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Verify &amp; Submit Inquiry</span>
+            </button>
+        </div>
+    </div>
 
     
 
@@ -664,180 +748,321 @@ if (empty($hero_slides)) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="assets/js/main.js?v=2"></script>
     <script>
-    $(document).ready(function() {
-        let chatPolling;
-        
-        // If chat is already active on load
-        if ($('#live-chat-ui').is(':visible')) {
-            $('.contact-heading').text("Live Chat Support");
-            fetchUserMessages();
-            chatPolling = setInterval(fetchUserMessages, 3000);
+    (function() {
+        const form = document.getElementById('resident-inquiry-form');
+        const formCard = document.getElementById('inquiry-form-card');
+        const successCard = document.getElementById('inquiry-success-card');
+        const formAlert = document.getElementById('inquiry-form-alert');
+        const btnSubmit = document.getElementById('btn-submit-inquiry');
+
+        const modalBackdrop = document.getElementById('gmail-otp-modal-backdrop');
+        const btnCloseModal = document.getElementById('btn-modal-close-otp');
+        const targetEmailEl = document.getElementById('modal-otp-target-email');
+        const modalAlert = document.getElementById('modal-otp-alert');
+        const modalDevHint = document.getElementById('modal-otp-dev-hint');
+        const countdownEl = document.getElementById('modal-otp-countdown');
+        const btnResend = document.getElementById('btn-modal-resend-otp');
+        const btnVerify = document.getElementById('btn-modal-verify-otp');
+        const digitBoxes = Array.from(document.querySelectorAll('.gmail-otp-digit-box'));
+
+        let expiryTimer = null;
+        let resendTimer = null;
+        let remainingExpireSec = 180;
+        let remainingResendSec = 30;
+
+        function showFormAlert(msg, type) {
+            if (!formAlert) return;
+            formAlert.className = 'inquiry-alert-banner ' + (type || 'error');
+            formAlert.textContent = msg;
+            formAlert.style.display = 'flex';
         }
 
-        $('#live-chat-form').on('submit', function(e) {
-            e.preventDefault();
-            
-            const name = $(this).find('input[type="text"]').eq(0).val();
-            const service = $(this).find('select').val();
-            const message = $(this).find('textarea').val();
+        function hideFormAlert() {
+            if (!formAlert) return;
+            formAlert.style.display = 'none';
+        }
 
-            $.post('api/chat_init.php', {name: name, service: service, message: message}, function(res) {
-                if(res.status === 'success') {
-                    $('#live-chat-form').hide();
-                    $('.contact-heading').text("Live Chat Support");
-                    $('#live-chat-ui').fadeIn();
-                    
-                    fetchUserMessages();
-                    chatPolling = setInterval(fetchUserMessages, 3000);
+        function showModalAlert(msg, type) {
+            if (!modalAlert) return;
+            modalAlert.className = 'gmail-otp-modal-alert ' + (type || 'error');
+            modalAlert.textContent = msg;
+            modalAlert.style.display = 'block';
+        }
+
+        function hideModalAlert() {
+            if (!modalAlert) return;
+            modalAlert.style.display = 'none';
+        }
+
+        function formatMMSS(sec) {
+            const m = Math.floor(Math.max(0, sec) / 60);
+            const s = Math.max(0, sec) % 60;
+            return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        }
+
+        function startOtpTimers(expireSeconds) {
+            clearInterval(expiryTimer);
+            clearInterval(resendTimer);
+
+            remainingExpireSec = expireSeconds || 180;
+            remainingResendSec = 30;
+
+            countdownEl.textContent = formatMMSS(remainingExpireSec);
+            btnResend.disabled = true;
+            btnResend.textContent = `Resend Code (${remainingResendSec}s)`;
+
+            expiryTimer = setInterval(() => {
+                remainingExpireSec--;
+                countdownEl.textContent = formatMMSS(remainingExpireSec);
+                if (remainingExpireSec <= 0) {
+                    clearInterval(expiryTimer);
+                    showModalAlert('Verification code has expired. Please click "Resend Code" to receive a new 6-digit OTP.', 'error');
                 }
+            }, 1000);
+
+            resendTimer = setInterval(() => {
+                remainingResendSec--;
+                if (remainingResendSec <= 0) {
+                    clearInterval(resendTimer);
+                    btnResend.disabled = false;
+                    btnResend.textContent = 'Resend Code';
+                } else {
+                    btnResend.textContent = `Resend Code (${remainingResendSec}s)`;
+                }
+            }, 1000);
+        }
+
+        function openOtpModal(email, expiresIn, otpPreview) {
+            targetEmailEl.textContent = email;
+            hideModalAlert();
+            if (otpPreview && modalDevHint) {
+                modalDevHint.style.display = 'block';
+                modalDevHint.innerHTML = '<strong>Instant Verification Code (SMTP Fallback):</strong> <span style="font-family:monospace;font-size:1.05rem;font-weight:800;letter-spacing:2px;color:#0d2847;">' + otpPreview + '</span><br><span style="font-size:0.74rem;color:#475569;">(If the email is not in your Gmail Inbox or Spam folder yet, you can use this code or configure the 16-digit Gmail App Password in Admin &rarr; Settings &rarr; Hotlines &amp; Contacts.)</span>';
+            } else if (modalDevHint) {
+                modalDevHint.style.display = 'none';
+            }
+            digitBoxes.forEach(b => {
+                b.value = '';
+                b.classList.remove('filled');
+            });
+            modalBackdrop.classList.add('active');
+            startOtpTimers(expiresIn || 180);
+            setTimeout(() => {
+                if (digitBoxes[0]) digitBoxes[0].focus();
+            }, 80);
+        }
+
+        function closeOtpModal() {
+            modalBackdrop.classList.remove('active');
+            clearInterval(expiryTimer);
+            clearInterval(resendTimer);
+        }
+
+        digitBoxes.forEach((box, idx) => {
+            box.addEventListener('input', (e) => {
+                const val = e.target.value.replace(/[^0-9]/g, '');
+                e.target.value = val ? val.charAt(val.length - 1) : '';
+                if (e.target.value) {
+                    e.target.classList.add('filled');
+                    if (idx < digitBoxes.length - 1) {
+                        digitBoxes[idx + 1].focus();
+                    }
+                } else {
+                    e.target.classList.remove('filled');
+                }
+            });
+
+            box.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace') {
+                    if (!box.value && idx > 0) {
+                        digitBoxes[idx - 1].value = '';
+                        digitBoxes[idx - 1].classList.remove('filled');
+                        digitBoxes[idx - 1].focus();
+                        e.preventDefault();
+                    } else {
+                        box.classList.remove('filled');
+                    }
+                } else if (e.key === 'ArrowLeft' && idx > 0) {
+                    digitBoxes[idx - 1].focus();
+                    e.preventDefault();
+                } else if (e.key === 'ArrowRight' && idx < digitBoxes.length - 1) {
+                    digitBoxes[idx + 1].focus();
+                    e.preventDefault();
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitOtpVerification();
+                }
+            });
+
+            box.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '').slice(0, 6);
+                if (!pasted) return;
+                for (let i = 0; i < digitBoxes.length; i++) {
+                    digitBoxes[i].value = pasted[i] || '';
+                    if (digitBoxes[i].value) {
+                        digitBoxes[i].classList.add('filled');
+                    } else {
+                        digitBoxes[i].classList.remove('filled');
+                    }
+                }
+                const nextFocusIdx = Math.min(pasted.length, digitBoxes.length - 1);
+                digitBoxes[nextFocusIdx].focus();
             });
         });
 
-        function getPublicChatFileMeta(ext) {
-            ext = (ext || '').toLowerCase();
-            if (ext === 'pdf') {
-                return {
-                    badge: 'PDF Document',
-                    bg: '#fee2e2',
-                    icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ef4444" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>'
-                };
-            }
-            if (ext === 'doc' || ext === 'docx') {
-                return {
-                    badge: 'Word Document',
-                    bg: '#dbeafe',
-                    icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>'
-                };
-            }
-            if (ext === 'jpg' || ext === 'jpeg' || ext === 'png') {
-                return {
-                    badge: 'Image Document',
-                    bg: '#dcfce7',
-                    icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#059669" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>'
-                };
-            }
-            return {
-                badge: 'Official Document',
-                bg: '#f1f5f9',
-                icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#64748b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>'
-            };
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                hideFormAlert();
+
+                const name = document.getElementById('inquiry-name').value.trim();
+                const email = document.getElementById('inquiry-email').value.trim();
+                const serviceType = document.getElementById('inquiry-service-type').value;
+                const message = document.getElementById('inquiry-message').value.trim();
+
+                if (!name || !email || !serviceType || !message) {
+                    showFormAlert('Please fill out all required fields before submitting.', 'error');
+                    return;
+                }
+
+                const origBtnHtml = btnSubmit.innerHTML;
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = 'Sending 6-Digit OTP to Gmail...';
+
+                const fd = new FormData();
+                fd.append('name', name);
+                fd.append('email', email);
+                fd.append('service_type', serviceType);
+                fd.append('message', message);
+
+                fetch('api/send_otp.php', {
+                    method: 'POST',
+                    body: fd
+                })
+                .then(r => r.json())
+                .then(res => {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = origBtnHtml;
+                    if (res.status === 'success') {
+                        openOtpModal(res.email || email, res.expires_in || 180, res.otp_preview || null);
+                    } else {
+                        showFormAlert(res.message || 'Unable to send verification code. Please try again.', 'error');
+                    }
+                })
+                .catch(() => {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = origBtnHtml;
+                    showFormAlert('Network error while connecting to verification server.', 'error');
+                });
+            });
         }
 
-        function renderPublicChatDocCard(filePath, fileName) {
-            if (!filePath) return '';
-            const ext = filePath.split('.').pop().toLowerCase();
-            const meta = getPublicChatFileMeta(ext);
-            const rawName = fileName || filePath.split('/').pop();
-            const safeName = $('<div>').text(rawName).html();
-            const cleanUrl = filePath.replace(/^\/+/, '');
+        if (btnResend) {
+            btnResend.addEventListener('click', function() {
+                if (btnResend.disabled) return;
+                btnResend.disabled = true;
+                btnResend.textContent = 'Sending...';
+                hideModalAlert();
 
-            return `
-                <div class="chat-doc-card">
-                    <div class="chat-doc-main">
-                        <div class="chat-doc-icon" style="background:${meta.bg};">
-                            ${meta.icon}
-                        </div>
-                        <div class="chat-doc-info">
-                            <span class="chat-doc-title" title="${safeName}">${safeName}</span>
-                            <span class="chat-doc-badge">${meta.badge}</span>
-                        </div>
-                    </div>
-                    <div class="chat-doc-actions">
-                        <a href="${cleanUrl}" download="${safeName}" class="btn-chat-doc-dl" target="_blank">
-                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Download
-                        </a>
-                        <button type="button" class="btn-chat-doc-print" onclick="printCitizenChatDoc('${cleanUrl}', '${ext}')">
-                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                            Print
-                        </button>
-                    </div>
-                </div>
-            `;
+                const fd = new FormData();
+                fd.append('action', 'resend');
+
+                fetch('api/send_otp.php', {
+                    method: 'POST',
+                    body: fd
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        showModalAlert('A fresh 6-digit verification code has been sent! Please check both your Gmail Inbox and Spam/Junk folder.', 'success');
+                        if (res.otp_preview && modalDevHint) {
+                            modalDevHint.style.display = 'block';
+                            modalDevHint.innerHTML = '<strong>Instant Verification Code (SMTP Fallback):</strong> <span style="font-family:monospace;font-size:1.05rem;font-weight:800;letter-spacing:2px;color:#0d2847;">' + res.otp_preview + '</span>';
+                        }
+                        digitBoxes.forEach(b => { b.value = ''; b.classList.remove('filled'); });
+                        digitBoxes[0].focus();
+                        startOtpTimers(res.expires_in || 180);
+                    } else {
+                        btnResend.disabled = false;
+                        btnResend.textContent = 'Resend Code';
+                        showModalAlert(res.message || 'Could not resend code.', 'error');
+                    }
+                })
+                .catch(() => {
+                    btnResend.disabled = false;
+                    btnResend.textContent = 'Resend Code';
+                    showModalAlert('Network error while resending code.', 'error');
+                });
+            });
         }
 
-        window.printCitizenChatDoc = function(fileUrl, ext) {
-            ext = (ext || '').toLowerCase();
-            if (ext === 'pdf') {
-                const printWindow = window.open(fileUrl, '_blank');
-                if (printWindow) {
-                    printWindow.onload = function() {
-                        try { printWindow.print(); } catch(e) {}
-                    };
-                }
-            } else if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
-                const printWindow = window.open('', '_blank');
-                if (printWindow) {
-                    printWindow.document.write(`
-                        <html>
-                            <head><title>Print Document</title><style>body{margin:0;display:flex;align-items:center;justify-content:center;background:#fff;} img{max-width:98vw;max-height:98vh;object-fit:contain;}</style></head>
-                            <body onload="window.print();">
-                                <img src="${fileUrl}" alt="Print Preview" />
-                            </body>
-                        </html>
-                    `);
-                    printWindow.document.close();
-                }
-            } else {
-                alert('For Word/Office documents (.doc, .docx), please download the file to open and print.');
-                const tempLink = document.createElement('a');
-                tempLink.href = fileUrl;
-                tempLink.download = '';
-                document.body.appendChild(tempLink);
-                tempLink.click();
-                document.body.removeChild(tempLink);
+        function submitOtpVerification() {
+            const code = digitBoxes.map(b => b.value.trim()).join('');
+            if (code.length !== 6) {
+                showModalAlert('Please enter all 6 digits of your verification code.', 'error');
+                return;
             }
-        };
 
-        function fetchUserMessages() {
-            $.get('api/chat_fetch.php', function(res) {
-                if(res.status === 'success') {
-                    let html = '';
-                    res.messages.forEach(msg => {
-                        const isUser = msg.sender === 'user';
-                        const align = isUser ? 'flex-end' : 'flex-start';
-                        const bg = isUser ? 'var(--primary)' : '#f8fafc';
-                        const color = isUser ? '#fff' : '#1e293b';
-                        const borderStyle = isUser ? 'none' : '1px solid #e2e8f0';
-                        const nameDisplay = isUser ? '' : '<strong style="display:block; margin-bottom:5px; font-size:0.85em; color:#0f172a;">Barangay San Jose Official</strong>';
-                        const safeMsg = msg.message ? $('<div>').text(msg.message).html().replace(/\n/g, '<br>') : '';
-                        const docCard = msg.attachment_file ? renderPublicChatDocCard(msg.attachment_file, msg.attachment_name) : '';
-                        
-                        html += `
-                            <div style="align-self:${align}; max-width:85%;">
-                                <div style="background:${bg}; color:${color}; border:${borderStyle}; padding:12px 16px; border-radius:12px; font-size:14px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
-                                    ${nameDisplay}
-                                    ${safeMsg ? `<p style="margin:0; line-height:1.4;">${safeMsg}</p>` : ''}
-                                    ${docCard}
-                                    <span style="display:block; text-align:right; font-size:0.75em; margin-top:8px; opacity:0.8;">${msg.time}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    $('#user-chat-messages').html(html);
-                    $('#user-chat-messages').scrollTop($('#user-chat-messages')[0].scrollHeight);
+            const origVerifyHtml = btnVerify.innerHTML;
+            btnVerify.disabled = true;
+            btnVerify.innerHTML = 'Verifying &amp; Submitting...';
+            hideModalAlert();
+
+            const fd = new FormData();
+            fd.append('otp', code);
+
+            fetch('api/verify_otp.php', {
+                method: 'POST',
+                body: fd
+            })
+            .then(r => r.json())
+            .then(res => {
+                btnVerify.disabled = false;
+                btnVerify.innerHTML = origVerifyHtml;
+                if (res.status === 'success') {
+                    closeOtpModal();
+                    document.getElementById('success-resident-name').textContent = res.name || 'Resident';
+                    document.getElementById('success-verified-email').textContent = res.email || '';
+                    formCard.style.display = 'none';
+                    successCard.style.display = 'block';
+                    form.reset();
+                } else {
+                    showModalAlert(res.message || 'Invalid verification code.', 'error');
+                }
+            })
+            .catch(() => {
+                btnVerify.disabled = false;
+                btnVerify.innerHTML = origVerifyHtml;
+                showModalAlert('Network error while verifying OTP code.', 'error');
+            });
+        }
+
+        if (btnVerify) {
+            btnVerify.addEventListener('click', submitOtpVerification);
+        }
+
+        if (btnCloseModal) {
+            btnCloseModal.addEventListener('click', closeOtpModal);
+        }
+
+        if (modalBackdrop) {
+            modalBackdrop.addEventListener('click', function(e) {
+                if (e.target === modalBackdrop) {
+                    closeOtpModal();
                 }
             });
         }
 
-        $('#user-chat-send').on('click', function() {
-            const msg = $('#user-chat-input').val();
-            if(msg.trim() === '') return;
-            
-            $.post('api/chat_send.php', {message: msg}, function(res) {
-                if(res.status === 'success') {
-                    $('#user-chat-input').val('');
-                    fetchUserMessages();
-                }
+        const btnAnother = document.getElementById('btn-send-another-inquiry');
+        if (btnAnother) {
+            btnAnother.addEventListener('click', function() {
+                successCard.style.display = 'none';
+                formCard.style.display = 'block';
+                hideFormAlert();
             });
-        });
-        
-        $('#user-chat-input').keypress(function(e) {
-            if(e.which == 13) {
-                $('#user-chat-send').click();
-            }
-        });
-    });
+        }
+    })();
     </script>
 
     <!-- Home Gallery Lightbox Modal -->
