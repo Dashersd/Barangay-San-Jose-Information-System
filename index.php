@@ -116,6 +116,9 @@ if (empty($hero_slides)) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/gallery.css?v=<?= time() ?>">
@@ -133,8 +136,31 @@ if (empty($hero_slides)) {
         display: flex !important;
         align-items: center !important;
         color: #ffffff !important;
-        padding: 10rem 0 !important;
+        padding: 9.5rem 0 !important;
         background: #0d2847 !important;
+    }
+
+    @media (max-width: 991px) {
+        .hero,
+        .hero-section {
+            padding: 6.5rem 0 4.5rem !important;
+            min-height: 70vh !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero,
+        .hero-section {
+            padding: 5rem 0 3.5rem !important;
+            min-height: auto !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero,
+        .hero-section {
+            padding: 4.25rem 0 3rem !important;
+        }
     }
 
     .hero::before,
@@ -195,14 +221,14 @@ if (empty($hero_slides)) {
     <nav class="navbar">
         <div class="navbar-container">
             <!-- Logo & Brand -->
-            <div class="navbar-brand">
+            <a href="index.php" class="navbar-brand">
                 <img src="assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="navbar-logo">
                 <img src="assets/images/Lapuyan Logo.png" alt="Municipality of Lapuyan Logo" class="navbar-logo">
                 <div class="brand-text">
                     <span class="brand-title">BARANGAY SAN JOSE</span>
                     <span class="brand-subtitle">Bayanihan &bull; Serbisyong Totoo</span>
                 </div>
-            </div>
+            </a>
 
             <!-- Desktop Links -->
             <ul class="navbar-links">
@@ -223,12 +249,67 @@ if (empty($hero_slides)) {
                 <li><a href="services.php">Services</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>
+
             <!-- Right Side: Admin Login -->
             <div class="navbar-right">
                 <a href="Admin/login.php" class="admin-login-link">Admin Login</a>
             </div>
+
+            <!-- Mobile Hamburger Toggle Button -->
+            <button type="button" class="navbar-mobile-toggle" id="btn-navbar-mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Navigation Drawer Backdrop -->
+    <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <aside class="mobile-nav-drawer" id="mobile-nav-drawer" aria-hidden="true">
+        <div class="mobile-nav-header">
+            <div class="mobile-nav-brand">
+                <img src="assets/images/San Jose Logo 2.png" alt="Barangay Logo" class="mobile-nav-logo">
+                <div class="mobile-nav-brand-text">
+                    <div class="mobile-nav-title">Barangay San Jose</div>
+                    <div class="mobile-nav-subtitle">Bayanihan &bull; Serbisyong Totoo</div>
+                </div>
+            </div>
+            <button type="button" class="mobile-nav-close" id="btn-mobile-nav-close" aria-label="Close navigation">&times;</button>
+        </div>
+
+        <div class="mobile-nav-body">
+            <ul class="mobile-nav-list">
+                <li><a href="index.php" class="mobile-nav-link active"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                <li class="mobile-dropdown-item">
+                    <button type="button" class="mobile-nav-link mobile-dropdown-toggle" id="btn-mobile-about-toggle" aria-expanded="false">
+                        <span><i class="fas fa-info-circle"></i> <span>About Us</span></span>
+                        <i class="fas fa-chevron-down mobile-dropdown-arrow"></i>
+                    </button>
+                    <div class="mobile-submenu" id="mobile-about-submenu">
+                        <a href="about.php#history" class="mobile-sublink"><i class="fas fa-landmark"></i> <span>History</span></a>
+                        <a href="vision.php" class="mobile-sublink"><i class="fas fa-eye"></i> <span>Vision</span></a>
+                        <a href="mission.php" class="mobile-sublink"><i class="fas fa-bullseye"></i> <span>Mission</span></a>
+                        <a href="officials.php" class="mobile-sublink"><i class="fas fa-users"></i> <span>Barangay Officials</span></a>
+                        <a href="skofficials.php" class="mobile-sublink"><i class="fas fa-user-graduate"></i> <span>SK Officials</span></a>
+                    </div>
+                </li>
+                <li><a href="announcement.php" class="mobile-nav-link"><i class="fas fa-bullhorn"></i> <span>Announcement</span></a></li>
+                <li><a href="gallery.php" class="mobile-nav-link"><i class="fas fa-images"></i> <span>Gallery</span></a></li>
+                <li><a href="spotmap.php" class="mobile-nav-link"><i class="fas fa-map-marked-alt"></i> <span>Spot Map</span></a></li>
+                <li><a href="services.php" class="mobile-nav-link"><i class="fas fa-file-signature"></i> <span>Services</span></a></li>
+                <li><a href="contact.php" class="mobile-nav-link"><i class="fas fa-envelope-open-text"></i> <span>Contact</span></a></li>
+            </ul>
+
+            <div class="mobile-nav-footer">
+                <a href="Admin/login.php" class="btn-mobile-admin-login">
+                    <i class="fas fa-shield-alt"></i> <span>Admin Login</span>
+                </a>
+            </div>
+        </div>
+    </aside>
 
     <!-- 1. Hero Section -->
     <section class="hero hero-section" id="hero-section" data-speed="<?= $hero_speed ?>">
