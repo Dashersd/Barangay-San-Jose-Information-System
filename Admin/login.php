@@ -146,42 +146,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="navbar">
-    <div class="navbar-container">
-        <!-- Brand & Logo -->
-        <div class="navbar-brand">
-            <img src="../assets/images/San Jose Logo 2.png" alt="Barangay San Jose Logo" class="navbar-logo">
-            <img src="../assets/images/Lapuyan Logo.png" alt="Municipality of Lapuyan Logo" class="navbar-logo">
-            <div class="brand-text">
-                <span class="brand-title">BARANGAY SAN JOSE</span>
-                <span class="brand-subtitle">Bayanihan &bull; Serbisyong Totoo</span>
-            </div>
-        </div>
-
-        <!-- Desktop Links -->
-        <ul class="navbar-links">
-            <li><a href="../index.php">Home</a></li>
-            <li><a href="../about.php">About Us</a></li>
-            <li class="dropdown">
-                <a href="javascript:void(0)" class="nav-link">Officials</a>
-                <div class="dropdown-content">
-                    <a href="../officials.php">Barangay Officials</a>
-                    <a href="../skofficials.php">SK Officials</a>
-                </div>
-            </li>
-            <li><a href="../announcement.php">Announcement</a></li>
-            <li><a href="../gallery.php">Gallery</a></li>
-            <li><a href="../index.php#spot-map">Spot Map</a></li>
-            <li><a href="../contact.php">Contact</a></li>
-        </ul>
-        <!-- Right Side: Admin Login -->
-        <div class="navbar-right">
-            <a href="login.php" class="admin-login-link">Admin Login</a>
-        </div>
-    </div>
-</nav>
-
 <!-- Auth Content Wrapper -->
 <main class="auth-wrapper">
     <div class="auth-card">
@@ -280,6 +244,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             <button type="submit" class="btn-submit" id="submitBtn">
                 Sign In
             </button>
+
+            <!-- Back to Website Link -->
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="../index.php" style="color: #64748b; font-size: 0.875rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='#002e5b'" onmouseout="this.style.color='#64748b'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back to Website
+                </a>
+            </div>
         </form>
     </div>
 </main>
