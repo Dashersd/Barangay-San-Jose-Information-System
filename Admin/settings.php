@@ -200,9 +200,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['action']) && 
     $slogan = trim($_POST['slogan'] ?? '');
     $office_schedule = trim($_POST['office_schedule'] ?? '');
     $address = trim($_POST['address'] ?? '');
-    $mission = trim($_POST['mission'] ?? '');
-    $vision = trim($_POST['vision'] ?? '');
-    $description = trim($_POST['description'] ?? '');
 
     $newLogoPath = null;
     $uploadError = null;
@@ -244,11 +241,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['action']) && 
     }
 
     if ($newLogoPath) {
-        $stmt = $conn->prepare("UPDATE barangay_information SET barangay_name=?, municipality=?, province=?, slogan=?, office_schedule=?, address=?, mission=?, vision=?, description=?, logo_path=? WHERE id = 1");
-        $stmt->bind_param("ssssssssss", $barangay_name, $municipality, $province, $slogan, $office_schedule, $address, $mission, $vision, $description, $newLogoPath);
+        $stmt = $conn->prepare("UPDATE barangay_information SET barangay_name=?, municipality=?, province=?, slogan=?, office_schedule=?, address=?, logo_path=? WHERE id = 1");
+        $stmt->bind_param("sssssss", $barangay_name, $municipality, $province, $slogan, $office_schedule, $address, $newLogoPath);
     } else {
-        $stmt = $conn->prepare("UPDATE barangay_information SET barangay_name=?, municipality=?, province=?, slogan=?, office_schedule=?, address=?, mission=?, vision=?, description=? WHERE id = 1");
-        $stmt->bind_param("sssssssss", $barangay_name, $municipality, $province, $slogan, $office_schedule, $address, $mission, $vision, $description);
+        $stmt = $conn->prepare("UPDATE barangay_information SET barangay_name=?, municipality=?, province=?, slogan=?, office_schedule=?, address=? WHERE id = 1");
+        $stmt->bind_param("ssssss", $barangay_name, $municipality, $province, $slogan, $office_schedule, $address);
     }
 
     if ($stmt->execute()) {
@@ -1541,22 +1538,6 @@ if ($h_res) {
                                 <div class="form-group-custom">
                                     <label class="form-label-custom">Physical Barangay Hall Address</label>
                                     <textarea name="address" class="form-control-custom" rows="2" placeholder="Complete address including street, landmark, and postal code"><?= htmlspecialchars($info['address'] ?? '') ?></textarea>
-                                </div>
-
-                                <div class="form-grid-2" style="margin-top: 1rem;">
-                                    <div class="form-group-custom">
-                                        <label class="form-label-custom">Official Mission Statement</label>
-                                        <textarea name="mission" class="form-control-custom" rows="4" placeholder="Enter barangay mission statement"><?= htmlspecialchars($info['mission'] ?? '') ?></textarea>
-                                    </div>
-                                    <div class="form-group-custom">
-                                        <label class="form-label-custom">Official Vision Statement</label>
-                                        <textarea name="vision" class="form-control-custom" rows="4" placeholder="Enter barangay vision statement"><?= htmlspecialchars($info['vision'] ?? '') ?></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom">General Community Description</label>
-                                    <textarea name="description" class="form-control-custom" rows="3" placeholder="Brief background, community identity, or portal introductory overview"><?= htmlspecialchars($info['description'] ?? '') ?></textarea>
                                 </div>
 
                                 <div class="form-actions-bar">
