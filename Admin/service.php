@@ -397,14 +397,14 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                         <table class="panel-table">
                             <thead>
                                 <tr>
-                                    <th style="width: 60px; text-align: center;">Icon</th>
-                                    <th>Service Name &amp; Details</th>
-                                    <th>Description</th>
-                                    <th>Requirements</th>
-                                    <th style="text-align: center;">Document File</th>
-                                    <th style="text-align: center;">Order</th>
-                                    <th style="text-align: center;">Status</th>
-                                    <th style="text-align: center;">Actions</th>
+                                    <th class="col-icon">Icon</th>
+                                    <th class="col-service">Service Name &amp; Details</th>
+                                    <th class="col-desc">Description</th>
+                                    <th class="col-reqs">Requirements</th>
+                                    <th class="col-file">Document File</th>
+                                    <th class="col-order">Order</th>
+                                    <th class="col-status">Status</th>
+                                    <th class="col-actions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -422,12 +422,12 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                                 <?php else: ?>
                                     <?php foreach ($services as $srv): ?>
                                         <tr>
-                                            <td class="service-icon-col">
+                                            <td class="col-icon service-icon-col">
                                                 <div class="service-icon" title="Icon: <?= htmlspecialchars($srv['icon']) ?>">
                                                     <?= get_service_icon_svg($srv['icon'], 22, 22) ?>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td class="col-service">
                                                 <div class="service-main-cell">
                                                     <span class="service-title-text"><?= htmlspecialchars($srv['title']) ?></span>
                                                     <div class="service-chips">
@@ -440,17 +440,17 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="description-cell" title="<?= htmlspecialchars($srv['description']) ?>">
+                                            <td class="col-desc description-cell" title="<?= htmlspecialchars($srv['description']) ?>">
                                                 <?= htmlspecialchars($srv['description']) ?>
                                             </td>
-                                            <td class="reqs-cell">
+                                            <td class="col-reqs reqs-cell">
                                                 <?php if (!empty($srv['requirements'])): ?>
                                                     <span title="<?= htmlspecialchars($srv['requirements']) ?>"><?= htmlspecialchars($srv['requirements']) ?></span>
                                                 <?php else: ?>
                                                     <span style="color: #cbd5e1; font-style: italic;">None specified</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td style="text-align: center;">
+                                            <td class="col-file" style="text-align: center;">
                                                 <?php if (!empty($srv['document_file'])): ?>
                                                     <a href="../<?= htmlspecialchars($srv['document_file']) ?>" download target="_blank" class="badge badge-doc-file" title="Download <?= htmlspecialchars(basename($srv['document_file'])) ?>">
                                                         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px; vertical-align: -1px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -460,10 +460,10 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                                                     <span style="color: #94a3b8; font-style: italic; font-size: 0.85rem;">No file</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td style="text-align: center;">
+                                            <td class="col-order" style="text-align: center;">
                                                 <span class="service-chip chip-order"><?= $srv['display_order'] ?></span>
                                             </td>
-                                            <td style="text-align: center;">
+                                            <td class="col-status" style="text-align: center;">
                                                 <form action="service.php" method="POST" style="margin: 0; display: inline;">
                                                     <input type="hidden" name="action" value="toggle_status">
                                                     <input type="hidden" name="service_id" value="<?= $srv['id'] ?>">
@@ -473,8 +473,8 @@ if ($msg === 'error') { $alert_text = 'An error occurred while saving the servic
                                                     </button>
                                                 </form>
                                             </td>
-                                            <td style="text-align: center;">
-                                                <div class="action-buttons-wrap" style="justify-content: center;">
+                                            <td class="col-actions" style="text-align: center;">
+                                                <div class="action-buttons-wrap">
                                                     <button type="button" class="btn-action edit-btn" onclick='openEditServiceModal(<?= json_encode($srv, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>);'>
                                                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                                         Edit
