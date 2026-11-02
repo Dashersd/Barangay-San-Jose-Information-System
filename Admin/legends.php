@@ -224,24 +224,105 @@ $nextOrder = count($legends) + 1;
             display: block;
             pointer-events: none;
         }
+        /* Aerial Map View Info Banner - Spacious & Responsive */
         .aerial-map-badge {
             position: absolute;
-            top: 14px;
-            left: 14px;
-            background: rgba(6, 78, 59, 0.88);
-            backdrop-filter: blur(4px);
+            top: 16px;
+            left: 16px;
+            max-width: min(720px, calc(100% - 32px));
+            background: rgba(6, 78, 59, 0.94);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             color: #ecfdf5;
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            padding: 8px 16px;
-            border-radius: 999px;
-            font-size: 0.825rem;
-            font-weight: 600;
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            padding: 12px 18px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(6, 78, 59, 0.2);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            z-index: 30;
+            pointer-events: none;
+            box-sizing: border-box;
+            line-height: 1.45;
+        }
+        .aerial-badge-icon {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            background: rgba(251, 191, 36, 0.18);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .aerial-badge-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+        .aerial-badge-title-row {
             display: flex;
             align-items: center;
             gap: 8px;
-            z-index: 30;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            pointer-events: none;
+            flex-wrap: wrap;
+        }
+        .aerial-badge-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+        }
+        .aerial-badge-dot {
+            color: rgba(52, 211, 153, 0.7);
+            font-size: 0.85rem;
+        }
+        .aerial-badge-hint {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #a7f3d0;
+        }
+        .aerial-badge-sub {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #6ee7b7;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .aerial-badge-sub::before {
+            content: "💡";
+            font-size: 0.75rem;
+        }
+        @media (max-width: 640px) {
+            .aerial-map-badge {
+                top: 10px;
+                left: 10px;
+                max-width: calc(100% - 20px);
+                padding: 10px 14px;
+                gap: 10px;
+                border-radius: 10px;
+            }
+            .aerial-badge-icon {
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+                font-size: 0.95rem;
+            }
+            .aerial-badge-title {
+                font-size: 0.82rem;
+            }
+            .aerial-badge-hint,
+            .aerial-badge-sub {
+                font-size: 0.74rem;
+            }
         }
 
         /* Saved Map Pins */
@@ -966,8 +1047,17 @@ $nextOrder = count($legends) + 1;
                     <div class="map-interactive-container" id="aerialMapContainer">
                         <!-- Top Floating Green Banner -->
                         <div class="aerial-map-badge">
-                            <i class="bi bi-geo-alt-fill" style="color: #fbbf24;"></i>
-                            Aerial Map View &bull; Drag the pulsing marker or click anywhere to position. Click saved pins to view landmark photo!
+                            <div class="aerial-badge-icon">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                            <div class="aerial-badge-content">
+                                <div class="aerial-badge-title-row">
+                                    <span class="aerial-badge-title">Aerial Map View</span>
+                                    <span class="aerial-badge-dot">&bull;</span>
+                                    <span class="aerial-badge-hint">Drag pulsing marker or click anywhere to position</span>
+                                </div>
+                                <div class="aerial-badge-sub">Click saved pins to view landmark photo!</div>
+                            </div>
                         </div>
 
                         <!-- Aerial Map Image -->
