@@ -232,14 +232,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $result = $conn->query("SELECT * FROM purok2_locations");
                     if ($result) {
                         while ($row = $result->fetch_assoc()) {
-                            if (!empty($row['marker_image'])) {
+                            if (!empty($row['marker_image']) && (file_exists('../' . $row['marker_image']) || file_exists($row['marker_image']))) {
                                 $top = htmlspecialchars($row['top_position']);
                                 $left = htmlspecialchars($row['left_position']);
                                 $width = htmlspecialchars($row['marker_width']);
                                 $height = htmlspecialchars($row['marker_height']);
                                 $src = htmlspecialchars($row['marker_image']);
                                 $title = htmlspecialchars($row['house_number'] . " - " . $row['husband_name']);
-                                echo "<img src='../$src' style='position: absolute; top: {$top}%; left: {$left}%; width: {$width}px; height: {$height}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='$title'>";
+                                echo "<img src='../$src' style='position: absolute; top: {$top}%; left: {$left}%; width: {$width}px; height: {$height}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='$title' onerror=\"this.remove();\">";
                             }
                         }
                     }

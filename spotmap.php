@@ -326,8 +326,8 @@
                                 $res1 = $conn->query("SELECT * FROM purok1_locations");
                                 if($res1){
                                     while($row = $res1->fetch_assoc()){
-                                        if(!empty($row['marker_image'])){
-                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                        if(!empty($row['marker_image']) && (file_exists($row['marker_image']) || file_exists(__DIR__ . '/' . $row['marker_image']))){
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' onerror=\"this.remove();\" title='House {$row['house_number']} - {$row['husband_name']}'>";
                                         }
                                     }
                                 }
@@ -341,8 +341,8 @@
                                 $res2 = $conn->query("SELECT * FROM purok2_locations");
                                 if($res2){
                                     while($row = $res2->fetch_assoc()){
-                                        if(!empty($row['marker_image'])){
-                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                        if(!empty($row['marker_image']) && (file_exists($row['marker_image']) || file_exists(__DIR__ . '/' . $row['marker_image']))){
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' onerror=\"this.remove();\" title='House {$row['house_number']} - {$row['husband_name']}'>";
                                         }
                                     }
                                 }
@@ -356,8 +356,8 @@
                                 $res3 = $conn->query("SELECT * FROM purok3_locations");
                                 if($res3){
                                     while($row = $res3->fetch_assoc()){
-                                        if(!empty($row['marker_image'])){
-                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                        if(!empty($row['marker_image']) && (file_exists($row['marker_image']) || file_exists(__DIR__ . '/' . $row['marker_image']))){
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' onerror=\"this.remove();\" title='House {$row['house_number']} - {$row['husband_name']}'>";
                                         }
                                     }
                                 }
@@ -371,8 +371,8 @@
                                 $res4 = $conn->query("SELECT * FROM purok4_locations");
                                 if($res4){
                                     while($row = $res4->fetch_assoc()){
-                                        if(!empty($row['marker_image'])){
-                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' title='House {$row['house_number']} - {$row['husband_name']}'>";
+                                        if(!empty($row['marker_image']) && (file_exists($row['marker_image']) || file_exists(__DIR__ . '/' . $row['marker_image']))){
+                                            echo "<img class='house-marker' data-image='".htmlspecialchars($row['house_image'])."' data-house='".htmlspecialchars($row['house_number'])."' data-husband='".htmlspecialchars($row['husband_name'])."' data-spouse='".htmlspecialchars($row['spouse_name'])."' data-children='".htmlspecialchars($row['children'] ?? '[]', ENT_QUOTES)."' src='".htmlspecialchars($row['marker_image'])."' style='position: absolute; top: {$row['top_position']}%; left: {$row['left_position']}%; width: {$row['marker_width']}px; height: {$row['marker_height']}px; transform: translate(-50%, -50%); z-index: 10; cursor: pointer;' alt='Marker' onerror=\"this.remove();\" title='House {$row['house_number']} - {$row['husband_name']}'>";
                                         }
                                     }
                                 }
