@@ -6,12 +6,12 @@ $isLiveHost = !empty($httpHost) && strpos($httpHost, 'localhost') === false && s
 if ($isLiveHost) {
     // =========================================================================
     // INFINITYFREE / PRODUCTION DATABASE CONFIGURATION
-    // You can find these details in your InfinityFree Client Area -> Control Panel -> MySQL Databases:
+    // Credentials for barangaysanjose.infinityfreeapp.com (Account if0_43319778)
     // =========================================================================
-    $servername = getenv('DB_HOST') ?: "sqlXXX.infinityfree.com";             // Replace with your MySQL Hostname (e.g. sql100.infinityfree.com or sql200.byetcluster.com)
-    $username   = getenv('DB_USER') ?: "if0_XXXXXXXX";                        // Replace with your InfinityFree MySQL Username (e.g. if0_38123456)
-    $password   = getenv('DB_PASS') ?: "your_vpanel_password";                // Replace with your InfinityFree Account / vPanel Password
-    $dbname     = getenv('DB_NAME') ?: "if0_XXXXXXXX_barangay_sanjose_db";    // Replace with your InfinityFree MySQL Database Name
+    $servername = getenv('DB_HOST') ?: "sql208.infinityfree.com";
+    $username   = getenv('DB_USER') ?: "if0_43319778";
+    $password   = getenv('DB_PASS') ?: "yBxuFOPGrAq0FR";
+    $dbname     = getenv('DB_NAME') ?: "if0_43319778_barangay_sanjose_db";
 } else {
     // =========================================================================
     // LOCAL XAMPP ENVIRONMENT CONFIGURATION
@@ -27,11 +27,33 @@ if (file_exists(__DIR__ . '/db_config.php')) {
     include __DIR__ . '/db_config.php';
 }
 
-// Create connection with resilient error handling
+// Create connection with resilient error handling and auto-database discovery
 try {
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = @new mysqli($servername, $username, $password);
     if ($conn->connect_error) {
         throw new Exception($conn->connect_error);
+    }
+
+    // Select database, or auto-detect if the database name has a custom suffix
+    if (!@$conn->select_db($dbname)) {
+        $selected = false;
+        $dbList = $conn->query("SHOW DATABASES");
+        if ($dbList) {
+            while ($row = $dbList->fetch_row()) {
+                $candidate = $row[0];
+                if ($candidate !== 'information_schema' && (strpos($candidate, $username) === 0 || !$isLiveHost)) {
+                    if ($conn->select_db($candidate)) {
+                        $dbname = $candidate;
+                        $selected = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!$selected) {
+            throw new Exception("Connected to MySQL server ($servername), but database '$dbname' does not exist yet. Please create a database in InfinityFree Control Panel &rarr; MySQL Databases.");
+        }
     }
 
     // Automatically ensure the feedback_chats table exists
