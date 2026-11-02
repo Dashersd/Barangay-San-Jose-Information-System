@@ -144,11 +144,12 @@ function smtpRawSend($host, $port, $protocol, $useStartTls, $user, $pass, $fromE
         ]
     ]);
 
-    $fp = @stream_socket_client($remote, $errno, $errstr, 8, STREAM_CLIENT_CONNECT, $context);
+    $timeout = 2.5;
+    $fp = @stream_socket_client($remote, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, $context);
     if (!$fp) {
         return ['success' => false, 'error' => "Connection failed ($errno): $errstr"];
     }
-    stream_set_timeout($fp, 8);
+    stream_set_timeout($fp, 4);
 
     $readResponse = function() use ($fp) {
         $data = '';
