@@ -118,6 +118,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    text-align: center;
 }
 
 .official-placeholder-text {
@@ -126,16 +127,21 @@
     color: #64748b;
     z-index: 1;
     user-select: none;
+    text-align: center;
 }
 
-.official-card-img {
+.official-card-img,
+.official-image-container img {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
     z-index: 2;
+    display: block;
 }
 
 .official-name-pill {

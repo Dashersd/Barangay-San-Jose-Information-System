@@ -1359,9 +1359,16 @@
         margin-bottom: 8px !important;
     }
 
-    .official-card img {
-        width: 65px !important;
-        height: 65px !important;
+    .official-card .official-card-img,
+    .official-card .official-image-container img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center top !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        top: 0 !important;
+        display: block !important;
     }
 
     .official-name {
