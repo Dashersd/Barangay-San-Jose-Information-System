@@ -586,46 +586,48 @@ if ($h_res) {
             opacity: 1;
         }
 
-        /* 6-Tab Navigation Bar - Single Row Layout */
+        /* 6-Tab Navigation Bar - Modern Pill Navigation Track */
         .settings-tabs-wrapper {
             background: #ffffff;
-            border: 1px solid var(--slate-border);
-            border-radius: 12px;
-            padding: 0.45rem;
+            border: 1px solid var(--slate-border, #e2e8f0);
+            border-radius: 14px;
+            padding: 6px;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 6px rgba(13, 40, 71, 0.04);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .settings-tabs-wrapper::-webkit-scrollbar {
+            display: none;
         }
         .settings-nav-tabs {
             display: flex;
             flex-wrap: nowrap;
             align-items: center;
-            justify-content: space-between;
-            gap: 0.35rem;
+            gap: 6px;
             list-style: none;
             margin: 0;
             padding: 0;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .settings-nav-tabs::-webkit-scrollbar {
-            display: none;
+            width: max-content;
+            min-width: 100%;
         }
         .settings-nav-item {
-            flex: 1 1 auto;
-            min-width: 0;
+            flex: 1 1 0;
+            min-width: max-content;
         }
         .settings-tab-btn {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.45rem;
+            gap: 8px;
             width: 100%;
-            padding: 0.75rem 0.7rem;
-            border-radius: 8px;
-            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9px;
+            border: 1px solid transparent;
             background: transparent;
-            color: var(--slate-text-muted);
-            font-size: 0.84rem;
+            color: #64748b;
+            font-size: 0.88rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -633,20 +635,27 @@ if ($h_res) {
             white-space: nowrap;
         }
         .settings-tab-btn i {
-            font-size: 1rem;
+            font-size: 1.05rem;
             flex-shrink: 0;
+            color: #94a3b8;
+            transition: color 0.2s ease;
         }
         .settings-tab-btn:hover {
-            background-color: var(--gov-blue-subtle);
-            color: var(--gov-blue);
+            background-color: #f1f5f9;
+            color: #0d2847;
+            border-color: #e2e8f0;
+        }
+        .settings-tab-btn:hover i {
+            color: #0d2847;
         }
         .settings-tab-btn.active {
-            background-color: var(--gov-navy);
+            background-color: #0d2847;
             color: #ffffff;
-            box-shadow: 0 4px 10px rgba(13, 40, 71, 0.25);
+            border-color: #0d2847;
+            box-shadow: 0 4px 12px rgba(13, 40, 71, 0.22);
         }
         .settings-tab-btn.active i {
-            color: var(--gov-gold);
+            color: #fbbf24;
         }
 
         /* Tab Content Panes */
@@ -1142,8 +1151,21 @@ if ($h_res) {
             }
         }
         @media (max-width: 768px) {
+            .settings-tabs-wrapper {
+                padding: 5px;
+                border-radius: 12px;
+                margin-bottom: 1.25rem;
+            }
             .settings-nav-tabs {
-                flex-direction: column;
+                gap: 5px;
+            }
+            .settings-tab-btn {
+                padding: 0.65rem 1rem;
+                font-size: 0.82rem;
+                gap: 6px;
+            }
+            .settings-tab-btn i {
+                font-size: 0.95rem;
             }
             .form-grid-2, .form-grid-3 {
                 grid-template-columns: 1fr;
@@ -1417,7 +1439,7 @@ if ($h_res) {
                                 </button>
                             </li>
                             <li class="settings-nav-item">
-                                <button type="button" class="settings-tab-btn tab-btn <?= $activeTab === 'hero_bg' ? 'active' : '' ?>" data-tab="hero_bg" onclick="switchTab('hero_bg', this)">
+                                <button type="button" class="settings-tab-btn <?= $activeTab === 'hero_bg' ? 'active' : '' ?>" data-tab="hero_bg">
                                     <i class="bi bi-images"></i>
                                     <span>Hero Background</span>
                                 </button>
@@ -2044,7 +2066,12 @@ if ($h_res) {
 
             // Activate matching button
             const activeBtn = btnEl || document.querySelector(`.settings-tab-btn[data-tab="${tabId}"]`);
-            if (activeBtn) activeBtn.classList.add('active');
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                try {
+                    activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                } catch(e) {}
+            }
 
             // Activate matching pane
             const activePane = document.getElementById(`tab-${tabId}`);
