@@ -1,23 +1,23 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // -------------------------------------------------------------
     // Sidebar Dropdown Navigation Logic
     // -------------------------------------------------------------
     const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-    
+
     dropdownToggles.forEach(toggle => {
-        toggle.addEventListener('click', function(e) {
+        toggle.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
             const parentLi = this.closest('.admin-dropdown');
             if (!parentLi) return;
-            
+
             const menu = parentLi.querySelector('.admin-dropdown-menu');
-            const isCurrentlyOpen = parentLi.classList.contains('open') || 
-                                    parentLi.classList.contains('active') ||
-                                    this.classList.contains('open') ||
-                                    this.classList.contains('active') ||
-                                    (menu && (menu.classList.contains('show') || menu.style.display === 'block'));
+            const isCurrentlyOpen = parentLi.classList.contains('open') ||
+                parentLi.classList.contains('active') ||
+                this.classList.contains('open') ||
+                this.classList.contains('active') ||
+                (menu && (menu.classList.contains('show') || menu.style.display === 'block'));
 
             if (isCurrentlyOpen) {
                 parentLi.classList.remove('open', 'active');
@@ -59,14 +59,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const modals = document.querySelectorAll('.modal-overlay');
 
     closeBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const modal = this.closest('.modal-overlay');
             if (modal) modal.classList.remove('show');
         });
     });
 
     modals.forEach(modal => {
-        modal.addEventListener('click', function(e) {
+        modal.addEventListener('click', function (e) {
             if (e.target === modal) {
                 modal.classList.remove('show');
             }
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // -------------------------------------------------------------
     // Universal Admin Mobile Navigation & Sidebar Drawer Controller
     // -------------------------------------------------------------
-    window.initAdminMobileSidebar = function() {
+    window.initAdminMobileSidebar = function () {
         if (window.__adminMobileSidebarInitialized) return;
         window.__adminMobileSidebarInitialized = true;
 
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (toggleBtn && !toggleBtn.dataset.boundSidebarToggle) {
             toggleBtn.dataset.boundSidebarToggle = 'true';
-            toggleBtn.addEventListener('click', function(e) {
+            toggleBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 if (sidebar.classList.contains('mobile-open')) {

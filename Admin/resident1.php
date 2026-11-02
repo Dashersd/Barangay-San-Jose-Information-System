@@ -252,13 +252,13 @@ if ($result) {
                     <table class="records-table">
                         <thead>
                             <tr>
-                                <th>House Image</th>
-                                <th>House Number</th>
-                                <th>Husband Name</th>
-                                <th>Spouse Name</th>
-                                <th>Children</th>
-                                <th>Date Added</th>
-                                <th>Actions</th>
+                                <th class="col-img">House Image</th>
+                                <th class="col-house-no">House Number</th>
+                                <th class="col-husband">Husband Name</th>
+                                <th class="col-spouse">Spouse Name</th>
+                                <th class="col-children">Children</th>
+                                <th class="col-date">Date Added</th>
+                                <th class="col-actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -269,46 +269,48 @@ if ($result) {
                             <?php else: ?>
                                 <?php foreach ($records as $record): ?>
                                 <tr>
-                                    <td>
+                                    <td class="col-img">
                                         <?php if (!empty($record['houseImage'])): ?>
-                                            <img src="../<?= htmlspecialchars($record['houseImage']) ?>" alt="House" style="width: 80px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                            <img src="../<?= htmlspecialchars($record['houseImage']) ?>" alt="House" class="house-thumb-img">
                                         <?php else: ?>
-                                            <span style="color: #94a3b8; font-style: italic;">No image</span>
+                                            <span style="color: #94a3b8; font-style: italic; font-size: 0.85rem;">No image</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= htmlspecialchars($record['houseNumber'] ?? '') ?></td>
-                                    <td><?= htmlspecialchars($record['husbandName'] ?? '') ?></td>
-                                    <td><?= htmlspecialchars($record['spouseName'] ?? '') ?></td>
-                                    <td>
+                                    <td class="col-house-no"><?= htmlspecialchars($record['houseNumber'] ?? '') ?></td>
+                                    <td class="col-husband"><?= htmlspecialchars($record['husbandName'] ?? '') ?></td>
+                                    <td class="col-spouse"><?= htmlspecialchars($record['spouseName'] ?? '') ?></td>
+                                    <td class="col-children">
                                         <?php 
                                         $children = json_decode($record['children'] ?? '[]', true);
                                         if (!empty($children) && is_array($children)): 
                                         ?>
-                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 99px; background: #e0f2fe; color: #0369a1; font-weight: 600; font-size: 0.75rem;">
+                                            <span class="children-badge">
                                                 <?= count($children) ?> <?= count($children) === 1 ? 'Child' : 'Children' ?>
                                             </span>
-                                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 3px;">
+                                            <div class="children-names">
                                                 <?= htmlspecialchars(implode(', ', $children)) ?>
                                             </div>
                                         <?php else: ?>
                                             <span style="color: #94a3b8; font-style: italic; font-size: 0.85rem;">None</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= date('M d, Y', strtotime($record['dateAdded'])) ?></td>
-                                    <td>
-                                        <button type="button" class="btn-action edit-btn" style="padding: 5px 10px; background: #0f766e; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;" 
-                                            data-id="<?= htmlspecialchars($record['id']) ?>"
-                                            data-house="<?= htmlspecialchars($record['houseNumber'] ?? '') ?>"
-                                            data-husband="<?= htmlspecialchars($record['husbandName'] ?? '') ?>"
-                                            data-spouse="<?= htmlspecialchars($record['spouseName'] ?? '') ?>"
-                                            data-children="<?= htmlspecialchars($record['children'] ?? '[]', ENT_QUOTES) ?>">
-                                            Edit
-                                        </button>
-                                        <form method="POST" action="" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this record?');">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="delete_id" value="<?= htmlspecialchars($record['id']) ?>">
-                                            <button type="submit" class="btn-action" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
-                                        </form>
+                                    <td class="col-date"><?= date('M d, Y', strtotime($record['dateAdded'])) ?></td>
+                                    <td class="col-actions">
+                                        <div class="table-actions-cell">
+                                            <button type="button" class="btn-action edit-btn" 
+                                                data-id="<?= htmlspecialchars($record['id']) ?>"
+                                                data-house="<?= htmlspecialchars($record['houseNumber'] ?? '') ?>"
+                                                data-husband="<?= htmlspecialchars($record['husbandName'] ?? '') ?>"
+                                                data-spouse="<?= htmlspecialchars($record['spouseName'] ?? '') ?>"
+                                                data-children="<?= htmlspecialchars($record['children'] ?? '[]', ENT_QUOTES) ?>">
+                                                Edit
+                                            </button>
+                                            <form method="POST" action="" style="display: inline; margin: 0;" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="delete_id" value="<?= htmlspecialchars($record['id']) ?>">
+                                                <button type="submit" class="btn-action delete-btn">Delete</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>

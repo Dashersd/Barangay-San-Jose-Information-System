@@ -250,11 +250,6 @@ if (empty($hero_slides)) {
                 <li><a href="contact.php">Contact</a></li>
             </ul>
 
-            <!-- Right Side: Admin Login -->
-            <div class="navbar-right">
-                <a href="Admin/login.php" class="admin-login-link">Admin Login</a>
-            </div>
-
             <!-- Mobile Hamburger Toggle Button -->
             <button type="button" class="navbar-mobile-toggle" id="btn-navbar-mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
                 <span class="hamburger-bar"></span>
@@ -302,12 +297,6 @@ if (empty($hero_slides)) {
                 <li><a href="services.php" class="mobile-nav-link"><i class="fas fa-file-signature"></i> <span>Services</span></a></li>
                 <li><a href="contact.php" class="mobile-nav-link"><i class="fas fa-envelope-open-text"></i> <span>Contact</span></a></li>
             </ul>
-
-            <div class="mobile-nav-footer">
-                <a href="Admin/login.php" class="btn-mobile-admin-login">
-                    <i class="fas fa-shield-alt"></i> <span>Admin Login</span>
-                </a>
-            </div>
         </div>
     </aside>
 
