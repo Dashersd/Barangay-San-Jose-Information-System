@@ -142,201 +142,6 @@ if ($res) {
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/service.css"> <!-- Modal styles -->
     <link rel="stylesheet" href="css/announcement.css?v=<?= time() ?>">
-    <style>
-        .badge-draft {
-            background-color: #f1f5f9;
-            color: #64748b;
-            border: 1px solid #cbd5e1;
-        }
-        .announcement-thumb {
-            width: 48px;
-            height: 48px;
-            object-fit: cover;
-            border-radius: 6px;
-            background: #f1f5f9;
-            display: inline-block;
-        }
-        .thumb-placeholder {
-            width: 48px;
-            height: 48px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #e2e8f0;
-            color: #64748b;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Modal Window & Scrollable Body Fix */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(4px);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .modal-overlay.show {
-            display: flex !important;
-        }
-        .modal-content {
-            background: #ffffff !important;
-            width: 100% !important;
-            max-width: 620px !important;
-            max-height: calc(100vh - 40px) !important;
-            border-radius: 12px !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-            display: flex !important;
-            flex-direction: column !important;
-            overflow: hidden !important;
-            margin: auto !important;
-        }
-        .modal-content form {
-            display: flex !important;
-            flex-direction: column !important;
-            flex: 1 !important;
-            min-height: 0 !important;
-            overflow: hidden !important;
-            margin: 0 !important;
-        }
-        .modal-header {
-            flex-shrink: 0 !important;
-            padding: 16px 24px !important;
-            border-bottom: 1px solid #e2e8f0 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            background: #ffffff !important;
-        }
-        .modal-header h2 {
-            margin: 0 !important;
-            font-size: 1.25rem !important;
-            font-weight: 700 !important;
-            color: #0f172a !important;
-        }
-        .modal-close {
-            width: 32px !important;
-            height: 32px !important;
-            border-radius: 6px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            border: none !important;
-            background: #f1f5f9 !important;
-            color: #64748b !important;
-            font-size: 1.25rem !important;
-            cursor: pointer !important;
-            line-height: 1 !important;
-        }
-        .modal-close:hover {
-            background: #fee2e2 !important;
-            color: #ef4444 !important;
-        }
-        .modal-body {
-            flex: 1 1 auto !important;
-            min-height: 0 !important;
-            overflow-y: auto !important;
-            padding: 20px 24px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 16px !important;
-            box-sizing: border-box !important;
-        }
-        .modal-body::-webkit-scrollbar {
-            width: 6px;
-        }
-        .modal-body::-webkit-scrollbar-track {
-            background: #f8fafc;
-        }
-        .modal-body::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 99px;
-        }
-        .modal-footer {
-            flex-shrink: 0 !important;
-            padding: 14px 24px !important;
-            border-top: 1px solid #e2e8f0 !important;
-            background: #f8fafc !important;
-            display: flex !important;
-            justify-content: flex-end !important;
-            align-items: center !important;
-            gap: 12px !important;
-        }
-        .modal-footer .btn {
-            padding: 9px 18px !important;
-            border-radius: 6px !important;
-            font-size: 0.925rem !important;
-            font-weight: 600 !important;
-            cursor: pointer !important;
-        }
-        .modal-footer .btn-secondary {
-            background: #ffffff !important;
-            color: #475569 !important;
-            border: 1px solid #cbd5e1 !important;
-        }
-        .modal-footer .btn-secondary:hover {
-            background: #f1f5f9 !important;
-        }
-        .modal-footer .btn-primary {
-            background: #0f766e !important;
-            color: #ffffff !important;
-            border: none !important;
-        }
-        .modal-footer .btn-primary:hover {
-            background: #115e59 !important;
-        }
-        .form-row {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 16px !important;
-            width: 100% !important;
-        }
-        @media (max-width: 580px) {
-            .form-row {
-                grid-template-columns: 1fr !important;
-            }
-        }
-        .form-group {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 6px !important;
-            width: 100% !important;
-        }
-        .form-group label {
-            font-size: 0.875rem !important;
-            font-weight: 600 !important;
-            color: #334155 !important;
-            margin: 0 !important;
-        }
-        .form-control {
-            width: 100% !important;
-            padding: 9px 12px !important;
-            border: 1px solid #cbd5e1 !important;
-            border-radius: 6px !important;
-            font-size: 0.925rem !important;
-            color: #0f172a !important;
-            background: #ffffff !important;
-            box-sizing: border-box !important;
-        }
-        .form-control:focus {
-            border-color: #0f766e !important;
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15) !important;
-            outline: none !important;
-        }
-        textarea.form-control {
-            min-height: 70px !important;
-            resize: vertical !important;
-        }
-    </style>
 </head>
 <body>
 
@@ -497,9 +302,12 @@ if ($res) {
                     </div>
                 <?php endif; ?>
 
-                <div class="content-header d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem;">
-                    <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--text, #1C1917);">Announcements & Updates</h2>
-                    <button id="addAnnouncementBtn" class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600;">
+                <div class="content-header d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem; background: #ffffff; padding: 1.25rem 1.75rem; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a; letter-spacing: -0.01em;">Announcements &amp; Updates</h2>
+                        <p style="margin: 0.35rem 0 0; color: #64748b; font-size: 0.92rem;">Manage official community updates, event notices, and advisories for residents.</p>
+                    </div>
+                    <button id="addAnnouncementBtn" class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; padding: 0.75rem 1.4rem; border-radius: 8px; font-weight: 700; background: #0f766e; color: #ffffff;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         Add New Announcement
                     </button>
@@ -510,74 +318,75 @@ if ($res) {
                         <table class="panel-table">
                             <thead>
                                 <tr>
-                                    <th>Cover</th>
-                                    <th>Date</th>
-                                    <th>Title</th>
-                                    <th>What / Who</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th class="col-cover">Cover</th>
+                                    <th class="col-date">Date</th>
+                                    <th class="col-title">Title</th>
+                                    <th class="col-desc">What / Who</th>
+                                    <th class="col-status">Status</th>
+                                    <th class="col-actions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if (empty($announcements)): ?>
                                     <tr>
-                                        <td colspan="6" style="text-align: center; padding: 30px; color: #94a3b8;">
+                                        <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8; font-style: italic;">
                                             No announcements found. Click "Add New Announcement" to post your first update.
                                         </td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($announcements as $row): ?>
                                     <tr>
-                                        <td>
+                                        <td class="col-cover">
                                             <?php if (!empty($row['cover_image'])): ?>
                                                 <img src="../<?= htmlspecialchars($row['cover_image']) ?>" alt="Cover" class="announcement-thumb">
                                             <?php else: ?>
                                                 <div class="thumb-placeholder">None</div>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="date-cell">
-                                            <strong><?= date('M d, Y', strtotime($row['event_date'])) ?></strong>
+                                        <td class="col-date date-cell">
+                                            <div class="date-main"><?= date('M d, Y', strtotime($row['event_date'])) ?></div>
                                             <?php if (!empty($row['when_time'])): ?>
-                                                <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">
+                                                <div class="time-sub">
                                                     <?= htmlspecialchars($row['when_time']) ?>
                                                 </div>
                                             <?php endif; ?>
                                         </td>
-                                        <td><strong><?= htmlspecialchars($row['title']) ?></strong></td>
-                                        <td class="description-cell" title="<?= htmlspecialchars(($row['what_desc'] ?? '') . ' | ' . ($row['who_target'] ?? '')) ?>">
-                                            <?= htmlspecialchars(!empty($row['what_desc']) ? $row['what_desc'] : ($row['why_desc'] ?? 'No summary available')) ?>
+                                        <td class="col-title"><strong><?= htmlspecialchars($row['title']) ?></strong></td>
+                                        <td class="col-desc description-cell" title="<?= htmlspecialchars(($row['what_desc'] ?? '') . ' | ' . ($row['who_target'] ?? '')) ?>">
+                                            <div><?= htmlspecialchars(!empty($row['what_desc']) ? $row['what_desc'] : ($row['why_desc'] ?? 'No summary available')) ?></div>
                                             <?php if (!empty($row['who_target'])): ?>
-                                                <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">
+                                                <div class="announcement-target-tag">
                                                     For: <?= htmlspecialchars($row['who_target']) ?>
                                                 </div>
                                             <?php endif; ?>
                                         </td>
-                                        <td>
+                                        <td class="col-status">
                                             <?php if ($row['status'] === 'Published'): ?>
                                                 <span class="badge badge-active">Published</span>
                                             <?php else: ?>
                                                 <span class="badge badge-draft">Draft</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td>
-                                            <button type="button" class="btn-action edit-btn edit-announcement-btn"
-                                                data-id="<?= htmlspecialchars($row['id']) ?>"
-                                                data-title="<?= htmlspecialchars($row['title'], ENT_QUOTES) ?>"
-                                                data-date="<?= htmlspecialchars($row['event_date']) ?>"
-                                                data-who="<?= htmlspecialchars($row['who_target'] ?? '', ENT_QUOTES) ?>"
-                                                data-when="<?= htmlspecialchars($row['when_time'] ?? '', ENT_QUOTES) ?>"
-                                                data-what="<?= htmlspecialchars($row['what_desc'] ?? '', ENT_QUOTES) ?>"
-                                                data-why="<?= htmlspecialchars($row['why_desc'] ?? '', ENT_QUOTES) ?>"
-                                                data-extra="<?= htmlspecialchars($row['extra_desc'] ?? '', ENT_QUOTES) ?>"
-                                                data-status="<?= htmlspecialchars($row['status']) ?>"
-                                                style="border: none; cursor: pointer;">
-                                                Edit
-                                            </button>
-                                            <form method="POST" action="" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this announcement?');">
-                                                <input type="hidden" name="action" value="delete">
-                                                <input type="hidden" name="delete_id" value="<?= htmlspecialchars($row['id']) ?>">
-                                                <button type="submit" class="btn-action delete-btn" style="border: none; cursor: pointer;">Delete</button>
-                                            </form>
+                                        <td class="col-actions">
+                                            <div class="table-actions-cell">
+                                                <button type="button" class="btn-action edit-btn edit-announcement-btn"
+                                                    data-id="<?= htmlspecialchars($row['id']) ?>"
+                                                    data-title="<?= htmlspecialchars($row['title'], ENT_QUOTES) ?>"
+                                                    data-date="<?= htmlspecialchars($row['event_date']) ?>"
+                                                    data-who="<?= htmlspecialchars($row['who_target'] ?? '', ENT_QUOTES) ?>"
+                                                    data-when="<?= htmlspecialchars($row['when_time'] ?? '', ENT_QUOTES) ?>"
+                                                    data-what="<?= htmlspecialchars($row['what_desc'] ?? '', ENT_QUOTES) ?>"
+                                                    data-why="<?= htmlspecialchars($row['why_desc'] ?? '', ENT_QUOTES) ?>"
+                                                    data-extra="<?= htmlspecialchars($row['extra_desc'] ?? '', ENT_QUOTES) ?>"
+                                                    data-status="<?= htmlspecialchars($row['status']) ?>">
+                                                    Edit
+                                                </button>
+                                                <form method="POST" action="" style="display: inline; margin: 0;" onsubmit="return confirm('Are you sure you want to delete this announcement?');">
+                                                    <input type="hidden" name="action" value="delete">
+                                                    <input type="hidden" name="delete_id" value="<?= htmlspecialchars($row['id']) ?>">
+                                                    <button type="submit" class="btn-action delete-btn">Delete</button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
